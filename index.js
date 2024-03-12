@@ -41,6 +41,13 @@ class Projectile {
     c.fillStyle = this.color;
     c.fill();
   }
+
+  // update the coordinates to create the animation effect
+  update() {
+    this.draw();
+    this.x = this.x + this.velocity.x;
+    this.y = this.y + this.velocity.y;
+  }
 }
 
 // Instantiate a Player
@@ -48,11 +55,40 @@ const x = canvas.width / 2;
 const y = canvas.height / 2;
 const player = new Player(x, y, 30, "blue");
 
-// call the draw method to show the player on screen
-player.draw();
+// array for storing projectiles
+const projectiles = [];
+
+// create a custom function to start a animation loop
+function animate() {
+  requestAnimationFrame(animate);
+  // clear canvas at each frame so it doesnt leave any trailers
+  c.clearRect(0, 0, canvas.width, canvas.height);
+
+  // call the draw method to show the player on screen
+  player.draw();
+
+  projectiles.forEach((projectile) => {
+    projectile.update();
+  });
+}
 
 // add click eventlistener for projectile
 addEventListener("click", (e) => {
-  const projectile = new Projectile(e.clientX, e.clientY, 5, "red", null);
-  projectile.draw();
+  // calculate the triangele angle (in radiant) between the center (Player) to the clicked point
+  const angle = Math.atan2(
+    e.clientY - canvas.height / 2,
+    e.clientX - canvas.width / 2
+  );
+  // calculate velocity through sin and cos
+  const velocity = {
+    x: Math.cos(angle),
+    y: Math.sin(angle),
+  };
+  // Instantiate a Projectile and push it to the array
+  projectiles.push(
+    new Projectile(canvas.width / 2, canvas.height / 2, 5, "red", velocity)
+  );
 });
+
+// staring to animate
+animate();
