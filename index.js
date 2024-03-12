@@ -50,6 +50,32 @@ class Projectile {
   }
 }
 
+// Create Enemy Class
+class Enemy {
+  constructor(x, y, radius, color, velocity) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.color = color;
+    this.velocity = velocity;
+  }
+
+  // create a custom draw method that initiates a circul and fills it
+  draw() {
+    c.beginPath();
+    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    c.fillStyle = this.color;
+    c.fill();
+  }
+
+  // update the coordinates to create the animation effect
+  update() {
+    this.draw();
+    this.x = this.x + this.velocity.x;
+    this.y = this.y + this.velocity.y;
+  }
+}
+
 // Instantiate a Player
 const x = canvas.width / 2;
 const y = canvas.height / 2;
@@ -57,6 +83,27 @@ const player = new Player(x, y, 30, "blue");
 
 // array for storing projectiles
 const projectiles = [];
+// array for storing enemies
+const enemies = [];
+
+// create enemies every 1 second and push to array
+function spawnEnemies() {
+  setInterval(() => {
+    const radius = 30;
+    // spawn off the screen randomly
+    const x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius;
+    const y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius;
+    const color = "green";
+
+    const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
+    const velocity = {
+      x: Math.cos(angle),
+      y: Math.sin(angle),
+    };
+
+    enemies.push(new Enemy(x, y, radius, color, velocity));
+  }, 1000);
+}
 
 // create a custom function to start a animation loop
 function animate() {
@@ -69,6 +116,10 @@ function animate() {
 
   projectiles.forEach((projectile) => {
     projectile.update();
+  });
+
+  enemies.forEach((enemy) => {
+    enemy.update();
   });
 }
 
@@ -91,4 +142,6 @@ addEventListener("click", (e) => {
 });
 
 // staring to animate
-animate();
+// animate();
+
+// spawnEnemies();
