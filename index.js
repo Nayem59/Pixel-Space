@@ -89,10 +89,20 @@ const enemies = [];
 // create enemies every 1 second and push to array
 function spawnEnemies() {
   setInterval(() => {
-    const radius = 30;
+    // any radius between 4 -> 30
+    const radius = Math.random() * (30 - 4) + 4;
+
     // spawn off the screen randomly
-    const x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius;
-    const y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius;
+    let x;
+    let y;
+    if (Math.random() < 0.5) {
+      x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius;
+      y = Math.random() * canvas.height;
+    } else {
+      x = Math.random() * canvas.width;
+      y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius;
+    }
+
     const color = "green";
 
     const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
