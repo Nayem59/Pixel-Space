@@ -107,7 +107,7 @@ function spawnEnemies() {
 
     const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
     const velocity = {
-      x: Math.cos(angle),
+      x: Math.cos(angle) *,
       y: Math.sin(angle),
     };
 
@@ -116,8 +116,9 @@ function spawnEnemies() {
 }
 
 // create a custom function to start a animation loop
+let animationId;
 function animate() {
-  requestAnimationFrame(animate);
+  animationId = requestAnimationFrame(animate);
   // clear canvas at each frame so it doesnt leave any trailers
   c.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -131,12 +132,24 @@ function animate() {
   enemies.forEach((enemy, enemyIndex) => {
     enemy.update();
 
+    // work out the distance between the player and enemy
+    const distPlEn = Math.hypot(player.x - enemy.x, player.y - enemy.y);
+
+    // end game if the enemy colides with player
+    if (distPlEn - enemy.radius - player.radius < -2) {
+      cancelAnimationFrame(animationId);
+    }
+
     projectiles.forEach((projectile, projectileIndex) => {
       // work out the distance between the enemy and projectile
-      const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
+      const distEnPro = Math.hypot(
+        projectile.x - enemy.x,
+        projectile.y - enemy.y
+      );
 
       // remove both if they touch, considering the radius
-      if (dist - enemy.radius - projectile.radius < 1) {
+      if (distEnPro - enemy.radius - projectile.radius < -2) {
+        // waits for next frame to remove enemy from array to avoid flasing bug
         setTimeout(() => {
           enemies.splice(enemyIndex, 1);
           projectiles.splice(projectileIndex, 1);
