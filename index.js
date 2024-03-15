@@ -107,7 +107,7 @@ function spawnEnemies() {
 
     const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
     const velocity = {
-      x: Math.cos(angle) *,
+      x: Math.cos(angle),
       y: Math.sin(angle),
     };
 
@@ -125,8 +125,21 @@ function animate() {
   // call the draw method to show the player on screen
   player.draw();
 
-  projectiles.forEach((projectile) => {
+  // starts the projetile animation effect
+  projectiles.forEach((projectile, projIndex) => {
     projectile.update();
+
+    // remove projectile from edge of screen to avoid memory usage
+    if (
+      projectile.x + projectile.radius < 0 ||
+      projectile.x - projectile.radius > canvas.width ||
+      projectile.y + projectile.radius < 0 ||
+      projectile.y - projectile.radius > canvas.height
+    ) {
+      setTimeout(() => {
+        projectiles.splice(projIndex, 1);
+      }, 0);
+    }
   });
 
   enemies.forEach((enemy, enemyIndex) => {
