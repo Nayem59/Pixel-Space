@@ -128,8 +128,21 @@ function animate() {
     projectile.update();
   });
 
-  enemies.forEach((enemy) => {
+  enemies.forEach((enemy, enemyIndex) => {
     enemy.update();
+
+    projectiles.forEach((projectile, projectileIndex) => {
+      // work out the distance between the enemy and projectile
+      const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
+
+      // remove both if they touch, considering the radius
+      if (dist - enemy.radius - projectile.radius < 1) {
+        setTimeout(() => {
+          enemies.splice(enemyIndex, 1);
+          projectiles.splice(projectileIndex, 1);
+        }, 0);
+      }
+    });
   });
 }
 
