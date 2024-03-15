@@ -87,8 +87,10 @@ const projectiles = [];
 const enemies = [];
 
 // create enemies every 1 second and push to array
+let enemyInterval;
 function spawnEnemies() {
-  setInterval(() => {
+  enemyInterval = setInterval(() => {
+    console.log(enemies);
     // any radius between 4 -> 30
     const radius = Math.random() * (30 - 4) + 4;
 
@@ -120,7 +122,8 @@ let animationId;
 function animate() {
   animationId = requestAnimationFrame(animate);
   // clear canvas at each frame so it doesnt leave any trailers
-  c.clearRect(0, 0, canvas.width, canvas.height);
+  c.fillStyle = "#DCDCDC";
+  c.fillRect(0, 0, canvas.width, canvas.height);
 
   // call the draw method to show the player on screen
   player.draw();
@@ -151,6 +154,7 @@ function animate() {
     // end game if the enemy colides with player
     if (distPlEn - enemy.radius - player.radius < -2) {
       cancelAnimationFrame(animationId);
+      clearInterval(enemyInterval);
     }
 
     projectiles.forEach((projectile, projectileIndex) => {
@@ -191,6 +195,6 @@ addEventListener("click", (e) => {
 });
 
 // staring to animate
-// animate();
+animate();
 
-// spawnEnemies();
+spawnEnemies();
