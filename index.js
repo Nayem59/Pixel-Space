@@ -1,4 +1,5 @@
 // Initializing Canvas
+console.log(gsap);
 const canvas = document.querySelector("canvas");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
@@ -90,7 +91,6 @@ const enemies = [];
 let enemyInterval;
 function spawnEnemies() {
   enemyInterval = setInterval(() => {
-    console.log(enemies);
     // any radius between 4 -> 30
     const radius = Math.random() * (30 - 4) + 4;
 
@@ -105,7 +105,7 @@ function spawnEnemies() {
       y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius;
     }
 
-    const color = "green";
+    const color = `hsl(${Math.random() * 360},50%,50%)`;
 
     const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
     const velocity = {
@@ -166,11 +166,21 @@ function animate() {
 
       // remove both if they touch, considering the radius
       if (distEnPro - enemy.radius - projectile.radius < -2) {
-        // waits for next frame to remove enemy from array to avoid flasing bug
-        setTimeout(() => {
-          enemies.splice(enemyIndex, 1);
-          projectiles.splice(projectileIndex, 1);
-        }, 0);
+        // setTimout waits for next frame to remove enemy from array to avoid flasing bug
+        if (enemy.radius - 10 > 5) {
+          // using gsap animation library to make a transition smother for enemy.radius -= 10
+          gsap.to(enemy, {
+            radius: enemy.radius - 10,
+          });
+          setTimeout(() => {
+            projectiles.splice(projectileIndex, 1);
+          }, 0);
+        } else {
+          setTimeout(() => {
+            enemies.splice(enemyIndex, 1);
+            projectiles.splice(projectileIndex, 1);
+          }, 0);
+        }
       }
     });
   });
@@ -185,8 +195,8 @@ addEventListener("click", (e) => {
   );
   // calculate velocity through sin and cos
   const velocity = {
-    x: Math.cos(angle),
-    y: Math.sin(angle),
+    x: Math.cos(angle) * 3,
+    y: Math.sin(angle) * 3,
   };
   // Instantiate a Projectile and push it to the array
   projectiles.push(
