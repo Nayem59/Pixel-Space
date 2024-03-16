@@ -4,6 +4,9 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 const scoreEl = document.querySelector("#score");
+const startGameBtn = document.querySelector("#startGame");
+const modal = document.querySelector(".modal-container");
+const endScore = document.querySelector("#endScore");
 
 // Initializing 2D Context (bit like magic pen to draw inside the canvas)
 const c = canvas.getContext("2d");
@@ -119,14 +122,24 @@ class Particle {
 // Instantiate a Player
 const x = canvas.width / 2;
 const y = canvas.height / 2;
-const player = new Player(x, y, 30, "blue");
+let player = new Player(x, y, 30, "blue");
 
 // array for storing projectiles
-const projectiles = [];
+let projectiles = [];
 // array for storing enemies
-const enemies = [];
+let enemies = [];
 // array for storing particles
-const particles = [];
+let particles = [];
+
+function init() {
+  player = new Player(x, y, 30, "blue");
+  projectiles = [];
+  enemies = [];
+  particles = [];
+  score = 0;
+  scoreEl.innerHTML = score;
+  endScore.innerHTML = score;
+}
 
 // create enemies every 1 second and push to array
 let enemyInterval;
@@ -207,6 +220,8 @@ function animate() {
     if (distPlEn - enemy.radius - player.radius < -2) {
       cancelAnimationFrame(animationId);
       clearInterval(enemyInterval);
+      endScore.innerHTML = score;
+      modal.style.display = "flex";
     }
 
     projectiles.forEach((projectile, projectileIndex) => {
@@ -278,7 +293,9 @@ addEventListener("click", (e) => {
   );
 });
 
-// staring to animate
-animate();
-
-spawnEnemies();
+startGameBtn.addEventListener("click", (e) => {
+  init();
+  animate();
+  spawnEnemies();
+  modal.style.display = "none";
+});

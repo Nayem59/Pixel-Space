@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  background-color: #dcdcdc;
 }
 
 canvas {
@@ -11,4 +12,47 @@ canvas {
   top: 5px;
   left: 5px;
   user-select: none;
+}
+
+.modal-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.background {
+  background-color: white;
+  width: 50%;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+  border-radius: 20px;
+}
+
+.background h1 {
+  margin: 0;
+}
+
+.start-button {
+  background-color: lightblue;
+  width: 100%;
+  border-radius: 20px;
+  border: none;
+  padding: 20px;
+}
+
+.start-button:hover {
+  background-color: rgb(115, 196, 224);
+}
+
+.start-button:active {
+  background-color: rgb(90, 188, 221);
 }
