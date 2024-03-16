@@ -3,6 +3,8 @@ const canvas = document.querySelector("canvas");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
+const scoreEl = document.querySelector("#score");
+
 // Initializing 2D Context (bit like magic pen to draw inside the canvas)
 const c = canvas.getContext("2d");
 
@@ -158,6 +160,8 @@ function spawnEnemies() {
 
 // create a custom function to start a animation loop
 let animationId;
+let score = 0;
+
 function animate() {
   animationId = requestAnimationFrame(animate);
   // clear canvas at each frame so it doesnt leave any trailers
@@ -231,6 +235,10 @@ function animate() {
 
         // setTimout waits for next frame to remove enemy from array to avoid flasing bug
         if (enemy.radius - 10 > 5) {
+          // increase score when touched
+          score += 100;
+          scoreEl.innerHTML = score;
+
           // using gsap animation library to make a transition smother for enemy.radius -= 10
           gsap.to(enemy, {
             radius: enemy.radius - 10,
@@ -239,6 +247,9 @@ function animate() {
             projectiles.splice(projectileIndex, 1);
           }, 0);
         } else {
+          score += 250;
+          scoreEl.innerHTML = score;
+
           setTimeout(() => {
             enemies.splice(enemyIndex, 1);
             projectiles.splice(projectileIndex, 1);

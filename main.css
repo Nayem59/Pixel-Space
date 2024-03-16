@@ -5,3 +5,10 @@ body {
 canvas {
   display: block;
 }
+
+.score-container {
+  position: fixed;
+  top: 5px;
+  left: 5px;
+  user-select: none;
+}
