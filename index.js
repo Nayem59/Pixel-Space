@@ -1,5 +1,4 @@
 // Initializing Canvas
-console.log(gsap);
 const canvas = document.querySelector("canvas");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
@@ -77,6 +76,33 @@ class Enemy {
   }
 }
 
+// Create Particle Class
+class Particle {
+  constructor(x, y, radius, color, velocity) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.color = color;
+    this.velocity = velocity;
+    this.alpha = 1;
+  }
+
+  // create a custom draw method that initiates a circul and fills it
+  draw() {
+    c.beginPath();
+    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    c.fillStyle = this.color;
+    c.fill();
+  }
+
+  // update the coordinates to create the animation effect
+  update() {
+    this.draw();
+    this.x = this.x + this.velocity.x;
+    this.y = this.y + this.velocity.y;
+  }
+}
+
 // Instantiate a Player
 const x = canvas.width / 2;
 const y = canvas.height / 2;
@@ -86,13 +112,15 @@ const player = new Player(x, y, 30, "blue");
 const projectiles = [];
 // array for storing enemies
 const enemies = [];
+// array for storing particles
+const particles = [];
 
 // create enemies every 1 second and push to array
 let enemyInterval;
 function spawnEnemies() {
   enemyInterval = setInterval(() => {
     // any radius between 4 -> 30
-    const radius = Math.random() * (30 - 4) + 4;
+    const radius = Math.random() * (30 - 5) + 5;
 
     // spawn off the screen randomly
     let x;
@@ -127,6 +155,11 @@ function animate() {
 
   // call the draw method to show the player on screen
   player.draw();
+
+  // starts the particle animation effect
+  particles.forEach((particle) => {
+    particle.update();
+  });
 
   // starts the projetile animation effect
   projectiles.forEach((projectile, projIndex) => {
@@ -166,6 +199,15 @@ function animate() {
 
       // remove both if they touch, considering the radius
       if (distEnPro - enemy.radius - projectile.radius < -2) {
+        for (let i = 0; i < 8; i++) {
+          particles.push(
+            new Particle(projectile.x, projectile.y, 3, enemy.color, {
+              x: Math.random() - 0.5,
+              y: Math.random() - 0.5,
+            })
+          );
+        }
+
         // setTimout waits for next frame to remove enemy from array to avoid flasing bug
         if (enemy.radius - 10 > 5) {
           // using gsap animation library to make a transition smother for enemy.radius -= 10
