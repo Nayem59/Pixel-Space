@@ -77,6 +77,7 @@ class Enemy {
 }
 
 // Create Particle Class
+const friction = 0.98;
 class Particle {
   constructor(x, y, radius, color, velocity) {
     this.x = x;
@@ -89,17 +90,27 @@ class Particle {
 
   // create a custom draw method that initiates a circul and fills it
   draw() {
+    // store the current drawing context state
+    c.save();
+    // setting global Alpha
+    c.globalAlpha = this.alpha;
     c.beginPath();
     c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     c.fillStyle = this.color;
     c.fill();
+    // restoring the preveously saved context state
+    c.restore();
   }
 
   // update the coordinates to create the animation effect
   update() {
     this.draw();
+    this.velocity.x *= friction;
+    this.velocity.y *= friction;
     this.x = this.x + this.velocity.x;
     this.y = this.y + this.velocity.y;
+    // make alpha reduce on every frame update
+    this.alpha -= 0.01;
   }
 }
 
@@ -157,8 +168,12 @@ function animate() {
   player.draw();
 
   // starts the particle animation effect
-  particles.forEach((particle) => {
-    particle.update();
+  particles.forEach((particle, partIndex) => {
+    if (particle.alpha <= 0) {
+      particles.splice(partIndex, 1);
+    } else {
+      particle.update();
+    }
   });
 
   // starts the projetile animation effect
@@ -199,12 +214,18 @@ function animate() {
 
       // remove both if they touch, considering the radius
       if (distEnPro - enemy.radius - projectile.radius < -2) {
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < enemy.radius * 2; i++) {
           particles.push(
-            new Particle(projectile.x, projectile.y, 3, enemy.color, {
-              x: Math.random() - 0.5,
-              y: Math.random() - 0.5,
-            })
+            new Particle(
+              projectile.x,
+              projectile.y,
+              Math.random() * 2,
+              enemy.color,
+              {
+                x: (Math.random() - 0.5) * (Math.random() * 5),
+                y: (Math.random() - 0.5) * (Math.random() * 5),
+              }
+            )
           );
         }
 
