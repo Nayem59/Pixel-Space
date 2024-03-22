@@ -13,11 +13,12 @@ const c = canvas.getContext("2d");
 
 // Create main Player Class
 class Player {
-  constructor(x, y, radius, color) {
+  constructor(x, y, radius, color, velocity) {
     this.x = x;
     this.y = y;
     this.radius = radius;
     this.color = color;
+    this.velocity = velocity;
   }
 
   // create a custom draw method that initiates a circul and fills it
@@ -26,6 +27,13 @@ class Player {
     c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     c.fillStyle = this.color;
     c.fill();
+  }
+
+  // update the coordinates to create the animation effect
+  update() {
+    this.draw();
+    this.x = this.x + this.velocity.x;
+    this.y = this.y + this.velocity.y;
   }
 }
 
@@ -103,7 +111,7 @@ class Particle {
     c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     c.fillStyle = this.color;
     c.fill();
-    // restoring the preveously saved context state
+    // restoring the previously saved context state
     c.restore();
   }
 
@@ -122,7 +130,7 @@ class Particle {
 // Instantiate a Player
 const x = canvas.width / 2;
 const y = canvas.height / 2;
-let player = new Player(x, y, 30, "blue");
+let player = new Player(x, y, 30, "blue", { x: 0, y: 0 });
 
 // array for storing projectiles
 let projectiles = [];
@@ -132,7 +140,7 @@ let enemies = [];
 let particles = [];
 
 function init() {
-  player = new Player(x, y, 30, "blue");
+  player = new Player(x, y, 30, "blue", { x: 0, y: 0 });
   projectiles = [];
   enemies = [];
   particles = [];
@@ -181,8 +189,8 @@ function animate() {
   c.fillStyle = "#DCDCDC";
   c.fillRect(0, 0, canvas.width, canvas.height);
 
-  // call the draw method to show the player on screen
-  player.draw();
+  // call the update method to show the player on screen and handle movement
+  player.update();
 
   // starts the particle animation effect
   particles.forEach((particle, partIndex) => {
@@ -278,19 +286,48 @@ function animate() {
 // add click eventlistener for projectile
 addEventListener("click", (e) => {
   // calculate the triangele angle (in radiant) between the center (Player) to the clicked point
-  const angle = Math.atan2(
-    e.clientY - canvas.height / 2,
-    e.clientX - canvas.width / 2
-  );
+  const angle = Math.atan2(e.clientY - player.y, e.clientX - player.x);
   // calculate velocity through sin and cos
   const velocity = {
     x: Math.cos(angle) * 3,
     y: Math.sin(angle) * 3,
   };
   // Instantiate a Projectile and push it to the array
-  projectiles.push(
-    new Projectile(canvas.width / 2, canvas.height / 2, 5, "red", velocity)
-  );
+  projectiles.push(new Projectile(player.x, player.y, 5, "red", velocity));
+});
+
+addEventListener("keydown", (e) => {
+  switch (e.key) {
+    case "w":
+      player.velocity.y = -2;
+      break;
+    case "a":
+      player.velocity.x = -2;
+      break;
+    case "s":
+      player.velocity.y = 2;
+      break;
+    case "d":
+      player.velocity.x = 2;
+      break;
+  }
+});
+
+addEventListener("keyup", (e) => {
+  switch (e.key) {
+    case "w":
+      player.velocity.y = 0;
+      break;
+    case "s":
+      player.velocity.y = 0;
+      break;
+    case "a":
+      player.velocity.x = 0;
+      break;
+    case "d":
+      player.velocity.x = 0;
+      break;
+  }
 });
 
 startGameBtn.addEventListener("click", (e) => {
