@@ -192,6 +192,20 @@ function animate() {
   // call the update method to show the player on screen and handle movement
   player.update();
 
+  // prevent player from going beyond the canvas
+  if (player.x - player.radius < 0) {
+    player.x = player.radius;
+  }
+  if (player.x + player.radius > canvas.width) {
+    player.x = canvas.width - player.radius;
+  }
+  if (player.y - player.radius < 0) {
+    player.y = player.radius;
+  }
+  if (player.y + player.radius > canvas.height) {
+    player.y = canvas.height - player.radius;
+  }
+
   // starts the particle animation effect
   particles.forEach((particle, partIndex) => {
     if (particle.alpha <= 0) {
