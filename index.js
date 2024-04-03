@@ -310,39 +310,45 @@ addEventListener("click", (e) => {
   projectiles.push(new Projectile(player.x, player.y, 5, "red", velocity));
 });
 
+// Object to keep track of pressed keys
+const keysPressed = {};
+
+// Constants for player movement speed
+const PLAYER_SPEED = 2;
+
+// Add or remove keys to the object on keydown and keyup events
 addEventListener("keydown", (e) => {
-  switch (e.key) {
-    case "w":
-      player.velocity.y = -2;
-      break;
-    case "a":
-      player.velocity.x = -2;
-      break;
-    case "s":
-      player.velocity.y = 2;
-      break;
-    case "d":
-      player.velocity.x = 2;
-      break;
-  }
+  keysPressed[e.key] = true;
+  handlePlayerVelocity();
 });
 
 addEventListener("keyup", (e) => {
-  switch (e.key) {
-    case "w":
-      player.velocity.y = 0;
-      break;
-    case "s":
-      player.velocity.y = 0;
-      break;
-    case "a":
-      player.velocity.x = 0;
-      break;
-    case "d":
-      player.velocity.x = 0;
-      break;
-  }
+  delete keysPressed[e.key];
+  handlePlayerVelocity();
 });
+
+// Function to handle player velocity based on pressed keys
+function handlePlayerVelocity() {
+  // Determine the direction based on pressed keys
+  let deltaX = 0;
+  let deltaY = 0;
+
+  if (keysPressed["w"]) deltaY -= 1;
+  if (keysPressed["s"]) deltaY += 1;
+  if (keysPressed["a"]) deltaX -= 1;
+  if (keysPressed["d"]) deltaX += 1;
+
+  // Normalize the velocity vector
+  const magnitude = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  if (magnitude !== 0) {
+    deltaX /= magnitude;
+    deltaY /= magnitude;
+  }
+
+  // Set the player's velocity based on the current direction
+  player.velocity.x = deltaX * PLAYER_SPEED;
+  player.velocity.y = deltaY * PLAYER_SPEED;
+}
 
 startGameBtn.addEventListener("click", (e) => {
   init();
