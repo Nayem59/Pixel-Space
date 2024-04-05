@@ -19,6 +19,7 @@ class Player {
     this.radius = radius;
     this.color = color;
     this.velocity = velocity;
+    this.speed = 3;
   }
 
   // create a custom draw method that initiates a circul and fills it
@@ -130,7 +131,7 @@ class Particle {
 // Instantiate a Player
 const x = canvas.width / 2;
 const y = canvas.height / 2;
-let player = new Player(x, y, 30, "blue", { x: 0, y: 0 });
+let player;
 
 // array for storing projectiles
 let projectiles = [];
@@ -188,6 +189,8 @@ function animate() {
   // clear canvas at each frame so it doesnt leave any trailers
   c.fillStyle = "#DCDCDC";
   c.fillRect(0, 0, canvas.width, canvas.height);
+
+  handlePlayerVelocity();
 
   // call the update method to show the player on screen and handle movement
   player.update();
@@ -303,8 +306,8 @@ addEventListener("click", (e) => {
   const angle = Math.atan2(e.clientY - player.y, e.clientX - player.x);
   // calculate velocity through sin and cos
   const velocity = {
-    x: Math.cos(angle) * 3,
-    y: Math.sin(angle) * 3,
+    x: Math.cos(angle) * 5,
+    y: Math.sin(angle) * 5,
   };
   // Instantiate a Projectile and push it to the array
   projectiles.push(new Projectile(player.x, player.y, 5, "red", velocity));
@@ -313,18 +316,15 @@ addEventListener("click", (e) => {
 // Object to keep track of pressed keys
 const keysPressed = {};
 
-// Constants for player movement speed
-const PLAYER_SPEED = 2;
-
 // Add or remove keys to the object on keydown and keyup events
 addEventListener("keydown", (e) => {
   keysPressed[e.key] = true;
-  handlePlayerVelocity();
+  // handlePlayerVelocity();
 });
 
 addEventListener("keyup", (e) => {
   delete keysPressed[e.key];
-  handlePlayerVelocity();
+  // handlePlayerVelocity();
 });
 
 // Function to handle player velocity based on pressed keys
@@ -345,9 +345,18 @@ function handlePlayerVelocity() {
     deltaY /= magnitude;
   }
 
+  // Apply Friction to slow down gradually on keyup
+  player.velocity.x *= friction;
+  player.velocity.y *= friction;
+  const areAllKeysReleased = Object.keys(keysPressed).length === 0;
+
   // Set the player's velocity based on the current direction
-  player.velocity.x = deltaX * PLAYER_SPEED;
-  player.velocity.y = deltaY * PLAYER_SPEED;
+  player.velocity.x = areAllKeysReleased
+    ? player.velocity.x + deltaX * player.speed
+    : deltaX * player.speed;
+  player.velocity.y = areAllKeysReleased
+    ? player.velocity.y + deltaY * player.speed
+    : deltaY * player.speed;
 }
 
 startGameBtn.addEventListener("click", (e) => {
