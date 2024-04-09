@@ -319,12 +319,10 @@ const keysPressed = {};
 // Add or remove keys to the object on keydown and keyup events
 addEventListener("keydown", (e) => {
   keysPressed[e.key] = true;
-  // handlePlayerVelocity();
 });
 
 addEventListener("keyup", (e) => {
   delete keysPressed[e.key];
-  // handlePlayerVelocity();
 });
 
 // Function to handle player velocity based on pressed keys
@@ -352,10 +350,10 @@ function handlePlayerVelocity() {
 
   // Set the player's velocity based on the current direction
   player.velocity.x = areAllKeysReleased
-    ? player.velocity.x + deltaX * player.speed
+    ? player.velocity.x
     : deltaX * player.speed;
   player.velocity.y = areAllKeysReleased
-    ? player.velocity.y + deltaY * player.speed
+    ? player.velocity.y
     : deltaY * player.speed;
 }
 
