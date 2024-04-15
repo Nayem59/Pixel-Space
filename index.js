@@ -19,7 +19,8 @@ class Player {
     this.radius = radius;
     this.color = color;
     this.velocity = velocity;
-    this.speed = 3;
+    this.speed = 0.2;
+    this.maxVelocity = 3;
   }
 
   // create a custom draw method that initiates a circul and fills it
@@ -327,34 +328,34 @@ addEventListener("keyup", (e) => {
 
 // Function to handle player velocity based on pressed keys
 function handlePlayerVelocity() {
-  // Determine the direction based on pressed keys
-  let deltaX = 0;
-  let deltaY = 0;
-
-  if (keysPressed["w"]) deltaY -= 1;
-  if (keysPressed["s"]) deltaY += 1;
-  if (keysPressed["a"]) deltaX -= 1;
-  if (keysPressed["d"]) deltaX += 1;
-
-  // Normalize the velocity vector
-  const magnitude = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-  if (magnitude !== 0) {
-    deltaX /= magnitude;
-    deltaY /= magnitude;
-  }
-
   // Apply Friction to slow down gradually on keyup
   player.velocity.x *= friction;
   player.velocity.y *= friction;
-  const areAllKeysReleased = Object.keys(keysPressed).length === 0;
 
-  // Set the player's velocity based on the current direction
-  player.velocity.x = areAllKeysReleased
-    ? player.velocity.x
-    : deltaX * player.speed;
-  player.velocity.y = areAllKeysReleased
-    ? player.velocity.y
-    : deltaY * player.speed;
+  // Continuously add speed to velocity
+  if (keysPressed["w"]) player.velocity.y -= player.speed;
+  if (keysPressed["s"]) player.velocity.y += player.speed;
+  if (keysPressed["a"]) player.velocity.x -= player.speed;
+  if (keysPressed["d"]) player.velocity.x += player.speed;
+
+  // Calculate velocity Magnitute through pythagoras theorem
+  const velocityMagnitude = Math.sqrt(
+    player.velocity.x ** 2 + player.velocity.y ** 2
+  );
+
+  // Handle if velocity is very small then set it to 0
+  const minVelocityThreshold = 0.01;
+  if (velocityMagnitude < minVelocityThreshold) {
+    player.velocity.x = 0;
+    player.velocity.y = 0;
+  }
+
+  // Limit the velocity to the maximum velocity
+  if (velocityMagnitude > player.maxVelocity) {
+    const scale = player.maxVelocity / velocityMagnitude;
+    player.velocity.x *= scale;
+    player.velocity.y *= scale;
+  }
 }
 
 startGameBtn.addEventListener("click", (e) => {
