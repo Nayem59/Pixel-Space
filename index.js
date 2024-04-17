@@ -3,6 +3,11 @@ const canvas = document.querySelector("canvas");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
+const ship = new Image();
+ship.src = "/assets/Ship_1.png";
+let shipReady = false;
+ship.onload = (e) => (shipReady = true);
+
 const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
 const modal = document.querySelector(".modal-container");
@@ -21,6 +26,7 @@ class Player {
     this.velocity = velocity;
     this.speed = 0.2;
     this.maxVelocity = 3;
+    this.rotation = 0;
   }
 
   // create a custom draw method that initiates a circul and fills it
@@ -29,6 +35,16 @@ class Player {
     c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     c.fillStyle = this.color;
     c.fill();
+
+    // saving state of context and handle draw & rotation of image
+    c.save();
+    c.translate(this.x, this.y);
+    c.rotate((this.rotation * Math.PI) / 180);
+    c.translate(-this.x, -this.y);
+    if (shipReady) {
+      c.drawImage(ship, this.x - 16, this.y - 17);
+    }
+    c.restore();
   }
 
   // update the coordinates to create the animation effect
@@ -332,11 +348,37 @@ function handlePlayerVelocity() {
   player.velocity.x *= friction;
   player.velocity.y *= friction;
 
-  // Continuously add speed to velocity
-  if (keysPressed["w"]) player.velocity.y -= player.speed;
-  if (keysPressed["s"]) player.velocity.y += player.speed;
-  if (keysPressed["a"]) player.velocity.x -= player.speed;
-  if (keysPressed["d"]) player.velocity.x += player.speed;
+  // Continuously add speed to velocity & handle rotation
+  if (keysPressed["w"]) {
+    player.velocity.y -= player.speed;
+    player.rotation = 0;
+  }
+  if (keysPressed["s"]) {
+    player.velocity.y += player.speed;
+    player.rotation = 180;
+  }
+  if (keysPressed["a"]) {
+    player.velocity.x -= player.speed;
+    player.rotation = -90;
+  }
+  if (keysPressed["d"]) {
+    player.velocity.x += player.speed;
+    player.rotation = 90;
+  }
+
+  // handle diagnal rotation
+  if (keysPressed["w"] && keysPressed["d"]) {
+    player.rotation = 45;
+  }
+  if (keysPressed["w"] && keysPressed["a"]) {
+    player.rotation = -45;
+  }
+  if (keysPressed["s"] && keysPressed["a"]) {
+    player.rotation = -135;
+  }
+  if (keysPressed["s"] && keysPressed["d"]) {
+    player.rotation = 135;
+  }
 
   // Calculate velocity Magnitute through pythagoras theorem
   const velocityMagnitude = Math.sqrt(
