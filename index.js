@@ -27,6 +27,7 @@ class Player {
     this.speed = 0.2;
     this.maxVelocity = 3;
     this.rotation = 0;
+    this.degree = 0;
   }
 
   // create a custom draw method that initiates a circul and fills it
@@ -39,7 +40,7 @@ class Player {
     // saving state of context and handle draw & rotation of image
     c.save();
     c.translate(this.x, this.y);
-    c.rotate((this.rotation * Math.PI) / 180);
+    c.rotate((this.degree * Math.PI) / 180);
     c.translate(-this.x, -this.y);
     if (shipReady) {
       c.drawImage(ship, this.x - 16, this.y - 17);
@@ -52,6 +53,7 @@ class Player {
     this.draw();
     this.x = this.x + this.velocity.x;
     this.y = this.y + this.velocity.y;
+    this.degree += this.rotation;
   }
 }
 
@@ -208,6 +210,7 @@ function animate() {
   c.fillRect(0, 0, canvas.width, canvas.height);
 
   handlePlayerVelocity();
+  handlePlayerRotation();
 
   // call the update method to show the player on screen and handle movement
   player.update();
@@ -349,36 +352,10 @@ function handlePlayerVelocity() {
   player.velocity.y *= friction;
 
   // Continuously add speed to velocity & handle rotation
-  if (keysPressed["w"]) {
-    player.velocity.y -= player.speed;
-    player.rotation = 0;
-  }
-  if (keysPressed["s"]) {
-    player.velocity.y += player.speed;
-    player.rotation = 180;
-  }
-  if (keysPressed["a"]) {
-    player.velocity.x -= player.speed;
-    player.rotation = -90;
-  }
-  if (keysPressed["d"]) {
-    player.velocity.x += player.speed;
-    player.rotation = 90;
-  }
-
-  // handle diagnal rotation
-  if (keysPressed["w"] && keysPressed["d"]) {
-    player.rotation = 45;
-  }
-  if (keysPressed["w"] && keysPressed["a"]) {
-    player.rotation = -45;
-  }
-  if (keysPressed["s"] && keysPressed["a"]) {
-    player.rotation = -135;
-  }
-  if (keysPressed["s"] && keysPressed["d"]) {
-    player.rotation = 135;
-  }
+  if (keysPressed["w"]) player.velocity.y -= player.speed;
+  if (keysPressed["s"]) player.velocity.y += player.speed;
+  if (keysPressed["a"]) player.velocity.x -= player.speed;
+  if (keysPressed["d"]) player.velocity.x += player.speed;
 
   // Calculate velocity Magnitute through pythagoras theorem
   const velocityMagnitude = Math.sqrt(
@@ -400,9 +377,56 @@ function handlePlayerVelocity() {
   }
 }
 
+function handlePlayerRotation() {
+  if (player.degree > 359) {
+    player.degree = 0;
+  }
+
+  player.rotation = 0;
+
+  if (keysPressed["w"] && player.degree !== 0) {
+    player.degree <= 180 ? (player.rotation = -5) : (player.rotation = 5);
+  }
+  if (keysPressed["s"] && player.degree !== 180) {
+    player.degree < 180 ? (player.rotation = 5) : (player.rotation = -5);
+  }
+  if (keysPressed["a"] && player.degree !== 270) {
+    if (player.degree > 270) {
+      player.rotation = -5;
+    } else if (player.degree < 90 && player.degree > 0) {
+      player.rotation = -5;
+    } else if (player.degree <= 0) {
+      player.rotation = 360 - 5;
+    } else if (player.degree < 270 || player.degree > 90) {
+      player.rotation = 5;
+    }
+  }
+  if (keysPressed["d"] && player.degree !== 90) {
+    if (player.degree > 270 || player.degree < 90) {
+      player.rotation = 5;
+    } else if (player.degree < 270 || player.degree > 90) {
+      player.rotation = -5;
+    }
+  }
+
+  // handle diagnal rotation
+  // if (keysPressed["w"] && keysPressed["d"]) {
+  //   player.rotation = 45;
+  // }
+  // if (keysPressed["w"] && keysPressed["a"]) {
+  //   player.rotation = -45;
+  // }
+  // if (keysPressed["s"] && keysPressed["a"]) {
+  //   player.rotation = -135;
+  // }
+  // if (keysPressed["s"] && keysPressed["d"]) {
+  //   player.rotation = 135;
+  // }
+}
+
 startGameBtn.addEventListener("click", (e) => {
   init();
   animate();
-  spawnEnemies();
+  // spawnEnemies();
   modal.style.display = "none";
 });
