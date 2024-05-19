@@ -384,13 +384,31 @@ function handlePlayerRotation() {
 
   player.rotation = 0;
 
-  if (keysPressed["w"] && player.degree !== 0) {
+  if (
+    keysPressed["w"] &&
+    !keysPressed["a"] &&
+    !keysPressed["d"] &&
+    !keysPressed["s"] &&
+    player.degree !== 0
+  ) {
     player.degree <= 180 ? (player.rotation = -5) : (player.rotation = 5);
   }
-  if (keysPressed["s"] && player.degree !== 180) {
+  if (
+    keysPressed["s"] &&
+    !keysPressed["a"] &&
+    !keysPressed["d"] &&
+    !keysPressed["w"] &&
+    player.degree !== 180
+  ) {
     player.degree < 180 ? (player.rotation = 5) : (player.rotation = -5);
   }
-  if (keysPressed["a"] && player.degree !== 270) {
+  if (
+    keysPressed["a"] &&
+    !keysPressed["w"] &&
+    !keysPressed["s"] &&
+    !keysPressed["d"] &&
+    player.degree !== 270
+  ) {
     if (player.degree > 270) {
       player.rotation = -5;
     } else if (player.degree < 90 && player.degree > 0) {
@@ -401,7 +419,13 @@ function handlePlayerRotation() {
       player.rotation = 5;
     }
   }
-  if (keysPressed["d"] && player.degree !== 90) {
+  if (
+    keysPressed["d"] &&
+    !keysPressed["w"] &&
+    !keysPressed["s"] &&
+    !keysPressed["a"] &&
+    player.degree !== 90
+  ) {
     if (player.degree > 270 || player.degree < 90) {
       player.rotation = 5;
     } else if (player.degree < 270 || player.degree > 90) {
@@ -410,23 +434,43 @@ function handlePlayerRotation() {
   }
 
   // handle diagnal rotation
-  // if (keysPressed["w"] && keysPressed["d"]) {
-  //   player.rotation = 45;
-  // }
-  // if (keysPressed["w"] && keysPressed["a"]) {
-  //   player.rotation = -45;
-  // }
-  // if (keysPressed["s"] && keysPressed["a"]) {
-  //   player.rotation = -135;
-  // }
-  // if (keysPressed["s"] && keysPressed["d"]) {
-  //   player.rotation = 135;
-  // }
+  if (keysPressed["w"] && keysPressed["d"] && player.degree !== 45) {
+    if (player.degree < 45 || player.degree > 225) {
+      player.rotation = 5;
+    } else {
+      player.rotation = -5;
+    }
+  }
+  if (keysPressed["w"] && keysPressed["a"] && player.degree !== 315) {
+    if (player.degree < 315 && player.degree > 135) {
+      player.rotation = 5;
+    } else if (player.degree <= 0) {
+      player.rotation = 360 - 5;
+    } else {
+      player.rotation = -5;
+    }
+  }
+  if (keysPressed["s"] && keysPressed["a"] && player.degree !== 225) {
+    if (player.degree < 225 && player.degree > 45) {
+      player.rotation = 5;
+    } else if (player.degree <= 0) {
+      player.rotation = 360 - 5;
+    } else {
+      player.rotation = -5;
+    }
+  }
+  if (keysPressed["s"] && keysPressed["d"] && player.degree !== 135) {
+    if (player.degree < 135 || player.degree > 315) {
+      player.rotation = 5;
+    } else {
+      player.rotation = -5;
+    }
+  }
 }
 
 startGameBtn.addEventListener("click", (e) => {
   init();
   animate();
-  // spawnEnemies();
+  spawnEnemies();
   modal.style.display = "none";
 });
