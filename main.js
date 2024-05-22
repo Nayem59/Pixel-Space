@@ -3,6 +3,7 @@ import Player from "./classes/Player.js";
 import Projectile from "./classes/Projectile.js";
 import Enemy from "./classes/Enemy.js";
 import Particle from "./classes/Particle.js";
+import Turret from "./classes/Turret.js";
 import { handlePlayerRotation, handlePlayerVelocity } from "./utils/input.js";
 
 const scoreEl = document.querySelector("#score");
@@ -16,6 +17,10 @@ export const friction = 0.98;
 const x = canvas.width / 2;
 const y = canvas.height / 2;
 export let player;
+let turret;
+let turretAngle = 0;
+let mouseX = 0;
+let mouseY = 0;
 
 // array for storing projectiles
 let projectiles = [];
@@ -26,6 +31,7 @@ let particles = [];
 
 function init() {
   player = new Player(x, y, 10, "blue", { x: 0, y: 0 });
+  turret = new Turret(player.x, player.y, turretAngle);
   projectiles = [];
   enemies = [];
   particles = [];
@@ -79,6 +85,13 @@ function animate() {
 
   // call the update method to show the player on screen and handle movement
   player.update();
+
+  // update turret and draw
+  turretAngle = Math.atan2(mouseY - player?.y, mouseX - player?.x);
+  turret.x = player.x;
+  turret.y = player.y;
+  turret.angle = turretAngle;
+  turret.draw();
 
   // prevent player from going beyond the canvas
   if (player.x - player.radius < 0) {
@@ -196,8 +209,21 @@ addEventListener("click", (e) => {
   };
   // Instantiate a Projectile and push it to the array
   projectiles.push(
-    new Projectile(player?.x, player?.y, 5, "red", velocity, angle)
+    new Projectile(
+      // adding velocity to create projectile distance from player
+      player?.x + velocity.x * 3,
+      player?.y + velocity.y * 3,
+      5,
+      "red",
+      velocity,
+      angle
+    )
   );
+});
+
+canvas.addEventListener("mousemove", (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
 });
 
 startGameBtn.addEventListener("click", (e) => {
