@@ -17,10 +17,11 @@ class Player {
 
   // create a custom draw method that initiates a circul and fills it
   draw() {
-    c.beginPath();
-    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    c.fillStyle = this.color;
-    c.fill();
+    // for collision and debug purposes
+    // c.beginPath();
+    // c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    // c.fillStyle = this.color;
+    // c.fill();
 
     // saving state of context and handle draw & rotation of image
     c.save();

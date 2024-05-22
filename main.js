@@ -25,7 +25,7 @@ let enemies = [];
 let particles = [];
 
 function init() {
-  player = new Player(x, y, 30, "blue", { x: 0, y: 0 });
+  player = new Player(x, y, 10, "blue", { x: 0, y: 0 });
   projectiles = [];
   enemies = [];
   particles = [];
@@ -195,7 +195,9 @@ addEventListener("click", (e) => {
     y: Math.sin(angle) * 5,
   };
   // Instantiate a Projectile and push it to the array
-  projectiles.push(new Projectile(player?.x, player?.y, 5, "red", velocity));
+  projectiles.push(
+    new Projectile(player?.x, player?.y, 5, "red", velocity, angle)
+  );
 });
 
 startGameBtn.addEventListener("click", (e) => {

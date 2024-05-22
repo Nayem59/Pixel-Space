@@ -3,6 +3,8 @@ import { friction, player } from "../main.js";
 // Object to keep track of pressed keys
 export const keysPressed = {};
 
+const rotationSpeed = 5;
+
 // Add or remove keys to the object on keydown and keyup events
 addEventListener("keydown", (e) => {
   keysPressed[e.key] = true;
@@ -58,7 +60,9 @@ export function handlePlayerRotation() {
     !keysPressed["s"] &&
     player.degree !== 0
   ) {
-    player.degree <= 180 ? (player.rotation = -5) : (player.rotation = 5);
+    player.degree <= 180
+      ? (player.rotation = -rotationSpeed)
+      : (player.rotation = rotationSpeed);
   }
   if (
     keysPressed["s"] &&
@@ -67,7 +71,9 @@ export function handlePlayerRotation() {
     !keysPressed["w"] &&
     player.degree !== 180
   ) {
-    player.degree < 180 ? (player.rotation = 5) : (player.rotation = -5);
+    player.degree < 180
+      ? (player.rotation = rotationSpeed)
+      : (player.rotation = -rotationSpeed);
   }
   if (
     keysPressed["a"] &&
@@ -77,13 +83,13 @@ export function handlePlayerRotation() {
     player.degree !== 270
   ) {
     if (player.degree > 270) {
-      player.rotation = -5;
+      player.rotation = -rotationSpeed;
     } else if (player.degree < 90 && player.degree > 0) {
-      player.rotation = -5;
+      player.rotation = -rotationSpeed;
     } else if (player.degree <= 0) {
-      player.rotation = 360 - 5;
+      player.rotation = 360 - rotationSpeed;
     } else if (player.degree < 270 || player.degree > 90) {
-      player.rotation = 5;
+      player.rotation = rotationSpeed;
     }
   }
   if (
@@ -94,43 +100,43 @@ export function handlePlayerRotation() {
     player.degree !== 90
   ) {
     if (player.degree > 270 || player.degree < 90) {
-      player.rotation = 5;
+      player.rotation = rotationSpeed;
     } else if (player.degree < 270 || player.degree > 90) {
-      player.rotation = -5;
+      player.rotation = -rotationSpeed;
     }
   }
 
   // handle diagnal rotation
   if (keysPressed["w"] && keysPressed["d"] && player.degree !== 45) {
     if (player.degree < 45 || player.degree > 225) {
-      player.rotation = 5;
+      player.rotation = rotationSpeed;
     } else {
-      player.rotation = -5;
+      player.rotation = -rotationSpeed;
     }
   }
   if (keysPressed["w"] && keysPressed["a"] && player.degree !== 315) {
     if (player.degree < 315 && player.degree > 135) {
-      player.rotation = 5;
+      player.rotation = rotationSpeed;
     } else if (player.degree <= 0) {
-      player.rotation = 360 - 5;
+      player.rotation = 360 - rotationSpeed;
     } else {
-      player.rotation = -5;
+      player.rotation = -rotationSpeed;
     }
   }
   if (keysPressed["s"] && keysPressed["a"] && player.degree !== 225) {
     if (player.degree < 225 && player.degree > 45) {
-      player.rotation = 5;
+      player.rotation = rotationSpeed;
     } else if (player.degree <= 0) {
-      player.rotation = 360 - 5;
+      player.rotation = 360 - rotationSpeed;
     } else {
-      player.rotation = -5;
+      player.rotation = -rotationSpeed;
     }
   }
   if (keysPressed["s"] && keysPressed["d"] && player.degree !== 135) {
     if (player.degree < 135 || player.degree > 315) {
-      player.rotation = 5;
+      player.rotation = rotationSpeed;
     } else {
-      player.rotation = -5;
+      player.rotation = -rotationSpeed;
     }
   }
 }
