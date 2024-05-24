@@ -1,10 +1,12 @@
 body {
   margin: 0;
-  background-color: #dcdcdc;
+  background-color: #0c134f;
+  image-rendering: pixelated;
 }
 
 canvas {
   display: block;
+  cursor: url("assets/crosshair6.png") 15 15, crosshair;
 }
 
 .score-container {

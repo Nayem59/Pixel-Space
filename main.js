@@ -77,7 +77,7 @@ let score = 0;
 function animate() {
   animationId = requestAnimationFrame(animate);
   // clear canvas at each frame so it doesnt leave any trailers
-  c.fillStyle = "#DCDCDC";
+  c.fillStyle = "#1D267D";
   c.fillRect(0, 0, canvas.width, canvas.height);
 
   handlePlayerVelocity();
@@ -229,6 +229,6 @@ canvas.addEventListener("mousemove", (e) => {
 startGameBtn.addEventListener("click", (e) => {
   init();
   animate();
-  spawnEnemies();
+  // spawnEnemies();
   modal.style.display = "none";
 });

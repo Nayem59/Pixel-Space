@@ -24,7 +24,8 @@ class Projectile {
     c.translate(-this.x, -this.y);
 
     c.beginPath();
-    c.rect(this.x, this.y, 15, 5);
+    // - 2.5 to center projectile to cursor
+    c.rect(this.x, this.y - 2.5, 15, 5);
     c.fillStyle = this.color;
     c.fill();
 
