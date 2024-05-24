@@ -1,5 +1,5 @@
 import { c } from "../utils/canvas.js";
-import { ship, shipReady } from "../utils/assets.js";
+import { assets } from "../utils/assets.js";
 
 // Create main Player Class
 class Player {
@@ -28,8 +28,8 @@ class Player {
     c.translate(this.x, this.y);
     c.rotate((this.degree * Math.PI) / 180);
     c.translate(-this.x, -this.y);
-    if (shipReady) {
-      c.drawImage(ship, this.x - 16, this.y - 17);
+    if (assets.images.ship1.isLoaded) {
+      c.drawImage(assets.images.ship1.image, this.x - 16, this.y - 17);
     }
     c.restore();
   }

@@ -1,5 +1,5 @@
 import { c } from "../utils/canvas.js";
-import { turret, turretReady } from "../utils/assets.js";
+import { assets } from "../utils/assets.js";
 
 class Turret {
   constructor(x, y, angle) {
@@ -14,8 +14,8 @@ class Turret {
     // 1.5708 rad is 90deg adding to offset
     c.rotate(this.angle + 1.5708);
     c.translate(-this.x, -this.y);
-    if (turretReady) {
-      c.drawImage(turret, this.x - 32, this.y - 30);
+    if (assets.images.turret.isLoaded) {
+      c.drawImage(assets.images.turret.image, this.x - 32, this.y - 30);
     }
     c.restore();
   }
