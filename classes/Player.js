@@ -1,5 +1,6 @@
 import { c } from "../utils/canvas.js";
 import { assets } from "../utils/assets.js";
+import { shipExFire } from "../main.js";
 
 // Create main Player Class
 class Player {
@@ -31,6 +32,7 @@ class Player {
     if (assets.images.ship1.isLoaded) {
       c.drawImage(assets.images.ship1.image, this.x - 16, this.y - 17);
     }
+    shipExFire.drawImage(c, this.x - 24, this.y - 24);
     c.restore();
   }
 

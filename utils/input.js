@@ -1,4 +1,4 @@
-import { friction, player } from "../main.js";
+import { friction, player, shipExFire } from "../main.js";
 
 // Object to keep track of pressed keys
 export const keysPressed = {};
@@ -137,6 +137,22 @@ export function handlePlayerRotation() {
       player.rotation = rotationSpeed;
     } else {
       player.rotation = -rotationSpeed;
+    }
+  }
+}
+
+export function handleShipExFireAnimation() {
+  if (Object.keys(keysPressed).length === 0) {
+    if (shipExFire.frame < 3) {
+      shipExFire.frame++;
+    } else {
+      shipExFire.frame = 0;
+    }
+  } else {
+    if (shipExFire.frame > 6 || shipExFire < 4) {
+      shipExFire.frame = 4;
+    } else {
+      shipExFire.frame++;
     }
   }
 }

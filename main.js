@@ -4,7 +4,14 @@ import Projectile from "./classes/Projectile.js";
 import Enemy from "./classes/Enemy.js";
 import Particle from "./classes/Particle.js";
 import Turret from "./classes/Turret.js";
-import { handlePlayerRotation, handlePlayerVelocity } from "./utils/input.js";
+import {
+  handlePlayerRotation,
+  handlePlayerVelocity,
+  handleShipExFireAnimation,
+} from "./utils/input.js";
+import Sprite from "./utils/sprite.js";
+import { assets } from "./utils/assets.js";
+import Vector2 from "./classes/Vector2.js";
 
 const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
@@ -18,6 +25,7 @@ const x = canvas.width / 2;
 const y = canvas.height / 2;
 export let player;
 let turret;
+export let shipExFire;
 let turretAngle = 0;
 let mouseX = 0;
 let mouseY = 0;
@@ -32,6 +40,13 @@ let particles = [];
 function init() {
   player = new Player(x, y, 10, "blue", { x: 0, y: 0 });
   turret = new Turret(player.x, player.y, turretAngle);
+  shipExFire = new Sprite({
+    asset: assets.images.shipExhaustFire,
+    frameSize: new Vector2(48, 48),
+    hFrames: 4,
+    vFrames: 2,
+    frame: 0,
+  });
   projectiles = [];
   enemies = [];
   particles = [];
@@ -82,6 +97,7 @@ function animate() {
 
   handlePlayerVelocity();
   handlePlayerRotation();
+  handleShipExFireAnimation();
 
   // call the update method to show the player on screen and handle movement
   player.update();

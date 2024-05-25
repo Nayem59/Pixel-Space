@@ -8,6 +8,7 @@ class Assets {
       ship4: "/../assets/Ship_4.png",
       ship5: "/../assets/Ship_5.png",
       turret: "/../assets/turret.png",
+      shipExhaustFire: "/../assets/shipexhaustFire.png",
     };
     // container for all images that have been downloaded
     // e.g. {ship1: {image: (ImageEl), isLoaded: true}}
