@@ -136,6 +136,17 @@ function animate() {
   projectiles.forEach((projectile, projIndex) => {
     projectile.update();
 
+    const distProj = Math.hypot(
+      projectile.originalX - projectile.x,
+      projectile.originalY - projectile.y
+    );
+
+    if (distProj > 200) {
+      setTimeout(() => {
+        projectiles.splice(projIndex, 1);
+      }, 0);
+    }
+
     // remove projectile from edge of screen to avoid memory usage
     if (
       projectile.x + projectile.radius < 0 ||
@@ -245,6 +256,6 @@ canvas.addEventListener("mousemove", (e) => {
 startGameBtn.addEventListener("click", (e) => {
   init();
   animate();
-  // spawnEnemies();
+  spawnEnemies();
   modal.style.display = "none";
 });

@@ -5,6 +5,8 @@ class Projectile {
   constructor(x, y, radius, color, velocity, angle) {
     this.x = x;
     this.y = y;
+    this.originalX = x;
+    this.originalY = y;
     this.radius = radius;
     this.color = color;
     this.velocity = velocity;
