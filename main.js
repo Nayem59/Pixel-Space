@@ -88,9 +88,17 @@ function spawnEnemies() {
 // create a custom function to start a animation loop
 let animationId;
 let score = 0;
+let delta = 0;
+let oldTimeStamp = 0;
 
-function animate() {
+function animate(timeStamp) {
   animationId = requestAnimationFrame(animate);
+  // Calculate delta aka how many seconds has passed (milliseconds)
+  delta = (timeStamp - oldTimeStamp) / 10;
+  // delta = 1;
+  oldTimeStamp = timeStamp;
+  delta = Math.min(delta, 10);
+
   // clear canvas at each frame so it doesnt leave any trailers
   c.fillStyle = "#1D267D";
   c.fillRect(0, 0, canvas.width, canvas.height);
@@ -100,7 +108,7 @@ function animate() {
   handleShipExFireAnimation();
 
   // call the update method to show the player on screen and handle movement
-  player.update();
+  player.update(delta);
 
   // update turret and draw
   turretAngle = Math.atan2(mouseY - player?.y, mouseX - player?.x);
@@ -128,20 +136,20 @@ function animate() {
     if (particle.alpha <= 0) {
       particles.splice(partIndex, 1);
     } else {
-      particle.update();
+      particle.update(delta);
     }
   });
 
   // starts the projetile animation effect
   projectiles.forEach((projectile, projIndex) => {
-    projectile.update();
+    projectile.update(delta);
 
     const distProj = Math.hypot(
       projectile.originalX - projectile.x,
       projectile.originalY - projectile.y
     );
 
-    if (distProj > 200) {
+    if (distProj > 300) {
       setTimeout(() => {
         projectiles.splice(projIndex, 1);
       }, 0);
@@ -161,7 +169,7 @@ function animate() {
   });
 
   enemies.forEach((enemy, enemyIndex) => {
-    enemy.update();
+    enemy.update(delta);
 
     // work out the distance between the player and enemy
     const distPlEn = Math.hypot(player.x - enemy.x, player.y - enemy.y);
@@ -255,7 +263,7 @@ canvas.addEventListener("mousemove", (e) => {
 
 startGameBtn.addEventListener("click", (e) => {
   init();
-  animate();
+  animate(0);
   spawnEnemies();
   modal.style.display = "none";
 });

@@ -27,12 +27,12 @@ class Particle {
   }
 
   // update the coordinates to create the animation effect
-  update() {
+  update(delta) {
     this.draw();
     this.velocity.x *= friction;
     this.velocity.y *= friction;
-    this.x = this.x + this.velocity.x;
-    this.y = this.y + this.velocity.y;
+    this.x = this.x + this.velocity.x * delta;
+    this.y = this.y + this.velocity.y * delta;
     // make alpha reduce on every frame update
     this.alpha -= 0.01;
   }

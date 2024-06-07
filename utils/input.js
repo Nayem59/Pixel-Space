@@ -3,7 +3,8 @@ import { friction, player, shipExFire } from "../main.js";
 // Object to keep track of pressed keys
 export const keysPressed = {};
 
-const rotationSpeed = 5;
+const rotationSpeed = 3;
+const rotationThreshold = 5;
 
 // Add or remove keys to the object on keydown and keyup events
 addEventListener("keydown", (e) => {
@@ -46,98 +47,54 @@ export function handlePlayerVelocity() {
   }
 }
 
+// Define key combinations and their target degrees
+const keyRotationMap = {
+  w: 0,
+  s: 180,
+  a: 270,
+  d: 90,
+  wd: 45,
+  dw: 45,
+  wa: 315,
+  aw: 315,
+  sa: 225,
+  as: 225,
+  sd: 135,
+  ds: 135,
+};
+
+function getKeyCombination() {
+  let combo = "";
+  if (keysPressed["w"]) combo += "w";
+  if (keysPressed["a"]) combo += "a";
+  if (keysPressed["s"]) combo += "s";
+  if (keysPressed["d"]) combo += "d";
+  return combo;
+}
+
 export function handlePlayerRotation() {
+  const combo = getKeyCombination();
+  const targetDegree = keyRotationMap[combo];
+
   if (player.degree > 359) {
     player.degree = 0;
   }
 
   player.rotation = 0;
+  if (targetDegree === undefined) return;
 
-  if (
-    keysPressed["w"] &&
-    !keysPressed["a"] &&
-    !keysPressed["d"] &&
-    !keysPressed["s"] &&
-    player.degree !== 0
-  ) {
-    player.degree <= 180
-      ? (player.rotation = -rotationSpeed)
-      : (player.rotation = rotationSpeed);
-  }
-  if (
-    keysPressed["s"] &&
-    !keysPressed["a"] &&
-    !keysPressed["d"] &&
-    !keysPressed["w"] &&
-    player.degree !== 180
-  ) {
-    player.degree < 180
-      ? (player.rotation = rotationSpeed)
-      : (player.rotation = -rotationSpeed);
-  }
-  if (
-    keysPressed["a"] &&
-    !keysPressed["w"] &&
-    !keysPressed["s"] &&
-    !keysPressed["d"] &&
-    player.degree !== 270
-  ) {
-    if (player.degree > 270) {
-      player.rotation = -rotationSpeed;
-    } else if (player.degree < 90 && player.degree > 0) {
-      player.rotation = -rotationSpeed;
-    } else if (player.degree <= 0) {
-      player.rotation = 360 - rotationSpeed;
-    } else if (player.degree < 270 || player.degree > 90) {
-      player.rotation = rotationSpeed;
-    }
-  }
-  if (
-    keysPressed["d"] &&
-    !keysPressed["w"] &&
-    !keysPressed["s"] &&
-    !keysPressed["a"] &&
-    player.degree !== 90
-  ) {
-    if (player.degree > 270 || player.degree < 90) {
-      player.rotation = rotationSpeed;
-    } else if (player.degree < 270 || player.degree > 90) {
-      player.rotation = -rotationSpeed;
-    }
-  }
+  // Calculate the shortest direction to rotate
+  const diff = (targetDegree - player.degree + 360) % 360;
 
-  // handle diagnal rotation
-  if (keysPressed["w"] && keysPressed["d"] && player.degree !== 45) {
-    if (player.degree < 45 || player.degree > 225) {
+  // Check if the player is within the rotation threshold, this is due to the overshooting of rotation with delta and causes back and forth shake oscillation
+  if (diff > rotationThreshold && diff < 360 - rotationThreshold) {
+    if (diff <= 180) {
       player.rotation = rotationSpeed;
     } else {
       player.rotation = -rotationSpeed;
     }
-  }
-  if (keysPressed["w"] && keysPressed["a"] && player.degree !== 315) {
-    if (player.degree < 315 && player.degree > 135) {
-      player.rotation = rotationSpeed;
-    } else if (player.degree <= 0) {
-      player.rotation = 360 - rotationSpeed;
-    } else {
-      player.rotation = -rotationSpeed;
-    }
-  }
-  if (keysPressed["s"] && keysPressed["a"] && player.degree !== 225) {
-    if (player.degree < 225 && player.degree > 45) {
-      player.rotation = rotationSpeed;
-    } else if (player.degree <= 0) {
-      player.rotation = 360 - rotationSpeed;
-    } else {
-      player.rotation = -rotationSpeed;
-    }
-  }
-  if (keysPressed["s"] && keysPressed["d"] && player.degree !== 135) {
-    if (player.degree < 135 || player.degree > 315) {
-      player.rotation = rotationSpeed;
-    } else {
-      player.rotation = -rotationSpeed;
-    }
+  } else {
+    player.degree = targetDegree; // Snap to target degree if within threshold
   }
 }
 

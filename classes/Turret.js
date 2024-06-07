@@ -15,7 +15,7 @@ class Turret {
     c.rotate(this.angle + 1.5708);
     c.translate(-this.x, -this.y);
     if (assets.images.turret.isLoaded) {
-      c.drawImage(assets.images.turret.image, this.x - 32, this.y - 30);
+      c.drawImage(assets.images.turret.image, this.x - 32, this.y - 40);
     }
     c.restore();
   }

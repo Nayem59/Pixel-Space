@@ -37,11 +37,11 @@ class Player {
   }
 
   // update the coordinates to create the animation effect
-  update() {
+  update(delta) {
     this.draw();
-    this.x = this.x + this.velocity.x;
-    this.y = this.y + this.velocity.y;
-    this.degree += this.rotation;
+    this.x = this.x + this.velocity.x * delta;
+    this.y = this.y + this.velocity.y * delta;
+    this.degree += this.rotation * delta;
   }
 }
 
