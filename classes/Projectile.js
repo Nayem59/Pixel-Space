@@ -25,9 +25,13 @@ class Projectile {
     c.rotate(this.angle);
     c.translate(-this.x, -this.y);
 
+    c.strokeStyle = "red";
+    c.shadowColor = "red";
+    c.shadowBlur = 10;
     c.beginPath();
     // - 2.5 to center projectile to cursor
-    c.rect(this.x, this.y - 2.5, 15, 5);
+    c.roundRect(this.x, this.y - 2.5, 15, 5, 5);
+    c.stroke();
     c.fillStyle = this.color;
     c.fill();
 

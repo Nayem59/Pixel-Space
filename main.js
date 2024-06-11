@@ -24,7 +24,7 @@ export const friction = 0.98;
 const x = canvas.width / 2;
 const y = canvas.height / 2;
 export let player;
-let turret;
+export let turret;
 export let shipExFire;
 let turretAngle = 0;
 let mouseX = 0;
@@ -39,7 +39,14 @@ let particles = [];
 
 function init() {
   player = new Player(x, y, 10, "blue", { x: 0, y: 0 });
-  turret = new Turret(player.x, player.y, turretAngle);
+  turret = new Turret(player.x, player.y, turretAngle, {
+    asset: assets.images.turret,
+    frameSize: new Vector2(64, 64),
+    hFrames: 8,
+    vFrames: 1,
+    frame: 0,
+  });
+  console.log(turret);
   shipExFire = new Sprite({
     asset: assets.images.shipExhaustFire,
     frameSize: new Vector2(48, 48),
@@ -105,7 +112,7 @@ function animate(timeStamp) {
 
   handlePlayerVelocity();
   handlePlayerRotation();
-  handleShipExFireAnimation();
+  handleShipExFireAnimation(delta);
 
   // call the update method to show the player on screen and handle movement
   player.update(delta);
@@ -115,6 +122,7 @@ function animate(timeStamp) {
   turret.x = player.x;
   turret.y = player.y;
   turret.angle = turretAngle;
+  turret.updateAnimation();
   turret.draw();
 
   // prevent player from going beyond the canvas
@@ -235,6 +243,8 @@ function animate(timeStamp) {
 
 // add click eventlistener for projectile
 addEventListener("click", (e) => {
+  turret.startAnimation();
+
   // calculate the triangele angle (in radiant) between the center (Player) to the clicked point
   const angle = Math.atan2(e.clientY - player?.y, e.clientX - player?.x);
   // calculate velocity through sin and cos
@@ -246,10 +256,10 @@ addEventListener("click", (e) => {
   projectiles.push(
     new Projectile(
       // adding velocity to create projectile distance from player
-      player?.x + velocity.x * 3,
-      player?.y + velocity.y * 3,
+      player?.x + velocity.x * 4,
+      player?.y + velocity.y * 4,
       5,
-      "red",
+      "white",
       velocity,
       angle
     )

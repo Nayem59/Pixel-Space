@@ -30,7 +30,13 @@ class Player {
     c.rotate((this.degree * Math.PI) / 180);
     c.translate(-this.x, -this.y);
     if (assets.images.ship1.isLoaded) {
+      c.save();
+      c.shadowColor = "black";
+      c.shadowOffsetX = 10;
+      c.shadowOffsetY = 10;
+      c.shadowBlur = 5;
       c.drawImage(assets.images.ship1.image, this.x - 16, this.y - 17);
+      c.restore();
     }
     shipExFire.drawImage(c, this.x - 24, this.y - 24);
     c.restore();

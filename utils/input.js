@@ -98,18 +98,30 @@ export function handlePlayerRotation() {
   }
 }
 
-export function handleShipExFireAnimation() {
-  if (Object.keys(keysPressed).length === 0) {
-    if (shipExFire.frame < 3) {
-      shipExFire.frame++;
+const idleFrames = [0, 1, 2, 3];
+const activeFrames = [4, 5, 6, 7];
+const frameDuration = (1 / 30) * 100;
+let frameTimer = 0;
+
+export function handleShipExFireAnimation(delta) {
+  // Increment the frame timer by delta time
+  frameTimer += delta;
+
+  // Check if it's time to update the frame
+  while (frameTimer >= frameDuration) {
+    frameTimer -= frameDuration; // Reset the timer by the frame duration
+
+    if (Object.keys(keysPressed).length === 0) {
+      // Idle animation
+      shipExFire.frame = (shipExFire.frame + 1) % idleFrames.length;
     } else {
-      shipExFire.frame = 0;
-    }
-  } else {
-    if (shipExFire.frame > 6 || shipExFire < 4) {
-      shipExFire.frame = 4;
-    } else {
-      shipExFire.frame++;
+      // Active animation
+      if (shipExFire.frame < 4 || shipExFire.frame > 6) {
+        shipExFire.frame = 4; // Ensure frame is within active range
+      } else {
+        shipExFire.frame =
+          4 + ((shipExFire.frame - 4 + 1) % activeFrames.length);
+      }
     }
   }
 }

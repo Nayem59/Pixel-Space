@@ -7,7 +7,7 @@ class Assets {
       ship3: "/../assets/Ship_3.png",
       ship4: "/../assets/Ship_4.png",
       ship5: "/../assets/Ship_5.png",
-      turret: "/../assets/turret.png",
+      turret: "/../assets/turretsheet2.png",
       shipExhaustFire: "/../assets/shipexhaustFire.png",
     };
     // container for all images that have been downloaded
