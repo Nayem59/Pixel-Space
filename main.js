@@ -122,7 +122,7 @@ function animate(timeStamp) {
   turret.x = player.x;
   turret.y = player.y;
   turret.angle = turretAngle;
-  turret.updateAnimation();
+  turret.updateAnimation(delta);
   turret.draw();
 
   // prevent player from going beyond the canvas

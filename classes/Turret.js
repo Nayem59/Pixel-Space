@@ -9,7 +9,9 @@ class Turret extends Sprite {
     this.y = y;
     this.angle = angle;
     this.isAnimating = false;
-    this.animationFrameCount = 0;
+    // this.animationFrameCount = 0;
+    this.frameTimer = 0;
+    this.frameDuration = (1 / 30) * 100;
     this.maxAnimationFrames = this.frameMap.size;
   }
 
@@ -31,14 +33,27 @@ class Turret extends Sprite {
   startAnimation() {
     this.isAnimating = true;
     this.frame = 0;
-    this.animationFrameCount = 0;
+    // this.animationFrameCount = 0;
   }
 
-  updateAnimation() {
+  // updateAnimation(delta) {
+  //   if (this.isAnimating) {
+  //     this.animationFrameCount++;
+  //     if (this.animationFrameCount % 2 === 0) {
+  //       // this to limit and adjust animation speed
+  //       this.frame++;
+  //       if (this.frame >= this.maxAnimationFrames) {
+  //         this.isAnimating = false;
+  //         this.frame = 0;
+  //       }
+  //     }
+  //   }
+  // }
+  updateAnimation(delta) {
     if (this.isAnimating) {
-      this.animationFrameCount++;
-      if (this.animationFrameCount % 2 === 0) {
-        // this to limit and adjust animation speed
+      this.frameTimer += delta;
+      while (this.frameTimer >= this.frameDuration) {
+        this.frameTimer -= this.frameDuration;
         this.frame++;
         if (this.frame >= this.maxAnimationFrames) {
           this.isAnimating = false;
