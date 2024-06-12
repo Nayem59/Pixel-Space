@@ -8,6 +8,7 @@ import {
   handlePlayerRotation,
   handlePlayerVelocity,
   handleShipExFireAnimation,
+  handleTrail,
 } from "./utils/input.js";
 import Sprite from "./utils/sprite.js";
 import { assets } from "./utils/assets.js";
@@ -36,6 +37,8 @@ let projectiles = [];
 let enemies = [];
 // array for storing particles
 let particles = [];
+// array for storing trails
+export let trails = [];
 
 function init() {
   player = new Player(x, y, 10, "blue", { x: 0, y: 0 });
@@ -46,7 +49,6 @@ function init() {
     vFrames: 1,
     frame: 0,
   });
-  console.log(turret);
   shipExFire = new Sprite({
     asset: assets.images.shipExhaustFire,
     frameSize: new Vector2(48, 48),
@@ -57,6 +59,7 @@ function init() {
   projectiles = [];
   enemies = [];
   particles = [];
+  trails = [];
   score = 0;
   scoreEl.innerHTML = score;
   endScore.innerHTML = score;
@@ -114,6 +117,14 @@ function animate(timeStamp) {
   handlePlayerRotation();
   handleShipExFireAnimation(delta);
 
+  handleTrail(delta);
+  trails.forEach((trail, trailIndex) => {
+    if (trail.alpha <= 0) {
+      trails.splice(trailIndex, 1);
+    } else {
+      trail.update();
+    }
+  });
   // call the update method to show the player on screen and handle movement
   player.update(delta);
 
@@ -243,7 +254,7 @@ function animate(timeStamp) {
 
 // add click eventlistener for projectile
 addEventListener("click", (e) => {
-  turret.startAnimation();
+  turret?.startAnimation();
 
   // calculate the triangele angle (in radiant) between the center (Player) to the clicked point
   const angle = Math.atan2(e.clientY - player?.y, e.clientX - player?.x);

@@ -1,4 +1,5 @@
-import { friction, player, shipExFire } from "../main.js";
+import Trail from "../classes/Trail.js";
+import { friction, player, shipExFire, trails } from "../main.js";
 
 // Object to keep track of pressed keys
 export const keysPressed = {};
@@ -111,10 +112,12 @@ export function handleShipExFireAnimation(delta) {
   while (frameTimer >= frameDuration) {
     frameTimer -= frameDuration; // Reset the timer by the frame duration
 
-    if (Object.keys(keysPressed).length === 0) {
-      // Idle animation
-      shipExFire.frame = (shipExFire.frame + 1) % idleFrames.length;
-    } else {
+    if (
+      keysPressed["w"] ||
+      keysPressed["a"] ||
+      keysPressed["s"] ||
+      keysPressed["d"]
+    ) {
       // Active animation
       if (shipExFire.frame < 4 || shipExFire.frame > 6) {
         shipExFire.frame = 4; // Ensure frame is within active range
@@ -122,6 +125,28 @@ export function handleShipExFireAnimation(delta) {
         shipExFire.frame =
           4 + ((shipExFire.frame - 4 + 1) % activeFrames.length);
       }
+    } else {
+      // Idle animation
+      shipExFire.frame = (shipExFire.frame + 1) % idleFrames.length;
+    }
+  }
+}
+
+const trailFrameDuration = (1 / 60) * 100;
+let trailFramTimer = 0;
+
+export function handleTrail(delta) {
+  trailFramTimer += delta;
+
+  while (trailFramTimer >= trailFrameDuration) {
+    trailFramTimer -= trailFrameDuration;
+    if (
+      keysPressed["w"] ||
+      keysPressed["a"] ||
+      keysPressed["s"] ||
+      keysPressed["d"]
+    ) {
+      trails.push(new Trail(player.x, player.y, "orange", player.degree));
     }
   }
 }
