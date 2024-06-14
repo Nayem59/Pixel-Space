@@ -190,6 +190,18 @@ function animate(timeStamp) {
   enemies.forEach((enemy, enemyIndex) => {
     enemy.update(delta);
 
+    // remove enemy from edge of screen to avoid memory usage
+    if (
+      enemy.x + enemy.radius < 0 ||
+      enemy.x - enemy.radius > canvas.width ||
+      enemy.y + enemy.radius < 0 ||
+      enemy.y - enemy.radius > canvas.height
+    ) {
+      setTimeout(() => {
+        enemies.splice(enemyIndex, 1);
+      }, 0);
+    }
+
     // work out the distance between the player and enemy
     const distPlEn = Math.hypot(player.x - enemy.x, player.y - enemy.y);
 
