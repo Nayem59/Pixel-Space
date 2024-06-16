@@ -70,7 +70,8 @@ let enemyInterval;
 function spawnEnemies() {
   enemyInterval = setInterval(() => {
     // any radius between 4 -> 30
-    const radius = Math.random() * (30 - 5) + 5;
+    // const radius = Math.random() * (30 - 5) + 5;
+    const radius = 23;
 
     // spawn off the screen randomly
     let x;
@@ -83,7 +84,8 @@ function spawnEnemies() {
       y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius;
     }
 
-    const color = `hsl(${Math.random() * 360},50%,50%)`;
+    // const color = `hsl(${Math.random() * 360},50%,50%)`;
+    const color = "#ab47bc";
 
     const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
     const velocity = {
@@ -91,7 +93,15 @@ function spawnEnemies() {
       y: Math.sin(angle),
     };
 
-    enemies.push(new Enemy(x, y, radius, color, velocity));
+    enemies.push(
+      new Enemy(x, y, radius, color, velocity, {
+        asset: assets.images.purpleBlob,
+        frameSize: new Vector2(64, 64),
+        hFrames: 1,
+        vFrames: 1,
+        frame: 0,
+      })
+    );
   }, 1000);
 }
 
@@ -244,9 +254,10 @@ function animate(timeStamp) {
           scoreEl.innerHTML = score;
 
           // using gsap animation library to make a transition smother for enemy.radius -= 10
-          gsap.to(enemy, {
-            radius: enemy.radius - 10,
-          });
+          // gsap.to(enemy, {
+          //   radius: enemy.radius - 10,
+          // });
+          enemy.radius -= 10;
           setTimeout(() => {
             projectiles.splice(projectileIndex, 1);
           }, 0);
