@@ -11,6 +11,10 @@ class Enemy extends Sprite {
     this.radius = radius;
     this.color = color;
     this.velocity = velocity;
+    this.isAnimating = false;
+    this.frameTimer = 0;
+    this.frameDuration = (1 / 10) * 100;
+    this.maxAnimationFrames = this.frameMap.size;
   }
 
   // create a custom draw method that initiates a circul and fills it
@@ -24,11 +28,28 @@ class Enemy extends Sprite {
     }
   }
 
+  startAnimation() {
+    this.isAnimating = true;
+    this.frame = 0;
+  }
+
   // update the coordinates to create the animation effect
   update(delta) {
     this.draw();
     this.x = this.x + this.velocity.x * delta;
     this.y = this.y + this.velocity.y * delta;
+
+    if (this.isAnimating) {
+      this.frameTimer += delta;
+      while (this.frameTimer >= this.frameDuration) {
+        this.frameTimer -= this.frameDuration;
+        this.frame++;
+        if (this.frame >= this.maxAnimationFrames) {
+          this.isAnimating = false;
+          this.frame = 0;
+        }
+      }
+    }
   }
 }
 

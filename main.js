@@ -97,7 +97,7 @@ function spawnEnemies() {
       new Enemy(x, y, radius, color, velocity, {
         asset: assets.images.purpleBlob,
         frameSize: new Vector2(64, 64),
-        hFrames: 1,
+        hFrames: 8,
         vFrames: 1,
         frame: 0,
       })
@@ -120,8 +120,15 @@ function animate(timeStamp) {
   delta = Math.min(delta, 10);
 
   // clear canvas at each frame so it doesnt leave any trailers
-  c.fillStyle = "#1D267D";
-  c.fillRect(0, 0, canvas.width, canvas.height);
+  // c.fillStyle = "#1D267D";
+  // c.fillRect(0, 0, canvas.width, canvas.height);
+  if (assets.images.spaceBg.isLoaded) {
+    c.drawImage(assets.images.spaceBg.image, 0, 0);
+    // c.drawImage(assets.images.spaceBg.image, -3000, -2000, 15360, 8640);
+  } else {
+    c.fillStyle = "#1D267D";
+    c.fillRect(0, 0, canvas.width, canvas.height);
+  }
 
   handlePlayerVelocity();
   handlePlayerRotation();
@@ -159,15 +166,6 @@ function animate(timeStamp) {
   if (player.y + player.radius > canvas.height) {
     player.y = canvas.height - player.radius;
   }
-
-  // starts the particle animation effect
-  particles.forEach((particle, partIndex) => {
-    if (particle.alpha <= 0) {
-      particles.splice(partIndex, 1);
-    } else {
-      particle.update(delta);
-    }
-  });
 
   // starts the projetile animation effect
   projectiles.forEach((projectile, projIndex) => {
@@ -257,6 +255,7 @@ function animate(timeStamp) {
           // gsap.to(enemy, {
           //   radius: enemy.radius - 10,
           // });
+          enemy.startAnimation();
           enemy.radius -= 10;
           setTimeout(() => {
             projectiles.splice(projectileIndex, 1);
@@ -272,6 +271,15 @@ function animate(timeStamp) {
         }
       }
     });
+  });
+
+  // starts the particle animation effect
+  particles.forEach((particle, partIndex) => {
+    if (particle.alpha <= 0) {
+      particles.splice(partIndex, 1);
+    } else {
+      particle.update(delta);
+    }
   });
 }
 

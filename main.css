@@ -1,6 +1,6 @@
 @font-face {
   font-family: pixel;
-  src: url("assets/pixel-font.otf");
+  src: url("assets/fonts/pixel-font.otf");
 }
 
 body {
@@ -12,7 +12,7 @@ body {
 
 canvas {
   display: block;
-  cursor: url("assets/crosshair6.png") 15 15, crosshair;
+  cursor: url("assets/crosshairs/crosshair6.png") 15 15, crosshair;
 }
 
 .score-container {
