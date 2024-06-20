@@ -13,6 +13,9 @@ import {
 import Sprite from "./utils/sprite.js";
 import { assets } from "./utils/assets.js";
 import Vector2 from "./classes/Vector2.js";
+import Map from "./classes/Map.js";
+import Camera from "./classes/Camera.js";
+// import MiniMap from "./classes/MiniMap.js";
 
 const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
@@ -31,6 +34,10 @@ let turretAngle = 0;
 let mouseX = 0;
 let mouseY = 0;
 
+export let map;
+export let camera;
+// let miniMap;
+
 // array for storing projectiles
 let projectiles = [];
 // array for storing enemies
@@ -41,7 +48,11 @@ let particles = [];
 export let trails = [];
 
 function init() {
-  player = new Player(x, y, 10, "blue", { x: 0, y: 0 });
+  if (assets.images.spaceBg.isLoaded) {
+    map = new Map(assets.images.spaceBg.image, 2048, 2048);
+    camera = new Camera(canvas.width, canvas.height, map);
+    player = new Player(x, y, 10, "blue", { x: 0, y: 0 }, map);
+  }
   turret = new Turret(player.x, player.y, turretAngle, {
     asset: assets.images.turret,
     frameSize: new Vector2(64, 64),
@@ -56,6 +67,7 @@ function init() {
     vFrames: 2,
     frame: 0,
   });
+  // miniMap = new MiniMap(canvas.width, canvas.height);
   projectiles = [];
   enemies = [];
   particles = [];
@@ -119,22 +131,20 @@ function animate(timeStamp) {
   oldTimeStamp = timeStamp;
   delta = Math.min(delta, 10);
 
-  // clear canvas at each frame so it doesnt leave any trailers
-  // c.fillStyle = "#1D267D";
-  // c.fillRect(0, 0, canvas.width, canvas.height);
-  if (assets.images.spaceBg.isLoaded) {
-    c.drawImage(assets.images.spaceBg.image, 0, 0);
-    // c.drawImage(assets.images.spaceBg.image, -3000, -2000, 15360, 8640);
-  } else {
-    c.fillStyle = "#1D267D";
-    c.fillRect(0, 0, canvas.width, canvas.height);
-  }
-
   handlePlayerVelocity();
   handlePlayerRotation();
   handleShipExFireAnimation(delta);
-
   handleTrail(delta);
+
+  c.clearRect(0, 0, canvas.width, canvas.height);
+  map.draw(c, camera);
+
+  player.update(delta);
+  camera.update(player);
+
+  c.save();
+  c.translate(-camera.x, -camera.y);
+
   trails.forEach((trail, trailIndex) => {
     if (trail.alpha <= 0) {
       trails.splice(trailIndex, 1);
@@ -142,30 +152,19 @@ function animate(timeStamp) {
       trail.update();
     }
   });
-  // call the update method to show the player on screen and handle movement
-  player.update(delta);
 
   // update turret and draw
-  turretAngle = Math.atan2(mouseY - player?.y, mouseX - player?.x);
+  const adjustedMouseX = mouseX + camera.x;
+  const adjustedMouseY = mouseY + camera.y;
+  turretAngle = Math.atan2(
+    adjustedMouseY - player.y,
+    adjustedMouseX - player.x
+  );
   turret.x = player.x;
   turret.y = player.y;
   turret.angle = turretAngle;
   turret.updateAnimation(delta);
   turret.draw();
-
-  // prevent player from going beyond the canvas
-  if (player.x - player.radius < 0) {
-    player.x = player.radius;
-  }
-  if (player.x + player.radius > canvas.width) {
-    player.x = canvas.width - player.radius;
-  }
-  if (player.y - player.radius < 0) {
-    player.y = player.radius;
-  }
-  if (player.y + player.radius > canvas.height) {
-    player.y = canvas.height - player.radius;
-  }
 
   // starts the projetile animation effect
   projectiles.forEach((projectile, projIndex) => {
@@ -177,18 +176,6 @@ function animate(timeStamp) {
     );
 
     if (distProj > 300) {
-      setTimeout(() => {
-        projectiles.splice(projIndex, 1);
-      }, 0);
-    }
-
-    // remove projectile from edge of screen to avoid memory usage
-    if (
-      projectile.x + projectile.radius < 0 ||
-      projectile.x - projectile.radius > canvas.width ||
-      projectile.y + projectile.radius < 0 ||
-      projectile.y - projectile.radius > canvas.height
-    ) {
       setTimeout(() => {
         projectiles.splice(projIndex, 1);
       }, 0);
@@ -281,6 +268,14 @@ function animate(timeStamp) {
       particle.update(delta);
     }
   });
+
+  // // draw mini map
+  // miniMap.draw();
+
+  c.restore();
+
+  console.log("player:", player.x, player.y);
+  // console.log("camera:", camera.x, camera.y);
 }
 
 // add click eventlistener for projectile
@@ -288,7 +283,10 @@ addEventListener("click", (e) => {
   turret?.startAnimation();
 
   // calculate the triangele angle (in radiant) between the center (Player) to the clicked point
-  const angle = Math.atan2(e.clientY - player?.y, e.clientX - player?.x);
+  const angle = Math.atan2(
+    e.clientY + camera?.y - player?.y,
+    e.clientX + camera?.x - player?.x
+  );
   // calculate velocity through sin and cos
   const velocity = {
     x: Math.cos(angle) * 5,
@@ -316,6 +314,6 @@ canvas.addEventListener("mousemove", (e) => {
 startGameBtn.addEventListener("click", (e) => {
   init();
   animate(0);
-  spawnEnemies();
+  // spawnEnemies();
   modal.style.display = "none";
 });

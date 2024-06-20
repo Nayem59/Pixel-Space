@@ -1,10 +1,9 @@
 import { c } from "../utils/canvas.js";
 import { assets } from "../utils/assets.js";
-import { shipExFire } from "../main.js";
+import { shipExFire, camera } from "../main.js";
 
-// Create main Player Class
 class Player {
-  constructor(x, y, radius, color, velocity) {
+  constructor(x, y, radius, color, velocity, map) {
     this.x = x;
     this.y = y;
     this.radius = radius;
@@ -14,9 +13,9 @@ class Player {
     this.maxVelocity = 3;
     this.rotation = 0;
     this.degree = 0;
+    this.map = map;
   }
 
-  // create a custom draw method that initiates a circul and fills it
   draw() {
     // for collision and debug purposes
     // c.beginPath();
@@ -24,30 +23,40 @@ class Player {
     // c.fillStyle = this.color;
     // c.fill();
 
-    // saving state of context and handle draw & rotation of image
     c.save();
-    c.translate(this.x, this.y);
+    c.translate(this.x - camera.x, this.y - camera.y);
     c.rotate((this.degree * Math.PI) / 180);
-    c.translate(-this.x, -this.y);
+    c.translate(-(this.x - camera.x), -(this.y - camera.y));
     if (assets.images.ship1.isLoaded) {
       c.save();
       c.shadowColor = "black";
       c.shadowOffsetX = 10;
       c.shadowOffsetY = 10;
       c.shadowBlur = 5;
-      c.drawImage(assets.images.ship1.image, this.x - 16, this.y - 17);
+      c.drawImage(
+        assets.images.ship1.image,
+        this.x - camera.x - 16,
+        this.y - camera.y - 17
+      );
       c.restore();
     }
-    shipExFire.drawImage(c, this.x - 24, this.y - 24);
+    shipExFire.drawImage(c, this.x - camera.x - 24, this.y - camera.y - 24);
     c.restore();
   }
 
-  // update the coordinates to create the animation effect
   update(delta) {
     this.draw();
-    this.x = this.x + this.velocity.x * delta;
-    this.y = this.y + this.velocity.y * delta;
     this.degree += this.rotation * delta;
+
+    this.x = Math.max(
+      this.radius,
+      Math.min(this.map.width - this.radius, this.x + this.velocity.x * delta)
+    );
+
+    this.y = Math.max(
+      this.radius,
+      Math.min(this.map.height - this.radius, this.y + this.velocity.y * delta)
+    );
   }
 }
 
