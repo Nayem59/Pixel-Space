@@ -15,7 +15,7 @@ import { assets } from "./utils/assets.js";
 import Vector2 from "./classes/Vector2.js";
 import Map from "./classes/Map.js";
 import Camera from "./classes/Camera.js";
-// import MiniMap from "./classes/MiniMap.js";
+import MiniMap from "./classes/MiniMap.js";
 
 const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
@@ -36,7 +36,7 @@ let mouseY = 0;
 
 export let map;
 export let camera;
-// let miniMap;
+let miniMap;
 
 // array for storing projectiles
 let projectiles = [];
@@ -67,7 +67,7 @@ function init() {
     vFrames: 2,
     frame: 0,
   });
-  // miniMap = new MiniMap(canvas.width, canvas.height);
+  miniMap = new MiniMap(canvas.width, canvas.height);
   projectiles = [];
   enemies = [];
   particles = [];
@@ -135,12 +135,11 @@ function animate(timeStamp) {
   handlePlayerRotation();
   handleShipExFireAnimation(delta);
   handleTrail(delta);
+  player.update(delta);
+  camera.update(player);
 
   c.clearRect(0, 0, canvas.width, canvas.height);
   map.draw(c, camera);
-
-  player.update(delta);
-  camera.update(player);
 
   c.save();
   c.translate(-camera.x, -camera.y);
@@ -269,13 +268,11 @@ function animate(timeStamp) {
     }
   });
 
-  // // draw mini map
-  // miniMap.draw();
-
   c.restore();
+  player.draw();
 
-  console.log("player:", player.x, player.y);
-  // console.log("camera:", camera.x, camera.y);
+  // draw mini map
+  miniMap.draw();
 }
 
 // add click eventlistener for projectile

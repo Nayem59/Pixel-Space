@@ -27,12 +27,12 @@ class Trail {
     c.shadowBlur = 5;
 
     c.beginPath();
-    c.arc(this.x - 8, this.y + 17, this.radius, 0, Math.PI * 2, false);
+    c.arc(this.x - 8, this.y + 14, this.radius, 0, Math.PI * 2, false);
     c.stroke();
     c.fill();
 
     c.beginPath();
-    c.arc(this.x + 8, this.y + 17, this.radius, 0, Math.PI * 2, false);
+    c.arc(this.x + 8, this.y + 14, this.radius, 0, Math.PI * 2, false);
     c.stroke();
     c.fill();
 

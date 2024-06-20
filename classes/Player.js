@@ -45,7 +45,7 @@ class Player {
   }
 
   update(delta) {
-    this.draw();
+    // this.draw();
     this.degree += this.rotation * delta;
 
     this.x = Math.max(

@@ -6,8 +6,8 @@ class MiniMap {
     this.width = 256;
     this.height = 256;
     this.scale = 0.125; // Scale of the mini-map (mini-map size / background size)
-    this.positionX = canvasWidth - this.width;
-    this.positionY = canvasHeight - this.height;
+    this.positionX = canvasWidth - this.width - 10;
+    this.positionY = canvasHeight - this.height - 10;
   }
 
   draw() {
@@ -29,11 +29,9 @@ class MiniMap {
     );
 
     // Draw the player on the mini-map
-    const miniMapPlayerX =
-      this.positionX + player.x * this.scale - player.radius * this.scale;
+    const miniMapPlayerX = this.positionX + player.x * this.scale;
 
-    const miniMapPlayerY =
-      this.positionY + player.y * this.scale - player.radius * this.scale;
+    const miniMapPlayerY = this.positionY + player.y * this.scale;
 
     c.fillStyle = "red";
 
@@ -41,7 +39,7 @@ class MiniMap {
     c.arc(
       miniMapPlayerX,
       miniMapPlayerY,
-      player.radius * this.scale,
+      player.radius * 0.5,
       0,
       Math.PI * 2,
       false
