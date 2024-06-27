@@ -12,7 +12,7 @@ body {
 
 canvas {
   display: block;
-  cursor: url("assets/crosshairs/crosshair6.png") 15 15, crosshair;
+  cursor: url("assets/crosshairs/crosshair6e.png") 15 15, crosshair;
 }
 
 .score-container {

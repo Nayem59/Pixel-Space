@@ -134,8 +134,8 @@ function animate(timeStamp) {
   handlePlayerVelocity();
   handlePlayerRotation();
   handleShipExFireAnimation(delta);
-  handleTrail(delta);
   player.update(delta);
+  handleTrail(delta);
   camera.update(player);
 
   c.clearRect(0, 0, canvas.width, canvas.height);
@@ -143,14 +143,6 @@ function animate(timeStamp) {
 
   c.save();
   c.translate(-camera.x, -camera.y);
-
-  trails.forEach((trail, trailIndex) => {
-    if (trail.alpha <= 0) {
-      trails.splice(trailIndex, 1);
-    } else {
-      trail.update();
-    }
-  });
 
   // update turret and draw
   const adjustedMouseX = mouseX + camera.x;
@@ -163,7 +155,6 @@ function animate(timeStamp) {
   turret.y = player.y;
   turret.angle = turretAngle;
   turret.updateAnimation(delta);
-  turret.draw();
 
   // starts the projetile animation effect
   projectiles.forEach((projectile, projIndex) => {
@@ -269,7 +260,15 @@ function animate(timeStamp) {
   });
 
   c.restore();
+  trails.forEach((trail, trailIndex) => {
+    if (trail.alpha <= 0) {
+      trails.splice(trailIndex, 1);
+    } else {
+      trail.update();
+    }
+  });
   player.draw();
+  turret.draw();
 
   // draw mini map
   miniMap.draw();

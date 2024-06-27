@@ -1,3 +1,4 @@
+import { camera } from "../main.js";
 import { c } from "../utils/canvas.js";
 
 // Create Trail Class
@@ -17,9 +18,9 @@ class Trail {
     c.save();
     // setting global Alpha
     c.globalAlpha = this.alpha;
-    c.translate(this.x, this.y);
+    c.translate(this.x - camera.x, this.y - camera.y);
     c.rotate((this.degree * Math.PI) / 180);
-    c.translate(-this.x, -this.y);
+    c.translate(-(this.x - camera.x), -(this.y - camera.y));
 
     c.strokeStyle = "red";
     c.fillStyle = this.color;
@@ -27,12 +28,26 @@ class Trail {
     c.shadowBlur = 5;
 
     c.beginPath();
-    c.arc(this.x - 8, this.y + 14, this.radius, 0, Math.PI * 2, false);
+    c.arc(
+      this.x - camera.x - 8,
+      this.y - camera.y + 14,
+      this.radius,
+      0,
+      Math.PI * 2,
+      false
+    );
     c.stroke();
     c.fill();
 
     c.beginPath();
-    c.arc(this.x + 8, this.y + 14, this.radius, 0, Math.PI * 2, false);
+    c.arc(
+      this.x - camera.x + 8,
+      this.y - camera.y + 14,
+      this.radius,
+      0,
+      Math.PI * 2,
+      false
+    );
     c.stroke();
     c.fill();
 

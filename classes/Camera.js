@@ -6,8 +6,8 @@ class Camera {
     this.height = height;
     this.map = map;
     // Define margins within which the player can move freely
-    this.marginX = width / 4;
-    this.marginY = height / 4;
+    this.marginX = width / 10;
+    this.marginY = height / 6;
   }
 
   update(player) {
