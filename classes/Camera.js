@@ -34,6 +34,12 @@ class Camera {
     //   this.x = this.map.width - this.width;
     // if (this.y + this.height > this.map.height)
     //   this.y = this.map.height - this.height;
+    if (this.x < 0) this.x = 0;
+    if (this.y < 0) this.y = 0;
+    if (this.x + this.width > this.map.tilesCountX * this.map.tileWidth)
+      this.x = this.map.tilesCountX * this.map.tileWidth - this.width;
+    if (this.y + this.height > this.map.tilesCountY * this.map.tileHeight)
+      this.y = this.map.tilesCountY * this.map.tileHeight - this.height;
   }
 }
 

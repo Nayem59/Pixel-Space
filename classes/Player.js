@@ -50,14 +50,18 @@ class Player {
 
     this.x = Math.max(
       this.radius,
-      // Math.min(this.map.width - this.radius, this.x + this.velocity.x * delta)
-      this.x + this.velocity.x * delta
+      Math.min(
+        this.map.tilesCountX * this.map.tileWidth - this.radius,
+        this.x + this.velocity.x * delta
+      )
     );
 
     this.y = Math.max(
       this.radius,
-      // Math.min(this.map.height - this.radius, this.y + this.velocity.y * delta)
-      this.y + this.velocity.y * delta
+      Math.min(
+        this.map.tilesCountY * this.map.tileHeight - this.radius,
+        this.y + this.velocity.y * delta
+      )
     );
   }
 }

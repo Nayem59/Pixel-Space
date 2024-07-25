@@ -37,7 +37,6 @@ class Assets {
       this.images[key] = { image: img, isLoaded: false };
       img.onload = (e) => (this.images[key].isLoaded = true);
     });
-    this.getSpaceBgImages();
   }
 
   getSpaceBgImages() {
