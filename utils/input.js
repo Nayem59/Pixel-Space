@@ -1,5 +1,13 @@
 import Trail from "../classes/Trail.js";
-import { friction, player, shipExFire, trails } from "../main.js";
+import {
+  camera,
+  friction,
+  map,
+  player,
+  shipExFire,
+  tileMap,
+  trails,
+} from "../main.js";
 
 // Object to keep track of pressed keys
 export const keysPressed = {};
@@ -149,4 +157,28 @@ export function handleTrail(delta) {
       trails.push(new Trail(player.x, player.y, "orange", player.degree));
     }
   }
+}
+
+export function handleTileMap() {
+  // if (player.x > 2048) {
+  //   map.image = tileMap.tileMap.get(1).img;
+  //   map.mapPosX = 2048;
+  // }
+  // if (player.y > 2048) {
+  //   map.image = tileMap.tileMap.get(5).img;
+  //   map.mapPosY = 2048;
+  // }
+
+  tileMap.tileMap.forEach((val, key) => {
+    if (
+      player.x > val.x &&
+      player.x < val.x + tileMap.tileWidth &&
+      player.y > val.y &&
+      player.y < val.y + tileMap.tileHeight
+    ) {
+      map.image = tileMap.tileMap.get(key).img;
+      map.mapPosX = val.x;
+      map.mapPosY = val.y;
+    }
+  });
 }

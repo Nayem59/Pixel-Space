@@ -8,6 +8,7 @@ import {
   handlePlayerRotation,
   handlePlayerVelocity,
   handleShipExFireAnimation,
+  handleTileMap,
   handleTrail,
 } from "./utils/input.js";
 import Sprite from "./utils/sprite.js";
@@ -16,6 +17,7 @@ import Vector2 from "./classes/Vector2.js";
 import Map from "./classes/Map.js";
 import Camera from "./classes/Camera.js";
 import MiniMap from "./classes/MiniMap.js";
+import TileMap from "./classes/TileMap.js";
 
 const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
@@ -34,6 +36,7 @@ let turretAngle = 0;
 let mouseX = 0;
 let mouseY = 0;
 
+export let tileMap;
 export let map;
 export let camera;
 let miniMap;
@@ -48,8 +51,10 @@ let particles = [];
 export let trails = [];
 
 function init() {
-  if (assets.images.spaceBg.isLoaded) {
-    map = new Map(assets.images.spaceBg.image, 2048, 2048);
+  tileMap = new TileMap(assets.getSpaceBgImages(), 2048, 2048, 5, 3);
+  if (assets.images.spaceBg1.isLoaded) {
+    // map = new Map(assets.images.spaceBg1.image, 2048, 2048);
+    map = new Map(tileMap.tileMap.get(0).img, 2048, 2048);
     camera = new Camera(canvas.width, canvas.height, map);
     player = new Player(x, y, 10, "blue", { x: 0, y: 0 }, map);
   }
@@ -123,8 +128,8 @@ let score = 0;
 let delta = 0;
 let oldTimeStamp = 0;
 
-function animate(timeStamp) {
-  animationId = requestAnimationFrame(animate);
+function gameLoop(timeStamp) {
+  animationId = requestAnimationFrame(gameLoop);
   // Calculate delta aka how many seconds has passed (milliseconds)
   delta = (timeStamp - oldTimeStamp) / 10;
   // delta = 1;
@@ -139,6 +144,8 @@ function animate(timeStamp) {
   camera.update(player);
 
   c.clearRect(0, 0, canvas.width, canvas.height);
+  // console.log(player.x, player.y);
+  handleTileMap();
   map.draw(c, camera);
 
   c.save();
@@ -309,7 +316,7 @@ canvas.addEventListener("mousemove", (e) => {
 
 startGameBtn.addEventListener("click", (e) => {
   init();
-  animate(0);
+  gameLoop(0);
   // spawnEnemies();
   modal.style.display = "none";
 });

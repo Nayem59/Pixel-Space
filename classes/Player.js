@@ -29,10 +29,10 @@ class Player {
     c.translate(-(this.x - camera.x), -(this.y - camera.y));
     if (assets.images.ship1.isLoaded) {
       c.save();
-      c.shadowColor = "black";
-      c.shadowOffsetX = 10;
-      c.shadowOffsetY = 10;
-      c.shadowBlur = 5;
+      // c.shadowColor = "black";
+      // c.shadowOffsetX = 10;
+      // c.shadowOffsetY = 10;
+      // c.shadowBlur = 5;
       c.drawImage(
         assets.images.ship1.image,
         this.x - camera.x - 16,
@@ -50,12 +50,14 @@ class Player {
 
     this.x = Math.max(
       this.radius,
-      Math.min(this.map.width - this.radius, this.x + this.velocity.x * delta)
+      // Math.min(this.map.width - this.radius, this.x + this.velocity.x * delta)
+      this.x + this.velocity.x * delta
     );
 
     this.y = Math.max(
       this.radius,
-      Math.min(this.map.height - this.radius, this.y + this.velocity.y * delta)
+      // Math.min(this.map.height - this.radius, this.y + this.velocity.y * delta)
+      this.y + this.velocity.y * delta
     );
   }
 }
