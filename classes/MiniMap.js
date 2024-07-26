@@ -3,9 +3,9 @@ import { c } from "../utils/canvas.js";
 
 class MiniMap {
   constructor(canvasWidth, canvasHeight) {
-    this.width = 256;
-    this.height = 256;
-    this.scale = 0.125; // Scale of the mini-map (mini-map size / background size)
+    this.width = (2048 * 5) / 32;
+    this.height = (2048 * 3) / 32;
+    this.scale = 0.03125; // Scale of the mini-map (mini-map size / background size)
     this.positionX = canvasWidth - this.width - 10;
     this.positionY = canvasHeight - this.height - 10;
   }
@@ -16,21 +16,28 @@ class MiniMap {
     c.fillRect(this.positionX, this.positionY, this.width, this.height);
 
     // Draw the scaled-down background on the mini-map
-    c.drawImage(
-      map.image,
-      0,
-      0,
-      map.width,
-      map.height,
-      this.positionX,
-      this.positionY,
-      this.width,
-      this.height
-    );
+    for (let row = 0; row < map.tilesCountY; row++) {
+      for (let col = 0; col < map.tilesCountX; col++) {
+        const tileIndex = row * map.tilesCountX + col;
+        const tile = map.images[tileIndex];
+        if (tile && tile.isLoaded) {
+          const miniMapTileX =
+            this.positionX + col * map.tileWidth * this.scale;
+          const miniMapTileY =
+            this.positionY + row * map.tileHeight * this.scale;
+          c.drawImage(
+            tile.image,
+            miniMapTileX,
+            miniMapTileY,
+            map.tileWidth * this.scale,
+            map.tileHeight * this.scale
+          );
+        }
+      }
+    }
 
     // Draw the player on the mini-map
     const miniMapPlayerX = this.positionX + player.x * this.scale;
-
     const miniMapPlayerY = this.positionY + player.y * this.scale;
 
     c.fillStyle = "red";
@@ -39,7 +46,7 @@ class MiniMap {
     c.arc(
       miniMapPlayerX,
       miniMapPlayerY,
-      player.radius * 0.5,
+      player.radius * 0.3,
       0,
       Math.PI * 2,
       false

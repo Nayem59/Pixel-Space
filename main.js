@@ -8,13 +8,11 @@ import {
   handlePlayerRotation,
   handlePlayerVelocity,
   handleShipExFireAnimation,
-  handleTileMap,
   handleTrail,
 } from "./utils/input.js";
 import Sprite from "./utils/sprite.js";
 import { assets } from "./utils/assets.js";
 import Vector2 from "./classes/Vector2.js";
-// import Map from "./classes/Map.js";
 import Camera from "./classes/Camera.js";
 import MiniMap from "./classes/MiniMap.js";
 import TileMap from "./classes/TileMap.js";
@@ -52,7 +50,6 @@ export let trails = [];
 
 function init() {
   if (assets.images.spaceBg1.isLoaded) {
-    // map = new Map(assets.images.spaceBg1.image, 2048, 2048);
     map = new TileMap(assets.getSpaceBgImages(), 2048, 2048, 5, 3);
     camera = new Camera(canvas.width, canvas.height, map);
     player = new Player(x, y, 10, "blue", { x: 0, y: 0 }, map);
@@ -143,8 +140,6 @@ function gameLoop(timeStamp) {
   camera.update(player);
 
   c.clearRect(0, 0, canvas.width, canvas.height);
-  // console.log(player.x, player.y);
-  // handleTileMap();
   map.draw(c, camera);
 
   c.save();
@@ -277,7 +272,7 @@ function gameLoop(timeStamp) {
   turret.draw();
 
   // draw mini map
-  // miniMap.draw();
+  miniMap.draw();
 }
 
 // add click eventlistener for projectile

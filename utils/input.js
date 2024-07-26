@@ -158,27 +158,3 @@ export function handleTrail(delta) {
     }
   }
 }
-
-export function handleTileMap() {
-  // if (player.x > 2048) {
-  //   map.image = tileMap.tileMap.get(1).img;
-  //   map.mapPosX = 2048;
-  // }
-  // if (player.y > 2048) {
-  //   map.image = tileMap.tileMap.get(5).img;
-  //   map.mapPosY = 2048;
-  // }
-
-  tileMap.tileMap.forEach((val, key) => {
-    if (
-      player.x > val.x &&
-      player.x < val.x + tileMap.tileWidth &&
-      player.y > val.y &&
-      player.y < val.y + tileMap.tileHeight
-    ) {
-      map.image = tileMap.tileMap.get(key).img;
-      map.mapPosX = val.x;
-      map.mapPosY = val.y;
-    }
-  });
-}
