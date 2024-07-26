@@ -8,8 +8,6 @@ class Camera {
     // Define margins within which the player can move freely
     this.marginX = width / 10;
     this.marginY = height / 6;
-    // this.marginX = 0;
-    // this.marginY = 0;
   }
 
   update(player) {
@@ -28,12 +26,6 @@ class Camera {
     }
 
     // Clamp camera position to map boundaries
-    // if (this.x < 0) this.x = 0;
-    // if (this.y < 0) this.y = 0;
-    // if (this.x + this.width > this.map.width)
-    //   this.x = this.map.width - this.width;
-    // if (this.y + this.height > this.map.height)
-    //   this.y = this.map.height - this.height;
     if (this.x < 0) this.x = 0;
     if (this.y < 0) this.y = 0;
     if (this.x + this.width > this.map.tilesCountX * this.map.tileWidth)

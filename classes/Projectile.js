@@ -1,6 +1,5 @@
 import { c } from "../utils/canvas.js";
 
-// Create Projectile Class
 class Projectile {
   constructor(x, y, radius, color, velocity, angle) {
     this.x = x;
@@ -13,8 +12,8 @@ class Projectile {
     this.angle = angle;
   }
 
-  // create a custom draw method that initiates a circul and fills it
   draw() {
+    // for collision and debug purposes
     // c.beginPath();
     // c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     // c.fillStyle = this.color;
@@ -38,7 +37,6 @@ class Projectile {
     c.restore();
   }
 
-  // update the coordinates to create the animation effect
   update(delta) {
     this.draw();
     this.x = this.x + this.velocity.x * delta;

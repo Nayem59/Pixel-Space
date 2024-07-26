@@ -1,36 +1,21 @@
 import Trail from "../classes/Trail.js";
-import {
-  camera,
-  friction,
-  map,
-  player,
-  shipExFire,
-  tileMap,
-  trails,
-} from "../main.js";
+import { friction, player, shipExFire, trails } from "../main.js";
 
-// Object to keep track of pressed keys
 export const keysPressed = {};
 
-const rotationSpeed = 3;
-const rotationThreshold = 5;
-
-// Add or remove keys to the object on keydown and keyup events
 addEventListener("keydown", (e) => {
   keysPressed[e.key] = true;
 });
-
 addEventListener("keyup", (e) => {
   delete keysPressed[e.key];
 });
 
-// Function to handle player velocity based on pressed keys
 export function handlePlayerVelocity() {
   // Apply Friction to slow down gradually on keyup
   player.velocity.x *= friction;
   player.velocity.y *= friction;
 
-  // Continuously add speed to velocity & handle rotation
+  // Continuously add speed to velocity
   if (keysPressed["w"]) player.velocity.y -= player.speed;
   if (keysPressed["s"]) player.velocity.y += player.speed;
   if (keysPressed["a"]) player.velocity.x -= player.speed;
@@ -80,6 +65,9 @@ function getKeyCombination() {
   if (keysPressed["d"]) combo += "d";
   return combo;
 }
+
+const rotationSpeed = 3;
+const rotationThreshold = 5;
 
 export function handlePlayerRotation() {
   const combo = getKeyCombination();

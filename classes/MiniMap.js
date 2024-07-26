@@ -1,4 +1,4 @@
-import { map, player } from "../main.js";
+import { camera, map, player } from "../main.js";
 import { c } from "../utils/canvas.js";
 
 class MiniMap {
@@ -12,10 +12,23 @@ class MiniMap {
 
   draw() {
     // Draw the mini-map
-    c.fillStyle = "rgba(255, 255, 255, 0.7)";
-    c.fillRect(this.positionX, this.positionY, this.width, this.height);
+    c.strokeStyle = "#7DF9FF";
+    c.strokeRect(
+      this.positionX - 1,
+      this.positionY - 1,
+      this.width + 2,
+      this.height + 2
+    );
 
     // Draw the scaled-down background on the mini-map
+    c.save();
+    if (
+      player.x - camera.x > this.positionX &&
+      player.y - camera.y > this.positionY
+    ) {
+      c.globalAlpha = 0.5;
+    }
+
     for (let row = 0; row < map.tilesCountY; row++) {
       for (let col = 0; col < map.tilesCountX; col++) {
         const tileIndex = row * map.tilesCountX + col;
@@ -35,13 +48,12 @@ class MiniMap {
         }
       }
     }
+    c.restore();
 
     // Draw the player on the mini-map
     const miniMapPlayerX = this.positionX + player.x * this.scale;
     const miniMapPlayerY = this.positionY + player.y * this.scale;
-
     c.fillStyle = "red";
-
     c.beginPath();
     c.arc(
       miniMapPlayerX,

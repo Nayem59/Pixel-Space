@@ -24,7 +24,7 @@ const endScore = document.querySelector("#endScore");
 
 export const friction = 0.98;
 
-// Instantiate a Player
+// Instantiation
 const x = canvas.width / 2;
 const y = canvas.height / 2;
 export let player;
@@ -39,13 +39,9 @@ export let map;
 export let camera;
 let miniMap;
 
-// array for storing projectiles
 let projectiles = [];
-// array for storing enemies
 let enemies = [];
-// array for storing particles
 let particles = [];
-// array for storing trails
 export let trails = [];
 
 function init() {
@@ -118,7 +114,7 @@ function spawnEnemies() {
   }, 1000);
 }
 
-// create a custom function to start a animation loop
+// main game loop
 let animationId;
 let score = 0;
 let delta = 0;
@@ -145,7 +141,7 @@ function gameLoop(timeStamp) {
   c.save();
   c.translate(-camera.x, -camera.y);
 
-  // update turret and draw
+  // update turret
   const adjustedMouseX = mouseX + camera.x;
   const adjustedMouseY = mouseY + camera.y;
   turretAngle = Math.atan2(
@@ -157,7 +153,7 @@ function gameLoop(timeStamp) {
   turret.angle = turretAngle;
   turret.updateAnimation(delta);
 
-  // starts the projetile animation effect
+  // projectile update
   projectiles.forEach((projectile, projIndex) => {
     projectile.update(delta);
 
@@ -173,6 +169,7 @@ function gameLoop(timeStamp) {
     }
   });
 
+  // enemy update and handle all collisions with enemy
   enemies.forEach((enemy, enemyIndex) => {
     enemy.update(delta);
 
@@ -188,9 +185,7 @@ function gameLoop(timeStamp) {
       }, 0);
     }
 
-    // work out the distance between the player and enemy
     const distPlEn = Math.hypot(player.x - enemy.x, player.y - enemy.y);
-
     // end game if the enemy colides with player
     if (distPlEn - enemy.radius - player.radius < -2) {
       cancelAnimationFrame(animationId);
@@ -200,7 +195,6 @@ function gameLoop(timeStamp) {
     }
 
     projectiles.forEach((projectile, projectileIndex) => {
-      // work out the distance between the enemy and projectile
       const distEnPro = Math.hypot(
         projectile.x - enemy.x,
         projectile.y - enemy.y
@@ -225,14 +219,8 @@ function gameLoop(timeStamp) {
 
         // setTimout waits for next frame to remove enemy from array to avoid flasing bug
         if (enemy.radius - 10 > 5) {
-          // increase score when touched
           score += 100;
           scoreEl.innerHTML = score;
-
-          // using gsap animation library to make a transition smother for enemy.radius -= 10
-          // gsap.to(enemy, {
-          //   radius: enemy.radius - 10,
-          // });
           enemy.startAnimation();
           enemy.radius -= 10;
           setTimeout(() => {
@@ -251,7 +239,7 @@ function gameLoop(timeStamp) {
     });
   });
 
-  // starts the particle animation effect
+  // particles update
   particles.forEach((particle, partIndex) => {
     if (particle.alpha <= 0) {
       particles.splice(partIndex, 1);
@@ -270,8 +258,6 @@ function gameLoop(timeStamp) {
   });
   player.draw();
   turret.draw();
-
-  // draw mini map
   miniMap.draw();
 }
 
