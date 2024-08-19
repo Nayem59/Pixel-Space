@@ -16,6 +16,7 @@ import Vector2 from "./classes/Vector2.js";
 import Camera from "./classes/Camera.js";
 import MiniMap from "./classes/MiniMap.js";
 import TileMap from "./classes/TileMap.js";
+import GameState from "./classes/GameState.js";
 
 const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
@@ -27,6 +28,7 @@ export const friction = 0.98;
 // Instantiation
 const x = canvas.width / 2;
 const y = canvas.height / 2;
+let gameState;
 export let player;
 export let turret;
 export let shipExFire;
@@ -39,12 +41,17 @@ export let map;
 export let camera;
 let miniMap;
 
+let live;
+
 let projectiles = [];
 let enemies = [];
 let particles = [];
 export let trails = [];
 
 function init() {
+  gameState = new GameState();
+  delta = 0;
+  oldTimeStamp = 0;
   if (assets.images.spaceBg1.isLoaded) {
     map = new TileMap(assets.getSpaceBgImages(), 2048, 2048, 5, 3);
     camera = new Camera(canvas.width, canvas.height, map);
@@ -65,6 +72,13 @@ function init() {
     frame: 0,
   });
   miniMap = new MiniMap(canvas.width, canvas.height);
+  live = new Sprite({
+    asset: assets.images.live,
+    frameSize: new Vector2(176, 44),
+    hFrames: 6,
+    vFrames: 1,
+    frame: 0,
+  });
   projectiles = [];
   enemies = [];
   particles = [];
@@ -186,12 +200,18 @@ function gameLoop(timeStamp) {
     }
 
     const distPlEn = Math.hypot(player.x - enemy.x, player.y - enemy.y);
-    // end game if the enemy colides with player
+    // reduce hp if the enemy colides with player, end game is hp is 0
     if (distPlEn - enemy.radius - player.radius < -2) {
-      cancelAnimationFrame(animationId);
-      clearInterval(enemyInterval);
-      endScore.innerHTML = score;
-      modal.style.display = "flex";
+      gameState.takeDamage(1);
+      setTimeout(() => {
+        enemies.splice(enemyIndex, 1);
+      }, 0);
+      if (gameState.playerHealth === 0) {
+        cancelAnimationFrame(animationId);
+        clearInterval(enemyInterval);
+        endScore.innerHTML = score;
+        modal.style.display = "flex";
+      }
     }
 
     projectiles.forEach((projectile, projectileIndex) => {
@@ -259,6 +279,9 @@ function gameLoop(timeStamp) {
   player.draw();
   turret.draw();
   miniMap.draw();
+
+  live.frame = 5 - gameState.playerHealth;
+  live.drawImage(c, 5, 25);
 }
 
 // add click eventlistener for projectile
@@ -297,6 +320,6 @@ canvas.addEventListener("mousemove", (e) => {
 startGameBtn.addEventListener("click", (e) => {
   init();
   gameLoop(0);
-  // spawnEnemies();
+  spawnEnemies();
   modal.style.display = "none";
 });

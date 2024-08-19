@@ -129,13 +129,13 @@ export function handleShipExFireAnimation(delta) {
 }
 
 const trailFrameDuration = (1 / 60) * 100;
-let trailFramTimer = 0;
+let trailFrameTimer = 0;
 
 export function handleTrail(delta) {
-  trailFramTimer += delta;
+  trailFrameTimer += delta;
 
-  while (trailFramTimer >= trailFrameDuration) {
-    trailFramTimer -= trailFrameDuration;
+  while (trailFrameTimer >= trailFrameDuration) {
+    trailFrameTimer -= trailFrameDuration;
     if (
       keysPressed["w"] ||
       keysPressed["a"] ||
