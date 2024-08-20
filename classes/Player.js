@@ -9,6 +9,7 @@ class Player {
     this.radius = radius;
     this.color = color;
     this.velocity = velocity;
+    this.mass = 1;
     this.speed = 0.2;
     this.maxVelocity = 3;
     this.rotation = 0;

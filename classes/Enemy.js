@@ -10,6 +10,7 @@ class Enemy extends Sprite {
     this.radius = radius;
     this.color = color;
     this.velocity = velocity;
+    this.mass = 5;
     this.isAnimating = false;
     this.frameTimer = 0;
     this.frameDuration = (1 / 10) * 100;

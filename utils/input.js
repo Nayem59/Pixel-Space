@@ -146,3 +146,56 @@ export function handleTrail(delta) {
     }
   }
 }
+
+// complex algorithm to resolve collision, dont understand fully, research elastic collision
+export function resolveCollision(circle1, circle2) {
+  const dx = circle2.x - circle1.x;
+  const dy = circle2.y - circle1.y;
+
+  // Angle of the collision
+  const collisionAngle = Math.atan2(dy, dx);
+
+  // Speeds before collision
+  const speed1 = Math.sqrt(
+    circle1.velocity.x * circle1.velocity.x +
+      circle1.velocity.y * circle1.velocity.y
+  );
+  const speed2 = Math.sqrt(
+    circle2.velocity.x * circle2.velocity.x +
+      circle2.velocity.y * circle2.velocity.y
+  );
+
+  // Directions before collision
+  const direction1 = Math.atan2(circle1.velocity.y, circle1.velocity.x);
+  const direction2 = Math.atan2(circle2.velocity.y, circle2.velocity.x);
+
+  // New velocities
+  const vx1 = speed1 * Math.cos(direction1 - collisionAngle);
+  const vy1 = speed1 * Math.sin(direction1 - collisionAngle);
+  const vx2 = speed2 * Math.cos(direction2 - collisionAngle);
+  const vy2 = speed2 * Math.sin(direction2 - collisionAngle);
+
+  // Conservation of momentum
+  const finalVx1 =
+    ((circle1.mass - circle2.mass) * vx1 +
+      (circle2.mass + circle2.mass) * vx2) /
+    (circle1.mass + circle2.mass);
+  const finalVx2 =
+    ((circle1.mass + circle1.mass) * vx1 +
+      (circle2.mass - circle1.mass) * vx2) /
+    (circle1.mass + circle2.mass);
+
+  // Update velocities according to the angle
+  circle1.velocity.x =
+    Math.cos(collisionAngle) * finalVx1 +
+    Math.cos(collisionAngle + Math.PI / 2) * vy1;
+  circle1.velocity.y =
+    Math.sin(collisionAngle) * finalVx1 +
+    Math.sin(collisionAngle + Math.PI / 2) * vy1;
+  circle2.velocity.x =
+    Math.cos(collisionAngle) * finalVx2 +
+    Math.cos(collisionAngle + Math.PI / 2) * vy2;
+  circle2.velocity.y =
+    Math.sin(collisionAngle) * finalVx2 +
+    Math.sin(collisionAngle + Math.PI / 2) * vy2;
+}

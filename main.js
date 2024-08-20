@@ -9,6 +9,7 @@ import {
   handlePlayerVelocity,
   handleShipExFireAnimation,
   handleTrail,
+  resolveCollision,
 } from "./utils/input.js";
 import Sprite from "./utils/sprite.js";
 import { assets } from "./utils/assets.js";
@@ -203,9 +204,13 @@ function gameLoop(timeStamp) {
     // reduce hp if the enemy colides with player, end game is hp is 0
     if (distPlEn - enemy.radius - player.radius < -2) {
       gameState.takeDamage(1);
+
+      resolveCollision(player, enemy);
+
       setTimeout(() => {
         enemies.splice(enemyIndex, 1);
       }, 0);
+
       if (gameState.playerHealth === 0) {
         cancelAnimationFrame(animationId);
         clearInterval(enemyInterval);
