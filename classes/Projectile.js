@@ -10,6 +10,7 @@ class Projectile {
     this.color = color;
     this.velocity = velocity;
     this.angle = angle;
+    this.mass = 1;
   }
 
   draw() {

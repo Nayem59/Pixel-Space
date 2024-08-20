@@ -1,4 +1,4 @@
-import { camera, map, player } from "../main.js";
+import { camera, enemies, map, player } from "../main.js";
 import { c } from "../utils/canvas.js";
 
 class MiniMap {
@@ -53,7 +53,7 @@ class MiniMap {
     // Draw the player on the mini-map
     const miniMapPlayerX = this.positionX + player.x * this.scale;
     const miniMapPlayerY = this.positionY + player.y * this.scale;
-    c.fillStyle = "red";
+    c.fillStyle = "#7DF9FF";
     c.beginPath();
     c.arc(
       miniMapPlayerX,
@@ -64,6 +64,23 @@ class MiniMap {
       false
     );
     c.fill();
+
+    // Draw the enemies on the mini-map
+    enemies.forEach((enemy) => {
+      const miniMapEnemyX = this.positionX + enemy.x * this.scale;
+      const miniMapEnemyY = this.positionY + enemy.y * this.scale;
+      c.fillStyle = "red";
+      c.beginPath();
+      c.arc(
+        miniMapEnemyX,
+        miniMapEnemyY,
+        enemy.radius * 0.1,
+        0,
+        Math.PI * 2,
+        false
+      );
+      c.fill();
+    });
   }
 }
 

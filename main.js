@@ -46,7 +46,7 @@ let miniMap;
 let live;
 
 let projectiles = [];
-let enemies = [];
+export let enemies = [];
 let particles = [];
 export let trails = [];
 
@@ -92,42 +92,47 @@ function init() {
 
 // create enemies every 1 second and push to array
 let enemyInterval;
+let removeEnemyInterval;
 function spawnEnemies() {
   enemyInterval = setInterval(() => {
     // any radius between 4 -> 30
     // const radius = Math.random() * (30 - 5) + 5;
     const radius = 23;
 
-    // spawn off the screen randomly
-    let x;
-    let y;
-    if (Math.random() < 0.5) {
-      x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius;
-      y = Math.random() * canvas.height;
-    } else {
-      x = Math.random() * canvas.width;
-      y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius;
-    }
+    let x = Math.random() * map.tileWidth * map.tilesCountX;
+    let y = Math.random() * map.tileHeight * map.tilesCountY;
 
     // const color = `hsl(${Math.random() * 360},50%,50%)`;
     const color = "#ab47bc";
 
-    const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
-    const velocity = {
-      x: Math.cos(angle),
-      y: Math.sin(angle),
-    };
-
     enemies.push(
-      new Enemy(x, y, radius, color, velocity, {
-        asset: assets.images.purpleBlob,
-        frameSize: new Vector2(64, 64),
-        hFrames: 8,
-        vFrames: 1,
-        frame: 0,
-      })
+      new Enemy(
+        x,
+        y,
+        radius,
+        color,
+        { x: 0, y: 0 },
+        {
+          asset: assets.images.purpleBlob,
+          frameSize: new Vector2(64, 64),
+          hFrames: 8,
+          vFrames: 1,
+          frame: 0,
+        }
+      )
     );
   }, 1000);
+  setTimeout(() => {
+    removeEnemyInterval = setInterval(() => {
+      if (!enemies[0].active) {
+        enemies.shift();
+      } else if (!enemies[1].active) {
+        enemies.splice(1, 1);
+      } else {
+        enemies.splice(2, 1);
+      }
+    }, 1000);
+  }, 20000);
 }
 
 // main game loop
@@ -189,18 +194,6 @@ function gameLoop(timeStamp) {
   enemies.forEach((enemy, enemyIndex) => {
     enemy.update(delta);
 
-    // remove enemy from edge of screen to avoid memory usage
-    if (
-      enemy.x + enemy.radius < 0 ||
-      enemy.x - enemy.radius > canvas.width ||
-      enemy.y + enemy.radius < 0 ||
-      enemy.y - enemy.radius > canvas.height
-    ) {
-      setTimeout(() => {
-        enemies.splice(enemyIndex, 1);
-      }, 0);
-    }
-
     const distPlEn = Math.hypot(player.x - enemy.x, player.y - enemy.y);
     // reduce hp if the enemy colides with player, end game is hp is 0
     if (distPlEn - enemy.radius - player.radius < -2) {
@@ -218,6 +211,7 @@ function gameLoop(timeStamp) {
         setTimeout(() => {
           cancelAnimationFrame(animationId);
           clearInterval(enemyInterval);
+          clearInterval(removeEnemyInterval);
           endScore.innerHTML = score;
           modal.style.display = "flex";
         }, 300);
@@ -251,6 +245,8 @@ function gameLoop(timeStamp) {
         if (enemy.radius - 10 > 5) {
           score += 100;
           scoreEl.innerHTML = score;
+          resolveCollision(projectile, enemy);
+          enemy.hitDuration = 20;
           enemy.startAnimation();
           enemy.radius -= 10;
           setTimeout(() => {
@@ -291,9 +287,7 @@ function gameLoop(timeStamp) {
   turret.draw();
   miniMap.draw();
 
-  // live.frame = 5 - gameState.playerHealth;
   live.update(delta);
-  console.log(live.frame, live.stepAnimationFrames);
 }
 
 // add click eventlistener for projectile

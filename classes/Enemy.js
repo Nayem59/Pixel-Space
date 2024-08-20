@@ -1,6 +1,7 @@
 import { assets } from "../utils/assets.js";
 import { c } from "../utils/canvas.js";
 import Sprite from "../utils/sprite.js";
+import { camera, player } from "../main.js";
 
 class Enemy extends Sprite {
   constructor(x, y, radius, color, velocity, spriteConfig) {
@@ -8,6 +9,10 @@ class Enemy extends Sprite {
     this.x = x;
     this.y = y;
     this.radius = radius;
+    this.detectionRadius = 300;
+    this.active = false;
+    this.hitDuration = 0;
+    this.margin = 40;
     this.color = color;
     this.velocity = velocity;
     this.mass = 5;
@@ -28,8 +33,42 @@ class Enemy extends Sprite {
     this.frame = 0;
   }
 
+  playerDetection() {
+    const distPlEn = Math.hypot(player.x - this.x, player.y - this.y);
+    return distPlEn < this.detectionRadius;
+  }
+
+  insideCameraView() {
+    if (
+      // adding a bit of margin so it doesnt get cut off on the edges
+      this.x > camera.x - this.margin &&
+      this.x < camera.x + camera.width + this.margin &&
+      this.y > camera.y - this.margin &&
+      this.y < camera.y + camera.height + this.margin
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   update(delta) {
-    this.draw();
+    if (this.insideCameraView()) {
+      this.draw();
+      this.active = true;
+    } else {
+      this.active = false;
+    }
+
+    if (this.playerDetection() && this.hitDuration < 1) {
+      const angle = Math.atan2(player.y - this.y, player.x - this.x);
+      this.velocity = {
+        x: Math.cos(angle),
+        y: Math.sin(angle),
+      };
+    } else {
+      this.hitDuration--;
+    }
+
     this.x = this.x + this.velocity.x * delta;
     this.y = this.y + this.velocity.y * delta;
 
