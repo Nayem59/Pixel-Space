@@ -18,6 +18,7 @@ import Camera from "./classes/Camera.js";
 import MiniMap from "./classes/MiniMap.js";
 import TileMap from "./classes/TileMap.js";
 import GameState from "./classes/GameState.js";
+import HealthBar from "./classes/HealthBar.js";
 
 const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
@@ -73,10 +74,10 @@ function init() {
     frame: 0,
   });
   miniMap = new MiniMap(canvas.width, canvas.height);
-  live = new Sprite({
+  live = new HealthBar(5, 25, {
     asset: assets.images.live,
     frameSize: new Vector2(176, 44),
-    hFrames: 6,
+    hFrames: 16,
     vFrames: 1,
     frame: 0,
   });
@@ -204,6 +205,8 @@ function gameLoop(timeStamp) {
     // reduce hp if the enemy colides with player, end game is hp is 0
     if (distPlEn - enemy.radius - player.radius < -2) {
       gameState.takeDamage(1);
+      live.startAnimation();
+      camera.damageDuration = 10;
 
       resolveCollision(player, enemy);
 
@@ -212,10 +215,12 @@ function gameLoop(timeStamp) {
       }, 0);
 
       if (gameState.playerHealth === 0) {
-        cancelAnimationFrame(animationId);
-        clearInterval(enemyInterval);
-        endScore.innerHTML = score;
-        modal.style.display = "flex";
+        setTimeout(() => {
+          cancelAnimationFrame(animationId);
+          clearInterval(enemyInterval);
+          endScore.innerHTML = score;
+          modal.style.display = "flex";
+        }, 300);
       }
     }
 
@@ -281,12 +286,14 @@ function gameLoop(timeStamp) {
       trail.update();
     }
   });
+  camera.showDamage(c);
   player.draw();
   turret.draw();
   miniMap.draw();
 
-  live.frame = 5 - gameState.playerHealth;
-  live.drawImage(c, 5, 25);
+  // live.frame = 5 - gameState.playerHealth;
+  live.update(delta);
+  console.log(live.frame, live.stepAnimationFrames);
 }
 
 // add click eventlistener for projectile

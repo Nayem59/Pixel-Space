@@ -8,6 +8,7 @@ class Camera {
     // Define margins within which the player can move freely
     this.marginX = width / 10;
     this.marginY = height / 6;
+    this.damageDuration = 0;
   }
 
   update(player) {
@@ -32,6 +33,27 @@ class Camera {
       this.x = this.map.tilesCountX * this.map.tileWidth - this.width;
     if (this.y + this.height > this.map.tilesCountY * this.map.tileHeight)
       this.y = this.map.tilesCountY * this.map.tileHeight - this.height;
+  }
+
+  showDamage(c) {
+    if (this.damageDuration > 0) {
+      const gradient = c.createRadialGradient(
+        this.width / 2,
+        this.height / 2,
+        this.width / 3,
+        this.width / 2,
+        this.height / 2,
+        this.width / 2
+      );
+      gradient.addColorStop(0, "rgb(255, 0, 0, 0)");
+      gradient.addColorStop(1, "rgb(255, 0, 0, 0.7)");
+      c.save();
+      c.globalAlpha = this.damageDuration / 10;
+      c.fillStyle = gradient;
+      c.fillRect(0, 0, this.width, this.height);
+      c.restore();
+      this.damageDuration--;
+    }
   }
 }
 
