@@ -1,7 +1,7 @@
 import { assets } from "../utils/assets.js";
 import { c } from "../utils/canvas.js";
 import Sprite from "../utils/sprite.js";
-import { camera, player } from "../main.js";
+import { camera, player, map, friction } from "../main.js";
 
 class Enemy extends Sprite {
   constructor(x, y, radius, color, velocity, spriteConfig) {
@@ -10,11 +10,13 @@ class Enemy extends Sprite {
     this.y = y;
     this.radius = radius;
     this.detectionRadius = 300;
-    this.active = false;
-    this.hitDuration = 0;
+    this.visible = false;
+    this.hit = false;
     this.margin = 40;
     this.color = color;
     this.velocity = velocity;
+    this.speed = 0.05;
+    this.maxVelocity = 2;
     this.mass = 5;
     this.isAnimating = false;
     this.frameTimer = 0;
@@ -51,26 +53,62 @@ class Enemy extends Sprite {
     return false;
   }
 
+  handleEnemyVelocity() {
+    // Apply Friction to slow down gradually on keyup
+    this.velocity.x *= friction;
+    this.velocity.y *= friction;
+
+    // Calculate velocity Magnitute through pythagoras theorem
+    const velocityMagnitude = Math.sqrt(
+      this.velocity.x ** 2 + this.velocity.y ** 2
+    );
+
+    // Handle if velocity is very small then set it to 0
+    const minVelocityThreshold = 0.01;
+    if (velocityMagnitude < minVelocityThreshold) {
+      this.velocity.x = 0;
+      this.velocity.y = 0;
+    }
+
+    // Limit the velocity to the maximum velocity
+    if (velocityMagnitude > this.maxVelocity) {
+      const scale = this.maxVelocity / velocityMagnitude;
+      this.velocity.x *= scale;
+      this.velocity.y *= scale;
+    }
+  }
+
   update(delta) {
     if (this.insideCameraView()) {
       this.draw();
-      this.active = true;
+      this.visible = true;
     } else {
-      this.active = false;
+      this.visible = false;
     }
 
-    if (this.playerDetection() && this.hitDuration < 1) {
+    if (this.playerDetection() || this.hit) {
       const angle = Math.atan2(player.y - this.y, player.x - this.x);
-      this.velocity = {
-        x: Math.cos(angle),
-        y: Math.sin(angle),
-      };
-    } else {
-      this.hitDuration--;
+      this.velocity.x += Math.cos(angle) * this.speed;
+      this.velocity.y += Math.sin(angle) * this.speed;
     }
 
-    this.x = this.x + this.velocity.x * delta;
-    this.y = this.y + this.velocity.y * delta;
+    this.handleEnemyVelocity();
+
+    this.x = Math.max(
+      this.radius,
+      Math.min(
+        map.tilesCountX * map.tileWidth - this.radius,
+        this.x + this.velocity.x * delta
+      )
+    );
+
+    this.y = Math.max(
+      this.radius,
+      Math.min(
+        map.tilesCountY * map.tileHeight - this.radius,
+        this.y + this.velocity.y * delta
+      )
+    );
 
     if (this.isAnimating) {
       this.frameTimer += delta;

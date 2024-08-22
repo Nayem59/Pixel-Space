@@ -90,49 +90,38 @@ function init() {
   endScore.innerHTML = score;
 }
 
-// create enemies every 1 second and push to array
-let enemyInterval;
-let removeEnemyInterval;
+let enemyTimeOutId;
 function spawnEnemies() {
-  enemyInterval = setInterval(() => {
-    // any radius between 4 -> 30
-    // const radius = Math.random() * (30 - 5) + 5;
-    const radius = 23;
+  const randomTime = Math.floor(Math.random() * (60000 - 10000 + 1)) + 10000;
+  const radius = 23;
 
-    let x = Math.random() * map.tileWidth * map.tilesCountX;
-    let y = Math.random() * map.tileHeight * map.tilesCountY;
+  let x = Math.random() * map.tileWidth * map.tilesCountX;
+  let y = Math.random() * map.tileHeight * map.tilesCountY;
+  const color = "#ab47bc";
 
-    // const color = `hsl(${Math.random() * 360},50%,50%)`;
-    const color = "#ab47bc";
-
-    enemies.push(
-      new Enemy(
-        x,
-        y,
-        radius,
-        color,
-        { x: 0, y: 0 },
-        {
-          asset: assets.images.purpleBlob,
-          frameSize: new Vector2(64, 64),
-          hFrames: 8,
-          vFrames: 1,
-          frame: 0,
-        }
-      )
-    );
-  }, 1000);
-  setTimeout(() => {
-    removeEnemyInterval = setInterval(() => {
-      if (!enemies[0].active) {
-        enemies.shift();
-      } else if (!enemies[1].active) {
-        enemies.splice(1, 1);
-      } else {
-        enemies.splice(2, 1);
+  enemies.push(
+    new Enemy(
+      x,
+      y,
+      radius,
+      color,
+      { x: 0, y: 0 },
+      {
+        asset: assets.images.purpleBlob,
+        frameSize: new Vector2(64, 64),
+        hFrames: 8,
+        vFrames: 1,
+        frame: 0,
       }
-    }, 1000);
-  }, 20000);
+    )
+  );
+
+  if (enemies.length > 50) {
+    const enemyIdx = enemies.findIndex((enemy) => !enemy.visible);
+    enemies.splice(enemyIdx, 1);
+  }
+
+  enemyTimeOutId = setTimeout(spawnEnemies, randomTime);
 }
 
 // main game loop
@@ -210,8 +199,7 @@ function gameLoop(timeStamp) {
       if (gameState.playerHealth === 0) {
         setTimeout(() => {
           cancelAnimationFrame(animationId);
-          clearInterval(enemyInterval);
-          clearInterval(removeEnemyInterval);
+          clearTimeout(enemyTimeOutId);
           endScore.innerHTML = score;
           modal.style.display = "flex";
         }, 300);
@@ -246,7 +234,7 @@ function gameLoop(timeStamp) {
           score += 100;
           scoreEl.innerHTML = score;
           resolveCollision(projectile, enemy);
-          enemy.hitDuration = 20;
+          enemy.hit = true;
           enemy.startAnimation();
           enemy.radius -= 10;
           setTimeout(() => {
