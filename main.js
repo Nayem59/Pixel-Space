@@ -95,8 +95,10 @@ function spawnEnemies() {
   const randomTime = Math.floor(Math.random() * (60000 - 10000 + 1)) + 10000;
   const radius = 23;
 
-  let x = Math.random() * map.tileWidth * map.tilesCountX;
-  let y = Math.random() * map.tileHeight * map.tilesCountY;
+  let x = 500;
+  let y = 500;
+  // let x = Math.random() * map.tileWidth * map.tilesCountX;
+  // let y = Math.random() * map.tileHeight * map.tilesCountY;
   const color = "#ab47bc";
 
   enemies.push(
@@ -121,7 +123,7 @@ function spawnEnemies() {
     enemies.splice(enemyIdx, 1);
   }
 
-  enemyTimeOutId = setTimeout(spawnEnemies, randomTime);
+  // enemyTimeOutId = setTimeout(spawnEnemies, randomTime);
 }
 
 // main game loop
@@ -214,7 +216,8 @@ function gameLoop(timeStamp) {
 
       // remove both if they touch, considering the radius
       if (distEnPro - enemy.radius - projectile.radius < -2) {
-        for (let i = 0; i < enemy.radius * 2; i++) {
+        enemy.health--;
+        for (let i = 0; i < enemy.radius; i++) {
           particles.push(
             new Particle(
               projectile.x,
@@ -230,13 +233,12 @@ function gameLoop(timeStamp) {
         }
 
         // setTimout waits for next frame to remove enemy from array to avoid flasing bug
-        if (enemy.radius - 10 > 5) {
+        if (enemy.health > 0) {
           score += 100;
           scoreEl.innerHTML = score;
           resolveCollision(projectile, enemy);
           enemy.hit = true;
           enemy.startAnimation();
-          enemy.radius -= 10;
           setTimeout(() => {
             projectiles.splice(projectileIndex, 1);
           }, 0);
