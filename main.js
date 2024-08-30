@@ -188,7 +188,7 @@ function gameLoop(timeStamp) {
     enemy.update(delta);
 
     const distPlEn = Math.hypot(player.x - enemy.x, player.y - enemy.y);
-    // reduce hp if the enemy colides with player, end game is hp is 0
+    // reduce hp if the enemy colides with player, end game if hp is 0
     if (distPlEn - enemy.radius - player.radius < -2) {
       gameState.takeDamage(1);
       live.startAnimation();
@@ -279,6 +279,9 @@ function gameLoop(timeStamp) {
   turret.draw();
   // miniMap.draw();
 
+  if (!live.isAnimating) {
+    live.frame = live.healthMap[gameState.playerHealth];
+  }
   live.update(delta);
 }
 

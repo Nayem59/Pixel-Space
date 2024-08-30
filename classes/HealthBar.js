@@ -7,11 +7,16 @@ class HealthBar extends Sprite {
     super(spriteConfig);
     this.x = x;
     this.y = y;
-    this.isAnimating = false;
-    this.frameTimer = 0;
     this.frameDuration = (1 / 10) * 100;
-    this.stepAnimationFrames = 3;
-    this.maxAnimationFrames = this.frameMap.size;
+    this.maxAnimationFrames = 3;
+    this.healthMap = {
+      5: 0,
+      4: 3,
+      3: 4,
+      2: 5,
+      1: 6,
+      0: 7,
+    };
   }
 
   draw() {
@@ -22,12 +27,10 @@ class HealthBar extends Sprite {
 
   startAnimation() {
     this.isAnimating = true;
-    // this.frame = 0;
+    this.frame = 1;
   }
 
   update(delta) {
-    this.draw();
-
     if (this.isAnimating) {
       this.frameTimer += delta;
       while (this.frameTimer >= this.frameDuration) {
@@ -37,13 +40,9 @@ class HealthBar extends Sprite {
           this.isAnimating = false;
           this.frame = 0;
         }
-
-        if (this.frame >= this.stepAnimationFrames) {
-          this.isAnimating = false;
-          this.stepAnimationFrames += 3;
-        }
       }
     }
+    this.draw();
   }
 }
 
