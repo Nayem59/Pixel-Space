@@ -11,6 +11,7 @@ class Assets {
       shipExhaustFire: "/../assets/player/shipexhaustFire.png",
       purpleBlob: "/../assets/enemies/purple_blob_sheet.png",
       live: "/../assets/ui/health.png",
+      exclam: "/../assets/ui/exclamationMark.png",
       spaceBg1: "/../assets/bge/bg1e.jpg",
       spaceBg2: "/../assets/bge/bg2e.jpg",
       spaceBg3: "/../assets/bge/bg3e.jpg",

@@ -9,10 +9,7 @@ class Turret extends Sprite {
     this.x = x;
     this.y = y;
     this.angle = angle;
-    this.isAnimating = false;
-    this.frameTimer = 0;
     this.frameDuration = (1 / 30) * 100;
-    this.maxAnimationFrames = this.frameMap.size;
   }
 
   draw() {
@@ -33,20 +30,6 @@ class Turret extends Sprite {
   startAnimation() {
     this.isAnimating = true;
     this.frame = 0;
-  }
-
-  updateAnimation(delta) {
-    if (this.isAnimating) {
-      this.frameTimer += delta;
-      while (this.frameTimer >= this.frameDuration) {
-        this.frameTimer -= this.frameDuration;
-        this.frame++;
-        if (this.frame >= this.maxAnimationFrames) {
-          this.isAnimating = false;
-          this.frame = 0;
-        }
-      }
-    }
   }
 }
 

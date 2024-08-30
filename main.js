@@ -133,6 +133,8 @@ let delta = 0;
 let oldTimeStamp = 0;
 
 function gameLoop(timeStamp) {
+  console.log(gameState.playerHealth);
+
   animationId = requestAnimationFrame(gameLoop);
   // Calculate delta aka how many seconds has passed (milliseconds)
   delta = (timeStamp - oldTimeStamp) / 10;
@@ -163,7 +165,7 @@ function gameLoop(timeStamp) {
   turret.x = player.x;
   turret.y = player.y;
   turret.angle = turretAngle;
-  turret.updateAnimation(delta);
+  turret.animate(delta);
 
   // projectile update
   projectiles.forEach((projectile, projIndex) => {
@@ -275,7 +277,7 @@ function gameLoop(timeStamp) {
   camera.showDamage(c);
   player.draw();
   turret.draw();
-  miniMap.draw();
+  // miniMap.draw();
 
   live.update(delta);
 }
@@ -316,6 +318,7 @@ canvas.addEventListener("mousemove", (e) => {
 startGameBtn.addEventListener("click", (e) => {
   init();
   gameLoop(0);
+  spawnEnemies();
   spawnEnemies();
   modal.style.display = "none";
 });

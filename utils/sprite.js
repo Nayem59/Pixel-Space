@@ -20,6 +20,10 @@ class Sprite {
     this.scale = scale ?? 1;
     this.position = position ?? new Vector2(0, 0);
     this.generateframeMap();
+    this.isAnimating = false;
+    this.frameTimer = 0;
+    this.frameDuration = (1 / 60) * 100;
+    this.maxAnimationFrames = this.frameMap.size;
   }
 
   generateframeMap() {
@@ -31,6 +35,20 @@ class Sprite {
           new Vector2(this.frameSize.x * h, this.frameSize.y * v)
         );
         frameCount++;
+      }
+    }
+  }
+
+  animate(delta) {
+    if (this.isAnimating) {
+      this.frameTimer += delta;
+      while (this.frameTimer >= this.frameDuration) {
+        this.frameTimer -= this.frameDuration;
+        this.frame++;
+        if (this.frame >= this.maxAnimationFrames) {
+          this.isAnimating = false;
+          this.frame = 0;
+        }
       }
     }
   }

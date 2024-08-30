@@ -2,6 +2,7 @@ import { assets } from "../utils/assets.js";
 import { c } from "../utils/canvas.js";
 import Sprite from "../utils/sprite.js";
 import { camera, player, map, friction } from "../main.js";
+import Vector2 from "./Vector2.js";
 
 class Enemy extends Sprite {
   constructor(x, y, radius, color, velocity, spriteConfig) {
@@ -23,10 +24,16 @@ class Enemy extends Sprite {
     this.speed = 0.05;
     this.maxVelocity = 2;
     this.mass = 5;
-    this.isAnimating = false;
-    this.frameTimer = 0;
     this.frameDuration = (1 / 10) * 100;
-    this.maxAnimationFrames = this.frameMap.size;
+    this.firstDetected = false;
+    this.exclam = new Sprite({
+      asset: assets.images.exclam,
+      frameSize: new Vector2(32, 32),
+      hFrames: 10,
+      vFrames: 1,
+      frame: 0,
+    });
+    this.exclam.frameDuration = (1 / 15) * 100;
   }
 
   generatePatrolPoints() {
@@ -54,7 +61,14 @@ class Enemy extends Sprite {
 
   playerDetection() {
     const distPlEn = Math.hypot(player.x - this.x, player.y - this.y);
-    return distPlEn < this.detectionRadius;
+    const playerDetected = distPlEn < this.detectionRadius;
+    if (playerDetected && !this.firstDetected) {
+      this.firstDetected = true; // Mark as first detection
+      this.exclam.isAnimating = true; // Start animation
+    } else if (!playerDetected) {
+      this.firstDetected = false; // Reset if player is no longer detected
+    }
+    return playerDetected;
   }
 
   insideCameraView() {
@@ -138,12 +152,17 @@ class Enemy extends Sprite {
 
     if (this.insideCameraView()) {
       this.draw();
+      if (this.exclam.isAnimating) {
+        this.exclam.animate(delta);
+        this.exclam.drawImage(c, this.x + 10, this.y - 60);
+      }
       this.visible = true;
     } else {
       this.visible = false;
     }
 
     this.handleEnemyVelocity();
+    this.animate(delta);
 
     this.x = Math.max(
       this.radius,
@@ -160,18 +179,6 @@ class Enemy extends Sprite {
         this.y + this.velocity.y * delta
       )
     );
-
-    if (this.isAnimating) {
-      this.frameTimer += delta;
-      while (this.frameTimer >= this.frameDuration) {
-        this.frameTimer -= this.frameDuration;
-        this.frame++;
-        if (this.frame >= this.maxAnimationFrames) {
-          this.isAnimating = false;
-          this.frame = 0;
-        }
-      }
-    }
   }
 }
 
