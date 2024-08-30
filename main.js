@@ -133,8 +133,6 @@ let delta = 0;
 let oldTimeStamp = 0;
 
 function gameLoop(timeStamp) {
-  console.log(gameState.playerHealth);
-
   animationId = requestAnimationFrame(gameLoop);
   // Calculate delta aka how many seconds has passed (milliseconds)
   delta = (timeStamp - oldTimeStamp) / 10;
@@ -177,18 +175,17 @@ function gameLoop(timeStamp) {
     );
 
     if (distProj > 300) {
-      setTimeout(() => {
-        projectiles.splice(projIndex, 1);
-      }, 0);
+      projectiles.splice(projIndex, 1);
     }
   });
 
+  const enemiesToRemove = [];
   // enemy update and handle all collisions with enemy
   enemies.forEach((enemy, enemyIndex) => {
     enemy.update(delta);
 
     const distPlEn = Math.hypot(player.x - enemy.x, player.y - enemy.y);
-    // reduce hp if the enemy colides with player, end game if hp is 0
+    // reduce hp if the enemy collides with player, end game if hp is 0
     if (distPlEn - enemy.radius - player.radius < -2) {
       gameState.takeDamage(1);
       live.startAnimation();
@@ -196,9 +193,7 @@ function gameLoop(timeStamp) {
 
       resolveCollision(player, enemy);
 
-      setTimeout(() => {
-        enemies.splice(enemyIndex, 1);
-      }, 0);
+      enemiesToRemove.push(enemyIndex);
 
       if (gameState.playerHealth === 0) {
         setTimeout(() => {
@@ -234,28 +229,27 @@ function gameLoop(timeStamp) {
           );
         }
 
-        // setTimout waits for next frame to remove enemy from array to avoid flasing bug
         if (enemy.health > 0) {
           score += 100;
           scoreEl.innerHTML = score;
           resolveCollision(projectile, enemy);
           enemy.hit = true;
           enemy.startAnimation();
-          setTimeout(() => {
-            projectiles.splice(projectileIndex, 1);
-          }, 0);
+          projectiles.splice(projectileIndex, 1);
         } else {
           score += 250;
           scoreEl.innerHTML = score;
-
-          setTimeout(() => {
-            enemies.splice(enemyIndex, 1);
-            projectiles.splice(projectileIndex, 1);
-          }, 0);
+          enemiesToRemove.push(enemyIndex);
+          projectiles.splice(projectileIndex, 1);
         }
       }
     });
   });
+  enemiesToRemove
+    .sort((a, b) => b - a)
+    .forEach((index) => {
+      enemies.splice(index, 1);
+    });
 
   // particles update
   particles.forEach((particle, partIndex) => {
