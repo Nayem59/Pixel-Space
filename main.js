@@ -20,11 +20,15 @@ import TileMap from "./classes/TileMap.js";
 import GameState from "./classes/GameState.js";
 import HealthBar from "./classes/HealthBar.js";
 import Collectable from "./classes/Collectable.js";
+import CoinUI from "./classes/CoinUI.js";
+import GemUI from "./classes/GemUI.js";
 
 const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
 const modal = document.querySelector(".modal-container");
 const endScore = document.querySelector("#endScore");
+const coinEl = document.querySelector("#coin");
+const gemEl = document.querySelector("#gem");
 
 export const friction = 0.98;
 
@@ -86,7 +90,21 @@ function init() {
     vFrames: 1,
     frame: 0,
   });
-  coinUI = projectiles = [];
+  coinUI = new CoinUI(canvas.width - 170, 3, {
+    asset: assets.images.coinUI,
+    frameSize: new Vector2(48, 48),
+    hFrames: 1,
+    vFrames: 1,
+    frame: 0,
+  });
+  gemUI = new GemUI(canvas.width - 170, 60, {
+    asset: assets.images.gemUI,
+    frameSize: new Vector2(48, 48),
+    hFrames: 1,
+    vFrames: 1,
+    frame: 0,
+  });
+  projectiles = [];
   enemies = [];
   particles = [];
   trails = [];
@@ -94,6 +112,8 @@ function init() {
   gems = [];
   scoreEl.innerHTML = gameState.score;
   endScore.innerHTML = gameState.score;
+  coinEl.innerHTML = gameState.coins;
+  gemEl.innerHTML = gameState.gems;
 }
 
 let enemyTimeOutId;
@@ -246,8 +266,7 @@ function gameLoop(timeStamp) {
           scoreEl.innerHTML = gameState.score;
           enemiesToRemove.push(enemyIndex);
 
-          dropCoins(enemy);
-          dropGem(enemy);
+          Math.random() < 0.1 ? dropGem(enemy) : dropCoins(enemy);
 
           projectiles.splice(projectileIndex, 1);
         }
@@ -276,6 +295,7 @@ function gameLoop(timeStamp) {
     if (distCoinPlayer - player.radius - coin.radius < -2) {
       coins.splice(coinIndex, 1);
       gameState.coins++;
+      coinEl.innerHTML = gameState.coins;
     }
   });
   gems.forEach((gem, gemIndex) => {
@@ -285,6 +305,7 @@ function gameLoop(timeStamp) {
     if (distCoinPlayer - player.radius - gem.radius < -2) {
       gems.splice(gemIndex, 1);
       gameState.gems++;
+      gemEl.innerHTML = gameState.gems;
     }
   });
 
@@ -305,6 +326,8 @@ function gameLoop(timeStamp) {
     live.frame = live.healthMap[gameState.playerHealth];
   }
   live.update(delta);
+  coinUI.draw();
+  gemUI.draw();
 }
 
 function dropCoins(enemy) {
@@ -347,7 +370,7 @@ function dropGem(enemy) {
 addEventListener("click", (e) => {
   turret?.startAnimation();
 
-  // calculate the triangele angle (in radiant) between the center (Player) to the clicked point
+  // calculate the triangle angle (in radiant) between the center (Player) to the clicked point
   const angle = Math.atan2(
     e.clientY + camera?.y - player?.y,
     e.clientX + camera?.x - player?.x

@@ -23,6 +23,24 @@ canvas {
   user-select: none;
 }
 
+#coin {
+  position: fixed;
+  color: wheat;
+  top: 15px;
+  right: 5px;
+  user-select: none;
+  font-size: 20px;
+}
+#gem {
+  position: fixed;
+  color: wheat;
+  top: 35px;
+  right: 5px;
+  user-select: none;
+  font-size: 20px;
+  margin-top: 35px;
+}
+
 .modal-container {
   position: fixed;
   top: 0;
