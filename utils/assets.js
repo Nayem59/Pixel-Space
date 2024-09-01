@@ -12,6 +12,8 @@ class Assets {
       purpleBlob: "/../assets/enemies/purple_blob_sheet.png",
       live: "/../assets/ui/health2.png",
       exclam: "/../assets/ui/exclamationMark.png",
+      gem: "/../assets/collectables/gem2.png",
+      coin: "/../assets/collectables/coin.png",
       spaceBg1: "/../assets/bge/bg1e.jpg",
       spaceBg2: "/../assets/bge/bg2e.jpg",
       spaceBg3: "/../assets/bge/bg3e.jpg",

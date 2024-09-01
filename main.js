@@ -19,6 +19,7 @@ import MiniMap from "./classes/MiniMap.js";
 import TileMap from "./classes/TileMap.js";
 import GameState from "./classes/GameState.js";
 import HealthBar from "./classes/HealthBar.js";
+import Collectable from "./classes/Collectable.js";
 
 const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
@@ -44,6 +45,10 @@ export let camera;
 let miniMap;
 
 let live;
+let coinUI;
+let gemUI;
+let coins = [];
+let gems = [];
 
 let projectiles = [];
 export let enemies = [];
@@ -81,13 +86,14 @@ function init() {
     vFrames: 1,
     frame: 0,
   });
-  projectiles = [];
+  coinUI = projectiles = [];
   enemies = [];
   particles = [];
   trails = [];
-  score = 0;
-  scoreEl.innerHTML = score;
-  endScore.innerHTML = score;
+  coins = [];
+  gems = [];
+  scoreEl.innerHTML = gameState.score;
+  endScore.innerHTML = gameState.score;
 }
 
 let enemyTimeOutId;
@@ -128,7 +134,6 @@ function spawnEnemies() {
 
 // main game loop
 let animationId;
-let score = 0;
 let delta = 0;
 let oldTimeStamp = 0;
 
@@ -199,7 +204,7 @@ function gameLoop(timeStamp) {
         setTimeout(() => {
           cancelAnimationFrame(animationId);
           clearTimeout(enemyTimeOutId);
-          endScore.innerHTML = score;
+          endScore.innerHTML = gameState.score;
           modal.style.display = "flex";
         }, 300);
       }
@@ -230,16 +235,20 @@ function gameLoop(timeStamp) {
         }
 
         if (enemy.health > 0) {
-          score += 100;
-          scoreEl.innerHTML = score;
+          gameState.score += 100;
+          scoreEl.innerHTML = gameState.score;
           resolveCollision(projectile, enemy);
           enemy.hit = true;
           enemy.startAnimation();
           projectiles.splice(projectileIndex, 1);
         } else {
-          score += 250;
-          scoreEl.innerHTML = score;
+          gameState.score += 250;
+          scoreEl.innerHTML = gameState.score;
           enemiesToRemove.push(enemyIndex);
+
+          dropCoins(enemy);
+          dropGem(enemy);
+
           projectiles.splice(projectileIndex, 1);
         }
       }
@@ -260,6 +269,25 @@ function gameLoop(timeStamp) {
     }
   });
 
+  coins.forEach((coin, coinIndex) => {
+    coin.isAnimating = true;
+    coin.update(delta);
+    const distCoinPlayer = Math.hypot(player.x - coin.x, player.y - coin.y);
+    if (distCoinPlayer - player.radius - coin.radius < -2) {
+      coins.splice(coinIndex, 1);
+      gameState.coins++;
+    }
+  });
+  gems.forEach((gem, gemIndex) => {
+    gem.isAnimating = true;
+    gem.update(delta);
+    const distCoinPlayer = Math.hypot(player.x - gem.x, player.y - gem.y);
+    if (distCoinPlayer - player.radius - gem.radius < -2) {
+      gems.splice(gemIndex, 1);
+      gameState.gems++;
+    }
+  });
+
   c.restore();
   trails.forEach((trail, trailIndex) => {
     if (trail.alpha <= 0) {
@@ -277,6 +305,42 @@ function gameLoop(timeStamp) {
     live.frame = live.healthMap[gameState.playerHealth];
   }
   live.update(delta);
+}
+
+function dropCoins(enemy) {
+  const randomCoins = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+  for (let i = 1; i <= randomCoins; i++) {
+    const randomLocX =
+      (Math.random() < 0.5 ? -1 : 1) *
+        Math.floor(Math.random() * (30 - 10 + 1)) +
+      10;
+    const randomLocY =
+      (Math.random() < 0.5 ? -1 : 1) *
+        Math.floor(Math.random() * (30 - 10 + 1)) +
+      10;
+
+    coins.push(
+      new Collectable(enemy.x + randomLocX, enemy.y + randomLocY, 8, "coin", {
+        asset: assets.images.coin,
+        frameSize: new Vector2(16, 16),
+        hFrames: 24,
+        vFrames: 1,
+        frame: Math.floor(Math.random() * (24 - 1 + 1)) + 1,
+      })
+    );
+  }
+}
+
+function dropGem(enemy) {
+  gems.push(
+    new Collectable(enemy.x, enemy.y, 8, "gem", {
+      asset: assets.images.gem,
+      frameSize: new Vector2(16, 16),
+      hFrames: 15,
+      vFrames: 1,
+      frame: 0,
+    })
+  );
 }
 
 // add click eventlistener for projectile
