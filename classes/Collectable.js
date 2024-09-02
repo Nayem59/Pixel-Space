@@ -28,6 +28,18 @@ class Collectable extends Sprite {
       coinEffect.frameDuration = (1 / 30) * 100;
       return coinEffect;
     }
+    if (this.type === "gem") {
+      const gemEffect = new Sprite({
+        asset: assets.images.gemEffect,
+        frameSize: new Vector2(16, 16),
+        hFrames: 10,
+        vFrames: 1,
+        frame: 0,
+        position: new Vector2(this.x, this.y),
+      });
+      gemEffect.frameDuration = (1 / 20) * 100;
+      return gemEffect;
+    }
   }
 
   draw() {

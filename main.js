@@ -53,6 +53,7 @@ let coinUI;
 let gemUI;
 let coins = [];
 let coinsEffects = [];
+let gemsEffects = [];
 let gems = [];
 
 let projectiles = [];
@@ -111,6 +112,7 @@ function init() {
   trails = [];
   coins = [];
   coinsEffects = [];
+  gemsEffects = [];
   gems = [];
   gameState.updateState();
 }
@@ -299,8 +301,11 @@ function gameLoop(timeStamp) {
   gems.forEach((gem, gemIndex) => {
     gem.isAnimating = true;
     gem.update(delta);
-    const distCoinPlayer = Math.hypot(player.x - gem.x, player.y - gem.y);
-    if (distCoinPlayer - player.radius - gem.radius < -2) {
+    const distGemPlayer = Math.hypot(player.x - gem.x, player.y - gem.y);
+    if (distGemPlayer - player.radius - gem.radius < -2) {
+      const gemEffect = gem.createCollectionEffect();
+      gemEffect.isAnimating = true;
+      gemsEffects.push(gemEffect);
       gems.splice(gemIndex, 1);
       gameState.gems++;
     }
@@ -311,10 +316,27 @@ function gameLoop(timeStamp) {
     if (!coinEffect.isAnimating) {
       coinsEffects.splice(coinEffectIndex, 1);
     } else {
+      c.shadowColor = "yellow";
+      c.shadowBlur = 10;
       coinEffect.drawImage(
         c,
         coinEffect.position.x - 8,
         coinEffect.position.y - 8
+      );
+    }
+  });
+
+  gemsEffects.forEach((gemEffect, gemEffectIndex) => {
+    gemEffect.animate(delta);
+    if (!gemEffect.isAnimating) {
+      gemsEffects.splice(gemEffectIndex, 1);
+    } else {
+      c.shadowColor = "#7DF9FF";
+      c.shadowBlur = 10;
+      gemEffect.drawImage(
+        c,
+        gemEffect.position.x - 8,
+        gemEffect.position.y - 8
       );
     }
   });
@@ -330,7 +352,7 @@ function gameLoop(timeStamp) {
   camera.showDamage(c);
   player.draw();
   turret.draw();
-  // miniMap.draw();
+  miniMap.draw();
 
   if (!live.isAnimating) {
     live.frame = live.healthMap[gameState.playerHealth];
