@@ -23,12 +23,12 @@ import Collectable from "./classes/Collectable.js";
 import CoinUI from "./classes/CoinUI.js";
 import GemUI from "./classes/GemUI.js";
 
-const scoreEl = document.querySelector("#score");
+export const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
 const modal = document.querySelector(".modal-container");
-const endScore = document.querySelector("#endScore");
-const coinEl = document.querySelector("#coin");
-const gemEl = document.querySelector("#gem");
+export const endScore = document.querySelector("#endScore");
+export const coinEl = document.querySelector("#coin");
+export const gemEl = document.querySelector("#gem");
 
 export const friction = 0.98;
 
@@ -52,6 +52,7 @@ let live;
 let coinUI;
 let gemUI;
 let coins = [];
+let coinsEffects = [];
 let gems = [];
 
 let projectiles = [];
@@ -109,11 +110,9 @@ function init() {
   particles = [];
   trails = [];
   coins = [];
+  coinsEffects = [];
   gems = [];
-  scoreEl.innerHTML = gameState.score;
-  endScore.innerHTML = gameState.score;
-  coinEl.innerHTML = gameState.coins;
-  gemEl.innerHTML = gameState.gems;
+  gameState.updateState();
 }
 
 let enemyTimeOutId;
@@ -224,7 +223,6 @@ function gameLoop(timeStamp) {
         setTimeout(() => {
           cancelAnimationFrame(animationId);
           clearTimeout(enemyTimeOutId);
-          endScore.innerHTML = gameState.score;
           modal.style.display = "flex";
         }, 300);
       }
@@ -256,14 +254,12 @@ function gameLoop(timeStamp) {
 
         if (enemy.health > 0) {
           gameState.score += 100;
-          scoreEl.innerHTML = gameState.score;
           resolveCollision(projectile, enemy);
           enemy.hit = true;
           enemy.startAnimation();
           projectiles.splice(projectileIndex, 1);
         } else {
           gameState.score += 250;
-          scoreEl.innerHTML = gameState.score;
           enemiesToRemove.push(enemyIndex);
 
           Math.random() < 0.1 ? dropGem(enemy) : dropCoins(enemy);
@@ -293,9 +289,11 @@ function gameLoop(timeStamp) {
     coin.update(delta);
     const distCoinPlayer = Math.hypot(player.x - coin.x, player.y - coin.y);
     if (distCoinPlayer - player.radius - coin.radius < -2) {
+      const coinEffect = coin.createCollectionEffect();
+      coinEffect.isAnimating = true;
+      coinsEffects.push(coinEffect);
       coins.splice(coinIndex, 1);
       gameState.coins++;
-      coinEl.innerHTML = gameState.coins;
     }
   });
   gems.forEach((gem, gemIndex) => {
@@ -305,7 +303,19 @@ function gameLoop(timeStamp) {
     if (distCoinPlayer - player.radius - gem.radius < -2) {
       gems.splice(gemIndex, 1);
       gameState.gems++;
-      gemEl.innerHTML = gameState.gems;
+    }
+  });
+
+  coinsEffects.forEach((coinEffect, coinEffectIndex) => {
+    coinEffect.animate(delta);
+    if (!coinEffect.isAnimating) {
+      coinsEffects.splice(coinEffectIndex, 1);
+    } else {
+      coinEffect.drawImage(
+        c,
+        coinEffect.position.x - 8,
+        coinEffect.position.y - 8
+      );
     }
   });
 
@@ -325,6 +335,7 @@ function gameLoop(timeStamp) {
   if (!live.isAnimating) {
     live.frame = live.healthMap[gameState.playerHealth];
   }
+  gameState.updateState();
   live.update(delta);
   coinUI.draw();
   gemUI.draw();

@@ -1,6 +1,8 @@
+import { coinEl, endScore, gemEl, scoreEl } from "../main.js";
+
 class GameState {
   constructor() {
-    this.playerHealth = 5;
+    this.playerHealth = 1;
     this.score = 0;
     this.coins = 0;
     this.gems = 0;
@@ -12,6 +14,13 @@ class GameState {
     if (this.playerHealth < 0) {
       this.playerHealth = 0;
     }
+  }
+
+  updateState() {
+    scoreEl.innerHTML = this.score;
+    endScore.innerHTML = this.score;
+    coinEl.innerHTML = this.coins;
+    gemEl.innerHTML = this.gems;
   }
 }
 

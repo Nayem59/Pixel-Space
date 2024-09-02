@@ -16,6 +16,7 @@ class Assets {
       coin: "/../assets/collectables/coin.png",
       coinUI: "/../assets/collectables/coinUI.png",
       gemUI: "/../assets/collectables/gemUI.png",
+      coinEffect: "/../assets/collectables/coinEffect.png",
       spaceBg1: "/../assets/bge/bg1e.jpg",
       spaceBg2: "/../assets/bge/bg2e.jpg",
       spaceBg3: "/../assets/bge/bg3e.jpg",

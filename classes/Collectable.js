@@ -1,6 +1,8 @@
 import { camera } from "../main.js";
+import { assets } from "../utils/assets.js";
 import { c } from "../utils/canvas.js";
 import Sprite from "../utils/sprite.js";
+import Vector2 from "./Vector2.js";
 
 class Collectable extends Sprite {
   constructor(x, y, radius, type, spriteConfig) {
@@ -11,6 +13,21 @@ class Collectable extends Sprite {
     this.type = type;
     this.margin = 40;
     this.frameDuration = (1 / 10) * 100;
+  }
+
+  createCollectionEffect() {
+    if (this.type === "coin") {
+      const coinEffect = new Sprite({
+        asset: assets.images.coinEffect,
+        frameSize: new Vector2(16, 16),
+        hFrames: 14,
+        vFrames: 1,
+        frame: 0,
+        position: new Vector2(this.x, this.y),
+      });
+      coinEffect.frameDuration = (1 / 30) * 100;
+      return coinEffect;
+    }
   }
 
   draw() {
