@@ -22,6 +22,8 @@ import HealthBar from "./classes/HealthBar.js";
 import Collectable from "./classes/Collectable.js";
 import CoinUI from "./classes/CoinUI.js";
 import GemUI from "./classes/GemUI.js";
+import Planet from "./classes/Planet.js";
+import SpaceStation from "./classes/SpaceStation.js";
 
 export const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
@@ -55,6 +57,8 @@ let coins = [];
 let coinsEffects = [];
 let gemsEffects = [];
 let gems = [];
+let yellowPlanet;
+let spaceStation1;
 
 let projectiles = [];
 export let enemies = [];
@@ -68,8 +72,24 @@ function init() {
   if (assets.images.spaceBg1.isLoaded) {
     map = new TileMap(assets.getSpaceBgImages(), 2048, 2048, 5, 3);
     camera = new Camera(canvas.width, canvas.height, map);
-    player = new Player(x, y, 10, "blue", { x: 0, y: 0 }, map);
+    player = new Player(x, y, 22, "blue", { x: 0, y: 0 }, map);
   }
+  yellowPlanet = new Planet(250, {
+    asset: assets.images.yellowPlanet,
+    frameSize: new Vector2(500, 500),
+    hFrames: 1,
+    vFrames: 1,
+    frame: 0,
+    position: new Vector2(2000, 3000),
+  });
+  spaceStation1 = new SpaceStation(280, {
+    asset: assets.images.spaceStation1,
+    frameSize: new Vector2(520, 520),
+    hFrames: 1,
+    vFrames: 1,
+    frame: 0,
+    position: new Vector2(1000, 1000),
+  });
   turret = new Turret(player.x, player.y, turretAngle, {
     asset: assets.images.turret,
     frameSize: new Vector2(64, 64),
@@ -166,6 +186,8 @@ function gameLoop(timeStamp) {
   oldTimeStamp = timeStamp;
   delta = Math.min(delta, 10);
 
+  console.log(player.x, player.y);
+
   handlePlayerVelocity();
   handlePlayerRotation();
   handleShipExFireAnimation(delta);
@@ -179,6 +201,8 @@ function gameLoop(timeStamp) {
   c.save();
   c.translate(-camera.x, -camera.y);
 
+  yellowPlanet.draw();
+  spaceStation1.draw();
   // update turret
   const adjustedMouseX = mouseX + camera.x;
   const adjustedMouseY = mouseY + camera.y;
@@ -417,8 +441,8 @@ addEventListener("click", (e) => {
   projectiles.push(
     new Projectile(
       // adding velocity to create projectile distance from player
-      player?.x + velocity.x * 4,
-      player?.y + velocity.y * 4,
+      player?.x + velocity.x * 5,
+      player?.y + velocity.y * 5,
       5,
       "white",
       velocity,

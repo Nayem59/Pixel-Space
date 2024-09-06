@@ -20,7 +20,14 @@ class Player {
   draw() {
     // for collision and debug purposes
     // c.beginPath();
-    // c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    // c.arc(
+    //   this.x - camera.x,
+    //   this.y - camera.y,
+    //   this.radius,
+    //   0,
+    //   Math.PI * 2,
+    //   false
+    // );
     // c.fillStyle = this.color;
     // c.fill();
 
@@ -36,12 +43,12 @@ class Player {
       // c.shadowBlur = 5;
       c.drawImage(
         assets.images.ship1.image,
-        this.x - camera.x - 16,
-        this.y - camera.y - 17
+        this.x - camera.x - 24,
+        this.y - camera.y - 25
       );
       c.restore();
     }
-    shipExFire.drawImage(c, this.x - camera.x - 24, this.y - camera.y - 24);
+    shipExFire.drawImage(c, this.x - camera.x - 24, this.y - camera.y - 15);
     c.restore();
   }
 

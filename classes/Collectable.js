@@ -37,7 +37,7 @@ class Collectable extends Sprite {
         frame: 0,
         position: new Vector2(this.x, this.y),
       });
-      gemEffect.frameDuration = (1 / 20) * 100;
+      gemEffect.frameDuration = (1 / 15) * 100;
       return gemEffect;
     }
   }

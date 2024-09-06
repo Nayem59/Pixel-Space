@@ -26,7 +26,7 @@ class Trail {
     c.beginPath();
     c.arc(
       this.x - camera.x - 8,
-      this.y - camera.y + 14,
+      this.y - camera.y + 24,
       this.radius,
       0,
       Math.PI * 2,
@@ -38,7 +38,7 @@ class Trail {
     c.beginPath();
     c.arc(
       this.x - camera.x + 8,
-      this.y - camera.y + 14,
+      this.y - camera.y + 24,
       this.radius,
       0,
       Math.PI * 2,

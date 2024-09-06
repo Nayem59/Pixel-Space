@@ -22,7 +22,7 @@ class Turret extends Sprite {
       c.shadowColor =
         this.frame === 0 ? "#7DF9FF" : `hsl(${this.frame * 20},100%,50%)`;
       c.shadowBlur = this.frame === 0 ? 8 : this.frame - 1;
-      super.drawImage(c, this.x - camera.x - 32, this.y - camera.y - 40);
+      super.drawImage(c, this.x - camera.x - 32, this.y - camera.y - 47);
     }
     c.restore();
   }

@@ -2,7 +2,7 @@ class Assets {
   constructor() {
     // all images to download
     this.toLoad = {
-      ship1: "/../assets/player/Ship_1.png",
+      ship1: "/../assets/player/player.png",
       ship2: "/../assets/player/Ship_2.png",
       ship3: "/../assets/player/Ship_3.png",
       ship4: "/../assets/player/Ship_4.png",
@@ -33,6 +33,8 @@ class Assets {
       spaceBg13: "/../assets/bge/bg13e.jpg",
       spaceBg14: "/../assets/bge/bg14e.jpg",
       spaceBg15: "/../assets/bge/bg15e.jpg",
+      yellowPlanet: "/../assets/planets/yellowPlanet.png",
+      spaceStation1: "/../assets/spaceStations/spaceStation1.png",
     };
     // container for all images that have been downloaded
     // e.g. {ship1: {image: (ImageEl), isLoaded: true}}
