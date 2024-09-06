@@ -6,6 +6,8 @@ class GameState {
     this.score = 0;
     this.coins = 0;
     this.gems = 0;
+    this.isPaused = false;
+    this.openStation = false;
   }
 
   takeDamage(damage) {

@@ -31,12 +31,13 @@ const modal = document.querySelector(".modal-container");
 export const endScore = document.querySelector("#endScore");
 export const coinEl = document.querySelector("#coin");
 export const gemEl = document.querySelector("#gem");
+export const pauseEl = document.querySelector("#pause");
 
 export const friction = 0.98;
 
 // Instantiation
-const x = canvas.width / 2;
-const y = canvas.height / 2;
+const canvasMidX = canvas.width / 2;
+const canvasMidY = canvas.height / 2;
 let gameState;
 export let player;
 export let turret;
@@ -53,6 +54,7 @@ let miniMap;
 let live;
 let coinUI;
 let gemUI;
+let stationUI;
 let coins = [];
 let coinsEffects = [];
 let gemsEffects = [];
@@ -72,7 +74,14 @@ function init() {
   if (assets.images.spaceBg1.isLoaded) {
     map = new TileMap(assets.getSpaceBgImages(), 2048, 2048, 5, 3);
     camera = new Camera(canvas.width, canvas.height, map);
-    player = new Player(x, y, 22, "blue", { x: 0, y: 0 }, map);
+    player = new Player(
+      canvasMidX,
+      canvasMidY,
+      22,
+      "blue",
+      { x: 0, y: 0 },
+      map
+    );
   }
   yellowPlanet = new Planet(250, {
     asset: assets.images.yellowPlanet,
@@ -123,6 +132,13 @@ function init() {
     asset: assets.images.gemUI,
     frameSize: new Vector2(48, 48),
     hFrames: 1,
+    vFrames: 1,
+    frame: 0,
+  });
+  stationUI = new Sprite({
+    asset: assets.images.stationUI,
+    frameSize: new Vector2(900, 600),
+    hFrames: 2,
     vFrames: 1,
     frame: 0,
   });
@@ -180,13 +196,25 @@ let oldTimeStamp = 0;
 
 function gameLoop(timeStamp) {
   animationId = requestAnimationFrame(gameLoop);
+
+  if (gameState.isPaused) {
+    return;
+  }
+
+  if (gameState.openStation) {
+    stationUI.drawImage(
+      c,
+      canvasMidX - stationUI.frameSize.x / 2,
+      canvasMidY - stationUI.frameSize.y / 2
+    );
+    return;
+  }
+
   // Calculate delta aka how many seconds has passed (milliseconds)
   delta = (timeStamp - oldTimeStamp) / 10;
   // delta = 1;
   oldTimeStamp = timeStamp;
   delta = Math.min(delta, 10);
-
-  console.log(player.x, player.y);
 
   handlePlayerVelocity();
   handlePlayerRotation();
@@ -425,30 +453,45 @@ function dropGem(enemy) {
 
 // add click eventlistener for projectile
 addEventListener("click", (e) => {
-  turret?.startAnimation();
+  if (!gameState?.isPaused) {
+    turret?.startAnimation();
 
-  // calculate the triangle angle (in radiant) between the center (Player) to the clicked point
-  const angle = Math.atan2(
-    e.clientY + camera?.y - player?.y,
-    e.clientX + camera?.x - player?.x
-  );
-  // calculate velocity through sin and cos
-  const velocity = {
-    x: Math.cos(angle) * 5,
-    y: Math.sin(angle) * 5,
-  };
-  // Instantiate a Projectile and push it to the array
-  projectiles.push(
-    new Projectile(
-      // adding velocity to create projectile distance from player
-      player?.x + velocity.x * 5,
-      player?.y + velocity.y * 5,
-      5,
-      "white",
-      velocity,
-      angle
-    )
-  );
+    // calculate the triangle angle (in radiant) between the center (Player) to the clicked point
+    const angle = Math.atan2(
+      e.clientY + camera?.y - player?.y,
+      e.clientX + camera?.x - player?.x
+    );
+    // calculate velocity through sin and cos
+    const velocity = {
+      x: Math.cos(angle) * 5,
+      y: Math.sin(angle) * 5,
+    };
+
+    // Instantiate a Projectile and push it to the array
+    projectiles.push(
+      new Projectile(
+        // adding velocity to create projectile distance from player
+        player?.x + velocity.x * 5,
+        player?.y + velocity.y * 5,
+        5,
+        "white",
+        velocity,
+        angle
+      )
+    );
+  }
+
+  if (spaceStation1?.playerDetection()) {
+    if (spaceStation1.mouseDetection(e)) {
+      gameState.openStation = true;
+    }
+  }
+});
+
+addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    gameState.isPaused = !gameState.isPaused;
+  }
 });
 
 canvas.addEventListener("mousemove", (e) => {

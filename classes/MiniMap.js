@@ -58,7 +58,7 @@ class MiniMap {
     c.arc(
       miniMapPlayerX,
       miniMapPlayerY,
-      player.radius * 0.3,
+      player.radius * 0.2,
       0,
       Math.PI * 2,
       false

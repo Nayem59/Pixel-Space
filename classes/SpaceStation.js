@@ -11,17 +11,17 @@ class SpaceStation extends Sprite {
 
   draw() {
     if (this.insideCameraView()) {
-      //   c.beginPath();
-      //   c.arc(
-      //     this.position.x,
-      //     this.position.y,
-      //     this.radius,
-      //     0,
-      //     Math.PI * 2,
-      //     false
-      //   );
-      //   c.fillStyle = "red";
-      //   c.fill();
+      c.beginPath();
+      c.arc(
+        this.position.x,
+        this.position.y,
+        this.radius,
+        0,
+        Math.PI * 2,
+        false
+      );
+      c.fillStyle = "red";
+      c.fill();
       c.save();
       if (this.playerDetection()) {
         c.shadowColor = "white";
@@ -33,12 +33,21 @@ class SpaceStation extends Sprite {
   }
 
   playerDetection() {
-    const distPlEn = Math.hypot(
+    const distPlStation = Math.hypot(
       player.x - this.position.x,
       player.y - this.position.y
     );
-    const playerDetected = distPlEn < this.radius;
+    const playerDetected = distPlStation < this.radius;
     return playerDetected;
+  }
+
+  mouseDetection(e) {
+    const distMouseStation = Math.hypot(
+      e.clientX + camera.x - this.position.x,
+      e.clientY + camera.y - this.position.y
+    );
+    const mouseDetected = distMouseStation < this.radius;
+    return mouseDetected;
   }
 
   insideCameraView() {

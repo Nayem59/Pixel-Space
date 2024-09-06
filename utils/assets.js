@@ -35,6 +35,7 @@ class Assets {
       spaceBg15: "/../assets/bge/bg15e.jpg",
       yellowPlanet: "/../assets/planets/yellowPlanet.png",
       spaceStation1: "/../assets/spaceStations/spaceStation1.png",
+      stationUI: "/../assets/spaceStations/stationUI.png",
     };
     // container for all images that have been downloaded
     // e.g. {ship1: {image: (ImageEl), isLoaded: true}}
