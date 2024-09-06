@@ -11,17 +11,17 @@ class SpaceStation extends Sprite {
 
   draw() {
     if (this.insideCameraView()) {
-      c.beginPath();
-      c.arc(
-        this.position.x,
-        this.position.y,
-        this.radius,
-        0,
-        Math.PI * 2,
-        false
-      );
-      c.fillStyle = "red";
-      c.fill();
+      // c.beginPath();
+      // c.arc(
+      //   this.position.x,
+      //   this.position.y,
+      //   this.radius,
+      //   0,
+      //   Math.PI * 2,
+      //   false
+      // );
+      // c.fillStyle = "red";
+      // c.fill();
       c.save();
       if (this.playerDetection()) {
         c.shadowColor = "white";

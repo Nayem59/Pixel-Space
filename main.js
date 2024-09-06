@@ -24,6 +24,7 @@ import CoinUI from "./classes/CoinUI.js";
 import GemUI from "./classes/GemUI.js";
 import Planet from "./classes/Planet.js";
 import SpaceStation from "./classes/SpaceStation.js";
+import StationUI from "./classes/StationUI.js";
 
 export const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
@@ -36,8 +37,8 @@ export const pauseEl = document.querySelector("#pause");
 export const friction = 0.98;
 
 // Instantiation
-const canvasMidX = canvas.width / 2;
-const canvasMidY = canvas.height / 2;
+export const canvasMidX = canvas.width / 2;
+export const canvasMidY = canvas.height / 2;
 let gameState;
 export let player;
 export let turret;
@@ -135,7 +136,7 @@ function init() {
     vFrames: 1,
     frame: 0,
   });
-  stationUI = new Sprite({
+  stationUI = new StationUI({
     asset: assets.images.stationUI,
     frameSize: new Vector2(900, 600),
     hFrames: 2,
@@ -202,11 +203,7 @@ function gameLoop(timeStamp) {
   }
 
   if (gameState.openStation) {
-    stationUI.drawImage(
-      c,
-      canvasMidX - stationUI.frameSize.x / 2,
-      canvasMidY - stationUI.frameSize.y / 2
-    );
+    stationUI.draw();
     return;
   }
 
@@ -453,13 +450,36 @@ function dropGem(enemy) {
 
 // add click eventlistener for projectile
 addEventListener("click", (e) => {
-  if (!gameState?.isPaused) {
+  const mouseX = e.clientX;
+  const mouseY = e.clientY;
+
+  if (spaceStation1?.playerDetection()) {
+    if (spaceStation1.mouseDetection(e)) {
+      gameState.openStation = true;
+    }
+  }
+
+  if (gameState.openStation) {
+    // Check if the click is inside the "X" button area
+    if (
+      mouseX >= stationUI.xButton.x &&
+      mouseX <= stationUI.xButton.x + stationUI.xButton.width &&
+      mouseY >= stationUI.xButton.y &&
+      mouseY <= stationUI.xButton.y + stationUI.xButton.height
+    ) {
+      setTimeout(() => {
+        gameState.openStation = false;
+      }, 0);
+    }
+  }
+
+  if (!gameState?.isPaused && !gameState.openStation) {
     turret?.startAnimation();
 
     // calculate the triangle angle (in radiant) between the center (Player) to the clicked point
     const angle = Math.atan2(
-      e.clientY + camera?.y - player?.y,
-      e.clientX + camera?.x - player?.x
+      mouseY + camera?.y - player?.y,
+      mouseX + camera?.x - player?.x
     );
     // calculate velocity through sin and cos
     const velocity = {
@@ -479,12 +499,6 @@ addEventListener("click", (e) => {
         angle
       )
     );
-  }
-
-  if (spaceStation1?.playerDetection()) {
-    if (spaceStation1.mouseDetection(e)) {
-      gameState.openStation = true;
-    }
   }
 });
 
