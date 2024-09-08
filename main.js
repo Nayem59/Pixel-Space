@@ -471,6 +471,24 @@ addEventListener("click", (e) => {
         gameState.openStation = false;
       }, 0);
     }
+
+    if (
+      mouseX >= stationUI.tab1Button.x &&
+      mouseX <= stationUI.tab1Button.x + stationUI.tab1Button.width &&
+      mouseY >= stationUI.tab1Button.y &&
+      mouseY <= stationUI.tab1Button.y + stationUI.tab1Button.height
+    ) {
+      stationUI.frame = 0;
+    }
+
+    if (
+      mouseX >= stationUI.tab2Button.x &&
+      mouseX <= stationUI.tab2Button.x + stationUI.tab2Button.width &&
+      mouseY >= stationUI.tab2Button.y &&
+      mouseY <= stationUI.tab2Button.y + stationUI.tab2Button.height
+    ) {
+      stationUI.frame = 1;
+    }
   }
 
   if (!gameState?.isPaused && !gameState.openStation) {

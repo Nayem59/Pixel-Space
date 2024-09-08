@@ -16,6 +16,18 @@ class StationUI extends Sprite {
       width: 60,
       height: 60,
     };
+    this.tab1Button = {
+      x: canvasMidX - 435,
+      y: canvasMidY - this.frameSize.y / 2 + 5,
+      width: 365,
+      height: 65,
+    };
+    this.tab2Button = {
+      x: canvasMidX + this.frameSize.x / 2 - 480,
+      y: canvasMidY - this.frameSize.y / 2 + 5,
+      width: 365,
+      height: 65,
+    };
   }
 
   draw() {
