@@ -25,6 +25,7 @@ import GemUI from "./classes/GemUI.js";
 import Planet from "./classes/Planet.js";
 import SpaceStation from "./classes/SpaceStation.js";
 import StationUI from "./classes/StationUI.js";
+import StoreState from "./classes/StoreState.js";
 
 export const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
@@ -39,7 +40,8 @@ export const friction = 0.98;
 // Instantiation
 export const canvasMidX = canvas.width / 2;
 export const canvasMidY = canvas.height / 2;
-let gameState;
+export let gameState;
+let storeState;
 export let player;
 export let turret;
 export let shipExFire;
@@ -70,6 +72,7 @@ export let trails = [];
 
 function init() {
   gameState = new GameState();
+  storeState = new StoreState();
   delta = 0;
   oldTimeStamp = 0;
   if (assets.images.spaceBg1.isLoaded) {
@@ -159,10 +162,11 @@ function spawnEnemies() {
   const randomTime = Math.floor(Math.random() * (60000 - 10000 + 1)) + 10000;
   const radius = 23;
 
-  let x = 500;
-  let y = 500;
-  // let x = Math.random() * map.tileWidth * map.tilesCountX;
-  // let y = Math.random() * map.tileHeight * map.tilesCountY;
+  // debugging
+  // let x = 500;
+  // let y = 500;
+  let x = Math.random() * map.tileWidth * map.tilesCountX;
+  let y = Math.random() * map.tileHeight * map.tilesCountY;
   const color = "#ab47bc";
 
   enemies.push(
@@ -187,7 +191,7 @@ function spawnEnemies() {
     enemies.splice(enemyIdx, 1);
   }
 
-  // enemyTimeOutId = setTimeout(spawnEnemies, randomTime);
+  enemyTimeOutId = setTimeout(spawnEnemies, randomTime);
 }
 
 // main game loop
@@ -285,9 +289,8 @@ function gameLoop(timeStamp) {
         projectile.y - enemy.y
       );
 
-      // remove both if they touch, considering the radius
       if (distEnPro - enemy.radius - projectile.radius < -2) {
-        enemy.health--;
+        enemy.health -= player.damage;
         for (let i = 0; i < enemy.radius; i++) {
           particles.push(
             new Particle(
@@ -459,7 +462,7 @@ addEventListener("click", (e) => {
     }
   }
 
-  if (gameState.openStation) {
+  if (gameState?.openStation) {
     // Check if the click is inside the "X" button area
     if (
       mouseX >= stationUI.xButton.x &&
@@ -473,21 +476,63 @@ addEventListener("click", (e) => {
     }
 
     if (
-      mouseX >= stationUI.tab1Button.x &&
-      mouseX <= stationUI.tab1Button.x + stationUI.tab1Button.width &&
-      mouseY >= stationUI.tab1Button.y &&
-      mouseY <= stationUI.tab1Button.y + stationUI.tab1Button.height
+      mouseX >= stationUI.upgradeTab.x &&
+      mouseX <= stationUI.upgradeTab.x + stationUI.upgradeTab.width &&
+      mouseY >= stationUI.upgradeTab.y &&
+      mouseY <= stationUI.upgradeTab.y + stationUI.upgradeTab.height
     ) {
+      stationUI.currentTab = "upgrade";
       stationUI.frame = 0;
     }
 
     if (
-      mouseX >= stationUI.tab2Button.x &&
-      mouseX <= stationUI.tab2Button.x + stationUI.tab2Button.width &&
-      mouseY >= stationUI.tab2Button.y &&
-      mouseY <= stationUI.tab2Button.y + stationUI.tab2Button.height
+      mouseX >= stationUI.shopTab.x &&
+      mouseX <= stationUI.shopTab.x + stationUI.shopTab.width &&
+      mouseY >= stationUI.shopTab.y &&
+      mouseY <= stationUI.shopTab.y + stationUI.shopTab.height
     ) {
+      stationUI.currentTab = "shop";
       stationUI.frame = 1;
+    }
+
+    if (stationUI.currentTab === "upgrade") {
+      if (
+        mouseX >= stationUI.healthPlusButton.x &&
+        mouseX <=
+          stationUI.healthPlusButton.x + stationUI.healthPlusButton.width &&
+        mouseY >= stationUI.healthPlusButton.y &&
+        mouseY <=
+          stationUI.healthPlusButton.y + stationUI.healthPlusButton.height
+      ) {
+        storeState.increaseHealth()
+          ? stationUI.healthUpgrade.frame++
+          : console.log("cant upgrade");
+      }
+
+      if (
+        mouseX >= stationUI.damagePlusButton.x &&
+        mouseX <=
+          stationUI.damagePlusButton.x + stationUI.damagePlusButton.width &&
+        mouseY >= stationUI.damagePlusButton.y &&
+        mouseY <=
+          stationUI.damagePlusButton.y + stationUI.damagePlusButton.height
+      ) {
+        storeState.increaseDamage()
+          ? stationUI.damageUpgrade.frame++
+          : console.log("cant upgrade");
+      }
+
+      if (
+        mouseX >= stationUI.speedPlusButton.x &&
+        mouseX <=
+          stationUI.speedPlusButton.x + stationUI.speedPlusButton.width &&
+        mouseY >= stationUI.speedPlusButton.y &&
+        mouseY <= stationUI.speedPlusButton.y + stationUI.speedPlusButton.height
+      ) {
+        storeState.increaseSpeed()
+          ? stationUI.speedUpgrade.frame++
+          : console.log("cant upgrade");
+      }
     }
   }
 
@@ -534,7 +579,6 @@ canvas.addEventListener("mousemove", (e) => {
 startGameBtn.addEventListener("click", (e) => {
   init();
   gameLoop(0);
-  spawnEnemies();
   spawnEnemies();
   modal.style.display = "none";
 });

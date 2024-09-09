@@ -36,6 +36,9 @@ class Assets {
       yellowPlanet: "/../assets/planets/yellowPlanet.png",
       spaceStation1: "/../assets/spaceStations/spaceStation1.png",
       stationUI: "/../assets/spaceStations/stationUI.png",
+      healthUpgrade: "/../assets/spaceStations/healthUpgrade.png",
+      damageUpgrade: "/../assets/spaceStations/damageUpgrade.png",
+      speedUpgrade: "/../assets/spaceStations/speedUpgrade.png",
     };
     // container for all images that have been downloaded
     // e.g. {ship1: {image: (ImageEl), isLoaded: true}}
