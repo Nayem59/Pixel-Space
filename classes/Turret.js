@@ -1,6 +1,6 @@
 import { c } from "../utils/canvas.js";
 import { assets } from "../utils/assets.js";
-import Sprite from "../utils/sprite.js";
+import Sprite from "./Sprite.js";
 import { camera } from "../main.js";
 
 class Turret extends Sprite {

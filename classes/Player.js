@@ -16,6 +16,7 @@ class Player {
     this.degree = 0;
     this.map = map;
     this.damage = 1;
+    this.isShooting = false;
   }
 
   draw() {

@@ -1,6 +1,6 @@
 import { assets } from "../utils/assets.js";
 import { c } from "../utils/canvas.js";
-import Sprite from "../utils/sprite.js";
+import Sprite from "./Sprite.js";
 
 class HealthBar extends Sprite {
   constructor(x, y, spriteConfig) {

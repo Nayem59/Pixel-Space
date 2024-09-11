@@ -1,5 +1,5 @@
 import { c } from "../utils/canvas.js";
-import Sprite from "../utils/sprite.js";
+import Sprite from "./Sprite.js";
 
 class CoinUI extends Sprite {
   constructor(x, y, spriteConfig) {

@@ -1,6 +1,6 @@
 import { camera, player } from "../main.js";
 import { c } from "../utils/canvas.js";
-import Sprite from "../utils/sprite.js";
+import Sprite from "./Sprite.js";
 
 class SpaceStation extends Sprite {
   constructor(radius, spriteConfig) {

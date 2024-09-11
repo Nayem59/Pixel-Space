@@ -1,7 +1,7 @@
 import { camera } from "../main.js";
 import { assets } from "../utils/assets.js";
 import { c } from "../utils/canvas.js";
-import Sprite from "../utils/sprite.js";
+import Sprite from "./Sprite.js";
 import Vector2 from "./Vector2.js";
 
 class Collectable extends Sprite {

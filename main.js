@@ -1,7 +1,5 @@
 import { c, canvas } from "./utils/canvas.js";
 import Player from "./classes/Player.js";
-import Projectile from "./classes/Projectile.js";
-import Enemy from "./classes/Enemy.js";
 import Particle from "./classes/Particle.js";
 import Turret from "./classes/Turret.js";
 import {
@@ -9,9 +7,10 @@ import {
   handlePlayerVelocity,
   handleShipExFireAnimation,
   handleTrail,
-  resolveCollision,
-} from "./utils/input.js";
-import Sprite from "./utils/sprite.js";
+  mouseX,
+  mouseY,
+} from "./utils/inputs.js";
+import Sprite from "./classes/Sprite.js";
 import { assets } from "./utils/assets.js";
 import Vector2 from "./classes/Vector2.js";
 import Camera from "./classes/Camera.js";
@@ -26,6 +25,13 @@ import Planet from "./classes/Planet.js";
 import SpaceStation from "./classes/SpaceStation.js";
 import StationUI from "./classes/StationUI.js";
 import StoreState from "./classes/StoreState.js";
+import {
+  resolveCollision,
+  spawnEnemies,
+  enemyTimeOutId,
+  dropCoins,
+  dropGem,
+} from "./utils/utils.js";
 
 export const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
@@ -41,13 +47,11 @@ export const friction = 0.98;
 export const canvasMidX = canvas.width / 2;
 export const canvasMidY = canvas.height / 2;
 export let gameState;
-let storeState;
+export let storeState;
 export let player;
 export let turret;
 export let shipExFire;
 let turretAngle = 0;
-let mouseX = 0;
-let mouseY = 0;
 
 export let tileMap;
 export let map;
@@ -57,15 +61,15 @@ let miniMap;
 let live;
 let coinUI;
 let gemUI;
-let stationUI;
-let coins = [];
+export let stationUI;
+export let coins = [];
 let coinsEffects = [];
 let gemsEffects = [];
-let gems = [];
+export let gems = [];
 let yellowPlanet;
-let spaceStation1;
+export let spaceStation1;
 
-let projectiles = [];
+export let projectiles = [];
 export let enemies = [];
 let particles = [];
 export let trails = [];
@@ -155,43 +159,6 @@ function init() {
   gemsEffects = [];
   gems = [];
   gameState.updateState();
-}
-
-let enemyTimeOutId;
-function spawnEnemies() {
-  const randomTime = Math.floor(Math.random() * (60000 - 10000 + 1)) + 10000;
-  const radius = 23;
-
-  // debugging
-  // let x = 500;
-  // let y = 500;
-  let x = Math.random() * map.tileWidth * map.tilesCountX;
-  let y = Math.random() * map.tileHeight * map.tilesCountY;
-  const color = "#ab47bc";
-
-  enemies.push(
-    new Enemy(
-      x,
-      y,
-      radius,
-      color,
-      { x: 0, y: 0 },
-      {
-        asset: assets.images.purpleBlob,
-        frameSize: new Vector2(64, 64),
-        hFrames: 8,
-        vFrames: 1,
-        frame: 0,
-      }
-    )
-  );
-
-  if (enemies.length > 50) {
-    const enemyIdx = enemies.findIndex((enemy) => !enemy.visible);
-    enemies.splice(enemyIdx, 1);
-  }
-
-  enemyTimeOutId = setTimeout(spawnEnemies, randomTime);
 }
 
 // main game loop
@@ -414,186 +381,6 @@ function gameLoop(timeStamp) {
   coinUI.draw();
   gemUI.draw();
 }
-
-function dropCoins(enemy) {
-  const randomCoins = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
-  for (let i = 1; i <= randomCoins; i++) {
-    const randomLocX =
-      (Math.random() < 0.5 ? -1 : 1) *
-        Math.floor(Math.random() * (30 - 10 + 1)) +
-      10;
-    const randomLocY =
-      (Math.random() < 0.5 ? -1 : 1) *
-        Math.floor(Math.random() * (30 - 10 + 1)) +
-      10;
-
-    coins.push(
-      new Collectable(enemy.x + randomLocX, enemy.y + randomLocY, 8, "coin", {
-        asset: assets.images.coin,
-        frameSize: new Vector2(16, 16),
-        hFrames: 24,
-        vFrames: 1,
-        frame: Math.floor(Math.random() * (24 - 1 + 1)) + 1,
-      })
-    );
-  }
-}
-
-function dropGem(enemy) {
-  gems.push(
-    new Collectable(enemy.x, enemy.y, 8, "gem", {
-      asset: assets.images.gem,
-      frameSize: new Vector2(16, 16),
-      hFrames: 15,
-      vFrames: 1,
-      frame: 0,
-    })
-  );
-}
-
-let isShooting = false;
-let shootInterval = null;
-let hasContinuousLaser = false; //temp flag
-canvas.addEventListener("mousedown", (e) => {
-  if (spaceStation1?.playerDetection()) {
-    if (spaceStation1.mouseDetection(e)) {
-      gameState.openStation = true;
-    }
-  }
-  if (!gameState?.isPaused && !gameState.openStation) {
-    isShooting = true;
-    if (hasContinuousLaser) {
-      shootProjectile(mouseX, mouseY);
-      shootInterval = setInterval(() => {
-        if (isShooting) {
-          shootProjectile(mouseX, mouseY);
-        }
-      }, 100);
-    } else {
-      shootProjectile(mouseX, mouseY);
-    }
-  }
-});
-
-canvas.addEventListener("mouseup", (e) => {
-  isShooting = false;
-  clearInterval(shootInterval);
-  const mouseX = e.clientX;
-  const mouseY = e.clientY;
-
-  if (gameState?.openStation) {
-    // Check if the click is inside the "X" button area
-    if (
-      mouseX >= stationUI.xButton.x &&
-      mouseX <= stationUI.xButton.x + stationUI.xButton.width &&
-      mouseY >= stationUI.xButton.y &&
-      mouseY <= stationUI.xButton.y + stationUI.xButton.height
-    ) {
-      setTimeout(() => {
-        gameState.openStation = false;
-      }, 0);
-    }
-
-    if (
-      mouseX >= stationUI.upgradeTab.x &&
-      mouseX <= stationUI.upgradeTab.x + stationUI.upgradeTab.width &&
-      mouseY >= stationUI.upgradeTab.y &&
-      mouseY <= stationUI.upgradeTab.y + stationUI.upgradeTab.height
-    ) {
-      stationUI.currentTab = "upgrade";
-      stationUI.frame = 0;
-    }
-
-    if (
-      mouseX >= stationUI.shopTab.x &&
-      mouseX <= stationUI.shopTab.x + stationUI.shopTab.width &&
-      mouseY >= stationUI.shopTab.y &&
-      mouseY <= stationUI.shopTab.y + stationUI.shopTab.height
-    ) {
-      stationUI.currentTab = "shop";
-      stationUI.frame = 1;
-    }
-
-    if (stationUI.currentTab === "upgrade") {
-      if (
-        mouseX >= stationUI.healthPlusButton.x &&
-        mouseX <=
-          stationUI.healthPlusButton.x + stationUI.healthPlusButton.width &&
-        mouseY >= stationUI.healthPlusButton.y &&
-        mouseY <=
-          stationUI.healthPlusButton.y + stationUI.healthPlusButton.height
-      ) {
-        storeState.increaseHealth()
-          ? stationUI.healthUpgrade.frame++
-          : console.log("cant upgrade");
-      }
-
-      if (
-        mouseX >= stationUI.damagePlusButton.x &&
-        mouseX <=
-          stationUI.damagePlusButton.x + stationUI.damagePlusButton.width &&
-        mouseY >= stationUI.damagePlusButton.y &&
-        mouseY <=
-          stationUI.damagePlusButton.y + stationUI.damagePlusButton.height
-      ) {
-        storeState.increaseDamage()
-          ? stationUI.damageUpgrade.frame++
-          : console.log("cant upgrade");
-      }
-
-      if (
-        mouseX >= stationUI.speedPlusButton.x &&
-        mouseX <=
-          stationUI.speedPlusButton.x + stationUI.speedPlusButton.width &&
-        mouseY >= stationUI.speedPlusButton.y &&
-        mouseY <= stationUI.speedPlusButton.y + stationUI.speedPlusButton.height
-      ) {
-        storeState.increaseSpeed()
-          ? stationUI.speedUpgrade.frame++
-          : console.log("cant upgrade");
-      }
-    }
-  }
-});
-
-function shootProjectile(mouseX, mouseY) {
-  turret?.startAnimation();
-
-  // calculate the triangle angle (in radiant) between the center (Player) to the clicked point
-  const angle = Math.atan2(
-    mouseY + camera?.y - player?.y,
-    mouseX + camera?.x - player?.x
-  );
-  // calculate velocity through sin and cos
-  const velocity = {
-    x: Math.cos(angle) * 5,
-    y: Math.sin(angle) * 5,
-  };
-
-  // Instantiate a Projectile and push it to the array
-  projectiles.push(
-    new Projectile(
-      // adding velocity to create projectile distance from player
-      player?.x + velocity.x * 5,
-      player?.y + velocity.y * 5,
-      5,
-      "white",
-      velocity,
-      angle
-    )
-  );
-}
-
-addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    gameState.isPaused = !gameState.isPaused;
-  }
-});
-
-canvas.addEventListener("mousemove", (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-});
 
 startGameBtn.addEventListener("click", (e) => {
   init();
