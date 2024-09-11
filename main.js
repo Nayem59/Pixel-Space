@@ -451,16 +451,35 @@ function dropGem(enemy) {
   );
 }
 
-// add click eventlistener for projectile
-addEventListener("click", (e) => {
-  const mouseX = e.clientX;
-  const mouseY = e.clientY;
-
+let isShooting = false;
+let shootInterval = null;
+let hasContinuousLaser = false; //temp flag
+canvas.addEventListener("mousedown", (e) => {
   if (spaceStation1?.playerDetection()) {
     if (spaceStation1.mouseDetection(e)) {
       gameState.openStation = true;
     }
   }
+  if (!gameState?.isPaused && !gameState.openStation) {
+    isShooting = true;
+    if (hasContinuousLaser) {
+      shootProjectile(mouseX, mouseY);
+      shootInterval = setInterval(() => {
+        if (isShooting) {
+          shootProjectile(mouseX, mouseY);
+        }
+      }, 100);
+    } else {
+      shootProjectile(mouseX, mouseY);
+    }
+  }
+});
+
+canvas.addEventListener("mouseup", (e) => {
+  isShooting = false;
+  clearInterval(shootInterval);
+  const mouseX = e.clientX;
+  const mouseY = e.clientY;
 
   if (gameState?.openStation) {
     // Check if the click is inside the "X" button area
@@ -535,35 +554,35 @@ addEventListener("click", (e) => {
       }
     }
   }
-
-  if (!gameState?.isPaused && !gameState.openStation) {
-    turret?.startAnimation();
-
-    // calculate the triangle angle (in radiant) between the center (Player) to the clicked point
-    const angle = Math.atan2(
-      mouseY + camera?.y - player?.y,
-      mouseX + camera?.x - player?.x
-    );
-    // calculate velocity through sin and cos
-    const velocity = {
-      x: Math.cos(angle) * 5,
-      y: Math.sin(angle) * 5,
-    };
-
-    // Instantiate a Projectile and push it to the array
-    projectiles.push(
-      new Projectile(
-        // adding velocity to create projectile distance from player
-        player?.x + velocity.x * 5,
-        player?.y + velocity.y * 5,
-        5,
-        "white",
-        velocity,
-        angle
-      )
-    );
-  }
 });
+
+function shootProjectile(mouseX, mouseY) {
+  turret?.startAnimation();
+
+  // calculate the triangle angle (in radiant) between the center (Player) to the clicked point
+  const angle = Math.atan2(
+    mouseY + camera?.y - player?.y,
+    mouseX + camera?.x - player?.x
+  );
+  // calculate velocity through sin and cos
+  const velocity = {
+    x: Math.cos(angle) * 5,
+    y: Math.sin(angle) * 5,
+  };
+
+  // Instantiate a Projectile and push it to the array
+  projectiles.push(
+    new Projectile(
+      // adding velocity to create projectile distance from player
+      player?.x + velocity.x * 5,
+      player?.y + velocity.y * 5,
+      5,
+      "white",
+      velocity,
+      angle
+    )
+  );
+}
 
 addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
