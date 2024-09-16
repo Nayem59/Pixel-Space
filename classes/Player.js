@@ -15,7 +15,7 @@ class Player {
     this.rotation = 0;
     this.degree = 0;
     this.map = map;
-    this.damage = 1;
+    this.damage = 10;
     this.isShooting = false;
   }
 

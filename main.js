@@ -18,13 +18,13 @@ import MiniMap from "./classes/MiniMap.js";
 import TileMap from "./classes/TileMap.js";
 import GameState from "./classes/GameState.js";
 import HealthBar from "./classes/HealthBar.js";
-import Collectable from "./classes/Collectable.js";
 import CoinUI from "./classes/CoinUI.js";
 import GemUI from "./classes/GemUI.js";
 import Planet from "./classes/Planet.js";
 import SpaceStation from "./classes/SpaceStation.js";
 import StationUI from "./classes/StationUI.js";
 import StoreState from "./classes/StoreState.js";
+import Text from "./classes/Text.js";
 import {
   resolveCollision,
   spawnEnemies,
@@ -65,6 +65,7 @@ let miniMap;
 let live;
 let coinUI;
 let gemUI;
+let text;
 export let stationUI;
 export let coins = [];
 let coinsEffects = [];
@@ -77,6 +78,7 @@ export let projectiles = [];
 export let enemies = [];
 let particles = [];
 export let trails = [];
+export let texts = [];
 
 function init() {
   gameState = new GameState();
@@ -162,6 +164,7 @@ function init() {
   coinsEffects = [];
   gemsEffects = [];
   gems = [];
+  texts = [];
   gameState.updateState();
 }
 
@@ -261,6 +264,7 @@ function gameLoop(timeStamp) {
       );
 
       if (distEnPro - enemy.radius - projectile.radius < -2) {
+        texts.push(new Text(enemy.x, enemy.y, player.damage * -1));
         enemy.health -= player.damage;
         for (let i = 0; i < enemy.radius; i++) {
           particles.push(
@@ -306,6 +310,15 @@ function gameLoop(timeStamp) {
       particles.splice(partIndex, 1);
     } else {
       particle.update(delta);
+    }
+  });
+
+  // text update
+  texts.forEach((text, textIndex) => {
+    if (text.alpha <= 0) {
+      texts.splice(textIndex, 1);
+    } else {
+      text.update(delta);
     }
   });
 
@@ -389,6 +402,7 @@ function gameLoop(timeStamp) {
 startGameBtn.addEventListener("click", (e) => {
   init();
   gameLoop(0);
+  spawnEnemies();
   spawnEnemies();
   modal.style.display = "none";
   collectableContainer.style.display = "block";

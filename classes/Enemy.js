@@ -3,6 +3,7 @@ import { c } from "../utils/canvas.js";
 import Sprite from "./Sprite.js";
 import { camera, player, map, friction } from "../main.js";
 import Vector2 from "./Vector2.js";
+import EnemyHealthBar from "./EnemyHealthBar.js";
 
 class Enemy extends Sprite {
   constructor(x, y, radius, color, velocity, spriteConfig) {
@@ -20,7 +21,8 @@ class Enemy extends Sprite {
     this.idleTime = 0;
     this.patrolPoints = this.generatePatrolPoints();
     this.currentPatrolPoint = 0;
-    this.health = 2;
+    this.health = 50;
+    this.maxHealth = 50;
     this.speed = 0.05;
     this.maxVelocity = 2;
     this.mass = 5;
@@ -34,6 +36,12 @@ class Enemy extends Sprite {
       frame: 0,
     });
     this.exclam.frameDuration = (1 / 15) * 100;
+    this.enemyHealthBar = new EnemyHealthBar(
+      this.x,
+      this.y,
+      this.health,
+      this.maxHealth
+    );
   }
 
   generatePatrolPoints() {
@@ -123,6 +131,10 @@ class Enemy extends Sprite {
   update(delta) {
     if (this.playerDetection() || this.hit) {
       this.state = "chasing";
+
+      this.enemyHealthBar.x = this.x - this.enemyHealthBar.width / 2;
+      this.enemyHealthBar.y = this.y + this.radius + 10;
+      this.enemyHealthBar.update(this.health);
     } else if (this.state !== "patrolling") {
       this.state = "idle";
     }

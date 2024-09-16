@@ -63,10 +63,10 @@ export function spawnEnemies() {
   const radius = 23;
 
   // debugging
-  // let x = 500;
-  // let y = 500;
-  let x = Math.random() * map.tileWidth * map.tilesCountX;
-  let y = Math.random() * map.tileHeight * map.tilesCountY;
+  let x = 500;
+  let y = 500;
+  // let x = Math.random() * map.tileWidth * map.tilesCountX;
+  // let y = Math.random() * map.tileHeight * map.tilesCountY;
   const color = "#ab47bc";
 
   enemies.push(
@@ -91,7 +91,7 @@ export function spawnEnemies() {
     enemies.splice(enemyIdx, 1);
   }
 
-  enemyTimeOutId = setTimeout(spawnEnemies, randomTime);
+  // enemyTimeOutId = setTimeout(spawnEnemies, randomTime);
 }
 
 export function dropCoins(enemy) {
