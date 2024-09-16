@@ -8,7 +8,7 @@ class StoreState {
     this.healthUpgradeCost = 200;
     this.damageUpgradeCost = 200;
     this.speedUpgradeCost = 200;
-    this.hasContinuousLaser = true;
+    this.hasContinuousLaser = false;
   }
 
   increaseHealth() {
@@ -55,6 +55,9 @@ class StoreState {
     } else {
       return false;
     }
+  }
+  upgradeToAutoTurret() {
+    this.hasContinuousLaser = true;
   }
 }
 

@@ -10,12 +10,22 @@ class HealthBar extends Sprite {
     this.frameDuration = (1 / 10) * 100;
     this.maxAnimationFrames = 3;
     this.healthMap = {
-      5: 0,
-      4: 3,
-      3: 4,
-      2: 5,
-      1: 6,
-      0: 7,
+      15: 0,
+      14: 3,
+      13: 4,
+      12: 5,
+      11: 6,
+      10: 7,
+      9: 8,
+      8: 9,
+      7: 10,
+      6: 11,
+      5: 12,
+      4: 13,
+      3: 14,
+      2: 15,
+      1: 16,
+      0: 17,
     };
   }
 

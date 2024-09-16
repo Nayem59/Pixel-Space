@@ -21,6 +21,11 @@ canvas {
   top: 5px;
   left: 5px;
   user-select: none;
+  display: none;
+}
+
+.collectable-container {
+  display: none;
 }
 
 #coin {

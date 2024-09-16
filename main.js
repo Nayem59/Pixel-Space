@@ -37,6 +37,10 @@ export const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
 const modal = document.querySelector(".modal-container");
 export const endScore = document.querySelector("#endScore");
+export const collectableContainer = document.querySelector(
+  ".collectable-container"
+);
+export const scoreContainer = document.querySelector(".score-container");
 export const coinEl = document.querySelector("#coin");
 export const gemEl = document.querySelector("#gem");
 export const pauseEl = document.querySelector("#pause");
@@ -125,8 +129,8 @@ function init() {
   live = new HealthBar(5, 25, {
     asset: assets.images.live,
     frameSize: new Vector2(176, 44),
-    hFrames: 16,
-    vFrames: 1,
+    hFrames: 8,
+    vFrames: 3,
     frame: 0,
   });
   coinUI = new CoinUI(canvas.width - 170, 3, {
@@ -387,4 +391,6 @@ startGameBtn.addEventListener("click", (e) => {
   gameLoop(0);
   spawnEnemies();
   modal.style.display = "none";
+  collectableContainer.style.display = "block";
+  scoreContainer.style.display = "block";
 });
