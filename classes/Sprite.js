@@ -53,6 +53,18 @@ class Sprite {
     }
   }
 
+  continuousAnimation(delta) {
+    // Increment the frame timer by delta time
+    this.frameTimer += delta;
+
+    // Check if it's time to update the frame
+    while (this.frameTimer >= this.frameDuration) {
+      this.frameTimer -= this.frameDuration; // Reset the timer by the frame duration
+
+      this.frame = (this.frame + 1) % this.maxAnimationFrames;
+    }
+  }
+
   drawImage(c, x, y) {
     if (!this.asset.isLoaded) {
       console.log("asset not loaded yet");

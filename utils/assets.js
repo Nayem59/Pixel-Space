@@ -9,6 +9,7 @@ class Assets {
       ship5: "/../assets/player/Ship_5.png",
       turret: "/../assets/player/turretsheet2.png",
       shipExhaustFire: "/../assets/player/shipexhaustFire.png",
+      missile: "/../assets/player/missile.png",
       purpleBlob: "/../assets/enemies/purple_blob_sheet.png",
       live: "/../assets/ui/health.png",
       exclam: "/../assets/ui/exclamationMark.png",

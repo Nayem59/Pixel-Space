@@ -9,6 +9,7 @@ class StoreState {
     this.damageUpgradeCost = 200;
     this.speedUpgradeCost = 200;
     this.hasContinuousLaser = false;
+    this.missileCount = 10;
   }
 
   increaseHealth() {

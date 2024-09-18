@@ -75,6 +75,7 @@ let yellowPlanet;
 export let spaceStation1;
 
 export let projectiles = [];
+export let missiles = [];
 export let enemies = [];
 let particles = [];
 export let trails = [];
@@ -157,6 +158,7 @@ function init() {
     frame: 0,
   });
   projectiles = [];
+  missiles = [];
   enemies = [];
   particles = [];
   trails = [];
@@ -232,6 +234,20 @@ function gameLoop(timeStamp) {
     }
   });
 
+  missiles.forEach((missile, missleIndex) => {
+    enemies.forEach((enemy, enemyIndex) => {
+      if (enemy.isMarked) {
+        missile.moveToTarget(enemy);
+      }
+    });
+
+    missile.update(delta);
+
+    if (missile.lifeSpan < 1) {
+      missiles.splice(missleIndex, 1);
+    }
+  });
+
   const enemiesToRemove = [];
   // enemy update and handle all collisions with enemy
   enemies.forEach((enemy, enemyIndex) => {
@@ -297,10 +313,47 @@ function gameLoop(timeStamp) {
         }
       }
     });
+    missiles.forEach((missile, missleIndex) => {
+      const distEnMissile = Math.hypot(
+        missile.x - enemy.x,
+        missile.y - enemy.y
+      );
+
+      if (distEnMissile - enemy.radius - missile.radius < -2) {
+        texts.push(new Text(enemy.x, enemy.y, player.damage * -1));
+        enemy.health -= player.damage;
+        for (let i = 0; i < enemy.radius; i++) {
+          particles.push(
+            new Particle(missile.x, missile.y, Math.random() * 2, enemy.color, {
+              x: (Math.random() - 0.5) * (Math.random() * 5),
+              y: (Math.random() - 0.5) * (Math.random() * 5),
+            })
+          );
+        }
+
+        if (enemy.health > 0) {
+          gameState.score += 100;
+          resolveCollision(missile, enemy);
+          enemy.hit = true;
+          enemy.startAnimation();
+          missiles.splice(missleIndex, 1);
+        } else {
+          gameState.score += 250;
+          enemiesToRemove.push(enemyIndex);
+
+          Math.random() < 0.1 ? dropGem(enemy) : dropCoins(enemy);
+
+          missiles.splice(missleIndex, 1);
+        }
+      }
+    });
   });
   enemiesToRemove
     .sort((a, b) => b - a)
     .forEach((index) => {
+      if (gameState.lastMarkedEnemy === enemies[index]) {
+        gameState.lastMarkedEnemy = null;
+      }
       enemies.splice(index, 1);
     });
 

@@ -8,6 +8,7 @@ class GameState {
     this.gems = 0;
     this.isPaused = false;
     this.openStation = false;
+    this.lastMarkedEnemy = null;
   }
 
   takeDamage(damage) {

@@ -1,9 +1,13 @@
+import HomingMissile from "../classes/HomingMissile.js";
 import Projectile from "../classes/Projectile.js";
 import Trail from "../classes/Trail.js";
+import Vector2 from "../classes/Vector2.js";
 import {
   camera,
+  enemies,
   friction,
   gameState,
+  missiles,
   player,
   projectiles,
   shipExFire,
@@ -13,6 +17,7 @@ import {
   trails,
   turret,
 } from "../main.js";
+import { assets } from "./assets.js";
 import { canvas } from "./canvas.js";
 
 const keysPressed = {};
@@ -24,6 +29,12 @@ addEventListener("keydown", (e) => {
   }
 });
 addEventListener("keyup", (e) => {
+  if (e.key === " ") {
+    if (storeState.missileCount > 0) {
+      shootHomingMissile();
+      storeState.missileCount--;
+    }
+  }
   delete keysPressed[e.key];
 });
 
@@ -36,6 +47,21 @@ canvas.addEventListener("mousemove", (e) => {
 
 let shootInterval = null;
 canvas.addEventListener("mousedown", (e) => {
+  let newMarkedEnemy = null;
+  for (let enemy of enemies) {
+    if (enemy.isMouseOverEnemy(e)) {
+      newMarkedEnemy = enemy;
+    }
+  }
+
+  if (newMarkedEnemy) {
+    if (gameState.lastMarkedEnemy) {
+      gameState.lastMarkedEnemy.isMarked = false;
+    }
+    newMarkedEnemy.isMarked = true;
+    gameState.lastMarkedEnemy = newMarkedEnemy;
+  }
+
   if (spaceStation1?.playerDetection()) {
     if (spaceStation1.mouseDetection(e)) {
       gameState.openStation = true;
@@ -159,6 +185,39 @@ function shootProjectile(mouseX, mouseY) {
       "white",
       velocity,
       angle
+    )
+  );
+}
+
+function shootHomingMissile() {
+  turret?.startAnimation();
+
+  // Convert player's degree to radians
+  const angle = ((player.degree - 90) * Math.PI) / 180;
+
+  // calculate velocity through sin and cos
+  const velocity = {
+    x: Math.cos(angle) * 3,
+    y: Math.sin(angle) * 3,
+  };
+
+  // Instantiate a Missile and push it to the array
+  missiles.push(
+    new HomingMissile(
+      // adding velocity to create projectile distance from player
+      player?.x + velocity.x * 5,
+      player?.y + velocity.y * 5,
+      40,
+      "white",
+      velocity,
+      angle,
+      {
+        asset: assets.images.missile,
+        frameSize: new Vector2(32, 32),
+        hFrames: 8,
+        vFrames: 1,
+        frame: 0,
+      }
     )
   );
 }

@@ -26,6 +26,7 @@ class Enemy extends Sprite {
     this.speed = 0.05;
     this.maxVelocity = 2;
     this.mass = 5;
+    this.isMarked = false;
     this.frameDuration = (1 / 10) * 100;
     this.firstDetected = false;
     this.exclam = new Sprite({
@@ -60,6 +61,27 @@ class Enemy extends Sprite {
     if (assets.images.purpleBlob.isLoaded) {
       super.drawImage(c, this.x - 32, this.y - 32);
     }
+    if (this.isMarked) {
+      c.beginPath();
+      c.arc(this.x - 30, this.y - 30, 7, 0, Math.PI * 2, false);
+      c.strokeStyle = "red";
+      c.lineWidth = 2;
+      c.stroke();
+
+      c.beginPath();
+      c.moveTo(this.x - 30, this.y - 35 - 10 / 2);
+      c.lineTo(this.x - 30, this.y - 30 - 3 / 2);
+      c.moveTo(this.x - 30, this.y - 30 + 3 / 2);
+      c.lineTo(this.x - 30, this.y - 25 + 10 / 2);
+      c.stroke();
+
+      c.beginPath();
+      c.moveTo(this.x - 35 - 10 / 2, this.y - 30);
+      c.lineTo(this.x - 30 - 3 / 2, this.y - 30);
+      c.moveTo(this.x - 30 + 3 / 2, this.y - 30);
+      c.lineTo(this.x - 25 + 10 / 2, this.y - 30);
+      c.stroke();
+    }
   }
 
   startAnimation() {
@@ -77,6 +99,15 @@ class Enemy extends Sprite {
       this.firstDetected = false; // Reset if player is no longer detected
     }
     return playerDetected;
+  }
+
+  isMouseOverEnemy(e) {
+    const distMouseEnemy = Math.hypot(
+      e.clientX + camera.x - this.x,
+      e.clientY + camera.y - this.y
+    );
+    const mouseDetected = distMouseEnemy < this.radius;
+    return mouseDetected;
   }
 
   insideCameraView() {
