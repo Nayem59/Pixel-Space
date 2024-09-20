@@ -27,6 +27,8 @@ class Enemy extends Sprite {
     this.maxVelocity = 2;
     this.mass = 5;
     this.isMarked = false;
+    this.lastExplosionDamageTime = 0;
+    this.explosionDamageCooldown = 2000;
     this.frameDuration = (1 / 10) * 100;
     this.firstDetected = false;
     this.exclam = new Sprite({
@@ -57,11 +59,23 @@ class Enemy extends Sprite {
     return points;
   }
 
+  canTakeDamage(currentTime) {
+    return (
+      currentTime - this.lastExplosionDamageTime > this.explosionDamageCooldown
+    );
+  }
+
+  takeDamage(amount, currentTime) {
+    this.health -= amount;
+    this.lastExplosionDamageTime = currentTime;
+  }
+
   draw() {
     if (assets.images.purpleBlob.isLoaded) {
       super.drawImage(c, this.x - 32, this.y - 32);
     }
     if (this.isMarked) {
+      c.save();
       c.beginPath();
       c.arc(this.x - 30, this.y - 30, 7, 0, Math.PI * 2, false);
       c.strokeStyle = "red";
@@ -81,6 +95,7 @@ class Enemy extends Sprite {
       c.moveTo(this.x - 30 + 3 / 2, this.y - 30);
       c.lineTo(this.x - 25 + 10 / 2, this.y - 30);
       c.stroke();
+      c.restore();
     }
   }
 

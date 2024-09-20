@@ -25,6 +25,7 @@ import SpaceStation from "./classes/SpaceStation.js";
 import StationUI from "./classes/StationUI.js";
 import StoreState from "./classes/StoreState.js";
 import Text from "./classes/Text.js";
+import Explosion from "./classes/Explosion.js";
 import {
   resolveCollision,
   spawnEnemies,
@@ -78,6 +79,7 @@ export let projectiles = [];
 export let missiles = [];
 export let enemies = [];
 let particles = [];
+let explosions = [];
 export let trails = [];
 export let texts = [];
 
@@ -161,6 +163,7 @@ function init() {
   missiles = [];
   enemies = [];
   particles = [];
+  explosions = [];
   trails = [];
   coins = [];
   coinsEffects = [];
@@ -244,6 +247,7 @@ function gameLoop(timeStamp) {
     missile.update(delta);
 
     if (missile.lifeSpan < 1) {
+      explosions.push(new Explosion(missile.x, missile.y, 30));
       missiles.splice(missleIndex, 1);
     }
   });
@@ -313,6 +317,7 @@ function gameLoop(timeStamp) {
         }
       }
     });
+
     missiles.forEach((missile, missleIndex) => {
       const distEnMissile = Math.hypot(
         missile.x - enemy.x,
@@ -320,36 +325,50 @@ function gameLoop(timeStamp) {
       );
 
       if (distEnMissile - enemy.radius - missile.radius < -2) {
+        explosions.push(new Explosion(enemy.x, enemy.y, 30));
+        missiles.splice(missleIndex, 1);
+      }
+    });
+
+    explosions.forEach((explosion, explosionIndex) => {
+      const distEnExplosion = Math.hypot(
+        explosion.x - enemy.x,
+        explosion.y - enemy.y
+      );
+
+      if (distEnExplosion - enemy.radius - explosion.radius < -2) {
         texts.push(
           new Text(
             enemy.x,
             enemy.y,
-            player.damage * missile.damageMultiplier * -1
+            player.damage * explosion.damageMultiplier * -1
           )
         );
-        enemy.health -= player.damage * missile.damageMultiplier;
+        enemy.health -= player.damage * explosion.damageMultiplier;
         for (let i = 0; i < 10; i++) {
           particles.push(
-            new Particle(missile.x, missile.y, Math.random() * 3, enemy.color, {
-              x: (Math.random() - 0.5) * (Math.random() * 5),
-              y: (Math.random() - 0.5) * (Math.random() * 5),
-            })
+            new Particle(
+              explosion.x,
+              explosion.y,
+              Math.random() * 3,
+              enemy.color,
+              {
+                x: (Math.random() - 0.5) * (Math.random() * 5),
+                y: (Math.random() - 0.5) * (Math.random() * 5),
+              }
+            )
           );
         }
 
         if (enemy.health > 0) {
           gameState.score += 100;
-          resolveCollision(missile, enemy);
+          // resolveCollision(explosion, enemy);
           enemy.hit = true;
           enemy.startAnimation();
-          missiles.splice(missleIndex, 1);
         } else {
           gameState.score += 250;
           enemiesToRemove.push(enemyIndex);
-
           Math.random() < 0.1 ? dropGem(enemy) : dropCoins(enemy);
-
-          missiles.splice(missleIndex, 1);
         }
       }
     });
@@ -369,6 +388,15 @@ function gameLoop(timeStamp) {
       particles.splice(partIndex, 1);
     } else {
       particle.update(delta);
+    }
+  });
+
+  // explosions update
+  explosions.forEach((explosion, explosionIndex) => {
+    if (explosion.alpha <= 0) {
+      explosions.splice(explosionIndex, 1);
+    } else {
+      explosion.update(delta);
     }
   });
 
