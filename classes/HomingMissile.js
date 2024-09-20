@@ -14,6 +14,7 @@ class HomingMissile extends Sprite {
     this.mass = 5;
     this.frameDuration = (1 / 20) * 100;
     this.lifeSpan = 500;
+    this.damageMultiplier = 2;
   }
 
   moveToTarget(target) {

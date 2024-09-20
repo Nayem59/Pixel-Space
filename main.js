@@ -282,12 +282,12 @@ function gameLoop(timeStamp) {
       if (distEnPro - enemy.radius - projectile.radius < -2) {
         texts.push(new Text(enemy.x, enemy.y, player.damage * -1));
         enemy.health -= player.damage;
-        for (let i = 0; i < enemy.radius; i++) {
+        for (let i = 0; i < 10; i++) {
           particles.push(
             new Particle(
               projectile.x,
               projectile.y,
-              Math.random() * 2,
+              Math.random() * 3,
               enemy.color,
               {
                 x: (Math.random() - 0.5) * (Math.random() * 5),
@@ -320,11 +320,17 @@ function gameLoop(timeStamp) {
       );
 
       if (distEnMissile - enemy.radius - missile.radius < -2) {
-        texts.push(new Text(enemy.x, enemy.y, player.damage * -1));
-        enemy.health -= player.damage;
-        for (let i = 0; i < enemy.radius; i++) {
+        texts.push(
+          new Text(
+            enemy.x,
+            enemy.y,
+            player.damage * missile.damageMultiplier * -1
+          )
+        );
+        enemy.health -= player.damage * missile.damageMultiplier;
+        for (let i = 0; i < 10; i++) {
           particles.push(
-            new Particle(missile.x, missile.y, Math.random() * 2, enemy.color, {
+            new Particle(missile.x, missile.y, Math.random() * 3, enemy.color, {
               x: (Math.random() - 0.5) * (Math.random() * 5),
               y: (Math.random() - 0.5) * (Math.random() * 5),
             })
