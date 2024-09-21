@@ -237,7 +237,7 @@ function gameLoop(timeStamp) {
     }
   });
 
-  missiles.forEach((missile, missleIndex) => {
+  missiles.forEach((missile, missileIndex) => {
     enemies.forEach((enemy, enemyIndex) => {
       if (enemy.isMarked) {
         missile.moveToTarget(enemy);
@@ -248,10 +248,11 @@ function gameLoop(timeStamp) {
 
     if (missile.lifeSpan < 1) {
       explosions.push(new Explosion(missile.x, missile.y, 30));
-      missiles.splice(missleIndex, 1);
+      missiles.splice(missileIndex, 1);
     }
   });
 
+  const currentTime = Date.now();
   const enemiesToRemove = [];
   // enemy update and handle all collisions with enemy
   enemies.forEach((enemy, enemyIndex) => {
@@ -318,7 +319,7 @@ function gameLoop(timeStamp) {
       }
     });
 
-    missiles.forEach((missile, missleIndex) => {
+    missiles.forEach((missile, missileIndex) => {
       const distEnMissile = Math.hypot(
         missile.x - enemy.x,
         missile.y - enemy.y
@@ -326,7 +327,7 @@ function gameLoop(timeStamp) {
 
       if (distEnMissile - enemy.radius - missile.radius < -2) {
         explosions.push(new Explosion(enemy.x, enemy.y, 30));
-        missiles.splice(missleIndex, 1);
+        missiles.splice(missileIndex, 1);
       }
     });
 
@@ -337,38 +338,43 @@ function gameLoop(timeStamp) {
       );
 
       if (distEnExplosion - enemy.radius - explosion.radius < -2) {
-        texts.push(
-          new Text(
-            enemy.x,
-            enemy.y,
-            player.damage * explosion.damageMultiplier * -1
-          )
-        );
-        enemy.health -= player.damage * explosion.damageMultiplier;
-        for (let i = 0; i < 10; i++) {
-          particles.push(
-            new Particle(
-              explosion.x,
-              explosion.y,
-              Math.random() * 3,
-              enemy.color,
-              {
-                x: (Math.random() - 0.5) * (Math.random() * 5),
-                y: (Math.random() - 0.5) * (Math.random() * 5),
-              }
+        if (enemy.canTakeDamage(currentTime)) {
+          texts.push(
+            new Text(
+              enemy.x,
+              enemy.y,
+              player.damage * explosion.damageMultiplier * -1
             )
           );
-        }
+          enemy.takeDamage(
+            player.damage * explosion.damageMultiplier,
+            currentTime
+          );
+          for (let i = 0; i < 10; i++) {
+            particles.push(
+              new Particle(
+                explosion.x,
+                explosion.y,
+                Math.random() * 3,
+                enemy.color,
+                {
+                  x: (Math.random() - 0.5) * (Math.random() * 5),
+                  y: (Math.random() - 0.5) * (Math.random() * 5),
+                }
+              )
+            );
+          }
 
-        if (enemy.health > 0) {
-          gameState.score += 100;
-          // resolveCollision(explosion, enemy);
-          enemy.hit = true;
-          enemy.startAnimation();
-        } else {
-          gameState.score += 250;
-          enemiesToRemove.push(enemyIndex);
-          Math.random() < 0.1 ? dropGem(enemy) : dropCoins(enemy);
+          if (enemy.health > 0) {
+            gameState.score += 100;
+            // resolveCollision(explosion, enemy);
+            enemy.hit = true;
+            enemy.startAnimation();
+          } else {
+            gameState.score += 250;
+            enemiesToRemove.push(enemyIndex);
+            Math.random() < 0.1 ? dropGem(enemy) : dropCoins(enemy);
+          }
         }
       }
     });

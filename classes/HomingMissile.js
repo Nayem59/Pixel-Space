@@ -74,7 +74,7 @@ class HomingMissile extends Sprite {
   update(delta) {
     this.x = this.x + this.velocity.x * delta;
     this.y = this.y + this.velocity.y * delta;
-    this.lifeSpan--;
+    this.lifeSpan -= 1 * delta;
     this.draw();
     this.continuousAnimation(delta);
   }

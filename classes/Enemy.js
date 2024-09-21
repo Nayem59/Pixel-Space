@@ -28,7 +28,7 @@ class Enemy extends Sprite {
     this.mass = 5;
     this.isMarked = false;
     this.lastExplosionDamageTime = 0;
-    this.explosionDamageCooldown = 2000;
+    this.explosionDamageCooldown = 500;
     this.frameDuration = (1 / 10) * 100;
     this.firstDetected = false;
     this.exclam = new Sprite({
