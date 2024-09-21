@@ -50,10 +50,10 @@ class Trail {
     c.restore();
   }
 
-  update() {
+  update(delta) {
     this.draw();
-    this.alpha -= 0.05;
-    this.radius -= 0.1;
+    this.alpha -= 0.05 * delta;
+    this.radius -= 0.1 * delta;
   }
 }
 

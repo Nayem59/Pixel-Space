@@ -18,11 +18,11 @@ class Text {
     c.restore();
   }
 
-  update() {
+  update(delta) {
     this.draw();
-    this.y -= 2;
-    this.x += this.random;
-    this.alpha -= 0.03;
+    this.y -= 2 * delta;
+    this.x += this.random * delta;
+    this.alpha -= 0.02 * delta;
   }
 }
 

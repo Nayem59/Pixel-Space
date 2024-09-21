@@ -23,7 +23,7 @@ class Explosion {
 
   update(delta) {
     this.draw();
-    this.alpha -= 0.01;
+    this.alpha -= 0.01 * delta;
   }
 }
 

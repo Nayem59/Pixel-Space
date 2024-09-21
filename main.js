@@ -475,7 +475,7 @@ function gameLoop(timeStamp) {
     if (trail.alpha <= 0) {
       trails.splice(trailIndex, 1);
     } else {
-      trail.update();
+      trail.update(delta);
     }
   });
   camera.showDamage(c);

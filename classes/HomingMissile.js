@@ -57,10 +57,10 @@ class HomingMissile extends Sprite {
 
   draw() {
     // for collision and debug purposes
-    c.beginPath();
-    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    c.fillStyle = this.color;
-    c.fill();
+    // c.beginPath();
+    // c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    // c.fillStyle = this.color;
+    // c.fill();
 
     c.save();
     c.translate(this.x, this.y);
