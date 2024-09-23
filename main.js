@@ -247,7 +247,19 @@ function gameLoop(timeStamp) {
     missile.update(delta);
 
     if (missile.lifeSpan < 1) {
-      explosions.push(new Explosion(missile.x, missile.y, 30));
+      explosions.push(
+        new Explosion(missile.x, missile.y, 30, {
+          asset:
+            Math.random() < 0.5
+              ? assets.images.explosion1
+              : assets.images.explosion2,
+          frameSize: new Vector2(48, 48),
+          hFrames: 8,
+          vFrames: 1,
+          frame: 0,
+          scale: 2,
+        })
+      );
       missiles.splice(missileIndex, 1);
     }
   });
@@ -326,7 +338,19 @@ function gameLoop(timeStamp) {
       );
 
       if (distEnMissile - enemy.radius - missile.radius < -2) {
-        explosions.push(new Explosion(enemy.x, enemy.y, 30));
+        explosions.push(
+          new Explosion(enemy.x, enemy.y, 30, {
+            asset:
+              Math.random() < 0.5
+                ? assets.images.explosion1
+                : assets.images.explosion2,
+            frameSize: new Vector2(48, 48),
+            hFrames: 8,
+            vFrames: 1,
+            frame: 0,
+            scale: 2,
+          })
+        );
         missiles.splice(missileIndex, 1);
       }
     });
@@ -399,7 +423,7 @@ function gameLoop(timeStamp) {
 
   // explosions update
   explosions.forEach((explosion, explosionIndex) => {
-    if (explosion.alpha <= 0) {
+    if (explosion.destroy) {
       explosions.splice(explosionIndex, 1);
     } else {
       explosion.update(delta);

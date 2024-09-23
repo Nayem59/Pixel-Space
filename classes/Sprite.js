@@ -39,7 +39,7 @@ class Sprite {
     }
   }
 
-  animate(delta) {
+  animate(delta, withDestroy) {
     if (this.isAnimating) {
       this.frameTimer += delta;
       while (this.frameTimer >= this.frameDuration) {
@@ -48,6 +48,9 @@ class Sprite {
         if (this.frame >= this.maxAnimationFrames) {
           this.isAnimating = false;
           this.frame = 0;
+          if (withDestroy) {
+            this.destroy = true;
+          }
         }
       }
     }

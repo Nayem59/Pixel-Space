@@ -10,6 +10,8 @@ class Assets {
       turret: "/../assets/player/turretsheet2.png",
       shipExhaustFire: "/../assets/player/shipexhaustFire.png",
       missile: "/../assets/player/missile.png",
+      explosion1: "/../assets/player/explosion1.png",
+      explosion2: "/../assets/player/explosion2.png",
       purpleBlob: "/../assets/enemies/purple_blob_sheet.png",
       live: "/../assets/ui/health.png",
       exclam: "/../assets/ui/exclamationMark.png",
