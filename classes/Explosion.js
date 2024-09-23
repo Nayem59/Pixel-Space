@@ -8,7 +8,8 @@ class Explosion {
     this.radius = radius;
     this.alpha = 1;
     this.damageMultiplier = 2;
-    // this.velocity = new Vector2(1, 1);
+    this.velocity = new Vector2(0, 0);
+    this.mass = 50;
   }
 
   draw() {

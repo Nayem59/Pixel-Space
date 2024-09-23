@@ -367,7 +367,7 @@ function gameLoop(timeStamp) {
 
           if (enemy.health > 0) {
             gameState.score += 100;
-            // resolveCollision(explosion, enemy);
+            resolveCollision(explosion, enemy);
             enemy.hit = true;
             enemy.startAnimation();
           } else {
