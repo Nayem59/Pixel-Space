@@ -175,16 +175,6 @@ class Enemy extends Sprite {
   }
 
   update(delta) {
-    if (this.playerDetection() || this.hit) {
-      this.state = "chasing";
-
-      this.enemyHealthBar.x = this.x - this.enemyHealthBar.width / 2;
-      this.enemyHealthBar.y = this.y + this.radius + 10;
-      this.enemyHealthBar.update(this.health);
-    } else if (this.state !== "patrolling") {
-      this.state = "idle";
-    }
-
     switch (this.state) {
       case "idle":
         this.idleTime++;
@@ -208,17 +198,6 @@ class Enemy extends Sprite {
         break;
     }
 
-    if (this.insideCameraView()) {
-      this.draw();
-      if (this.exclam.isAnimating) {
-        this.exclam.animate(delta);
-        this.exclam.drawImage(c, this.x + 10, this.y - 60);
-      }
-      this.visible = true;
-    } else {
-      this.visible = false;
-    }
-
     this.handleEnemyVelocity();
     this.animate(delta);
 
@@ -237,6 +216,27 @@ class Enemy extends Sprite {
         this.y + this.velocity.y * delta
       )
     );
+
+    if (this.insideCameraView()) {
+      this.visible = true;
+      if (this.exclam.isAnimating) {
+        this.exclam.animate(delta);
+        this.exclam.drawImage(c, this.x + 10, this.y - 60);
+      }
+      this.draw();
+    } else {
+      this.visible = false;
+    }
+
+    if (this.playerDetection() || this.hit) {
+      this.state = "chasing";
+
+      this.enemyHealthBar.x = this.x - this.enemyHealthBar.width / 2;
+      this.enemyHealthBar.y = this.y + this.radius + 10;
+      this.enemyHealthBar.update(this.health);
+    } else if (this.state !== "patrolling") {
+      this.state = "idle";
+    }
   }
 }
 

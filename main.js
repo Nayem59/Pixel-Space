@@ -290,12 +290,12 @@ function gameLoop(timeStamp) {
       }
     }
 
+    const projectilesToRemove = [];
     projectiles.forEach((projectile, projectileIndex) => {
       const distEnPro = Math.hypot(
         projectile.x - enemy.x,
         projectile.y - enemy.y
       );
-
       if (distEnPro - enemy.radius - projectile.radius < -2) {
         texts.push(new Text(enemy.x, enemy.y, player.damage * -1));
         enemy.health -= player.damage;
@@ -316,20 +316,29 @@ function gameLoop(timeStamp) {
 
         if (enemy.health > 0) {
           gameState.score += 100;
-          resolveCollision(projectile, enemy);
           enemy.hit = true;
           enemy.startAnimation();
-          projectiles.splice(projectileIndex, 1);
         } else {
           gameState.score += 250;
           enemiesToRemove.push(enemyIndex);
-
           Math.random() < 0.1 ? dropGem(enemy) : dropCoins(enemy);
-
-          projectiles.splice(projectileIndex, 1);
         }
+        projectilesToRemove.push(projectileIndex);
+        // Apply knockback to enemy
+        const knockbackStrength = 2;
+        const knockbackAngle = Math.atan2(
+          enemy.y - projectile.y,
+          enemy.x - projectile.x
+        );
+        enemy.velocity.x += Math.cos(knockbackAngle) * knockbackStrength;
+        enemy.velocity.y += Math.sin(knockbackAngle) * knockbackStrength;
       }
     });
+    projectilesToRemove
+      .sort((a, b) => b - a)
+      .forEach((index) => {
+        projectiles.splice(index, 1);
+      });
 
     missiles.forEach((missile, missileIndex) => {
       const distEnMissile = Math.hypot(
@@ -520,7 +529,7 @@ startGameBtn.addEventListener("click", (e) => {
   init();
   gameLoop(0);
   spawnEnemies();
-  spawnEnemies();
+  // spawnEnemies();
   modal.style.display = "none";
   collectableContainer.style.display = "block";
   scoreContainer.style.display = "block";

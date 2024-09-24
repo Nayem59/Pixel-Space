@@ -175,12 +175,30 @@ function shootProjectile(mouseX, mouseY) {
     y: Math.sin(angle) * 5,
   };
 
-  // Instantiate a Projectile and push it to the array
+  const offset = { x: 0, y: 0 };
+
+  if (storeState.hasTwinTurret) {
+    // Set the offset distance between the two projectiles
+    const turretSpacing = 10; // Adjust this value for wider or narrower spacing
+    // Calculate the perpendicular angle for the offset
+    const perpendicularAngle = angle + Math.PI / 2;
+    offset.x = Math.cos(perpendicularAngle) * turretSpacing;
+    offset.y = Math.sin(perpendicularAngle) * turretSpacing;
+    projectiles.push(
+      new Projectile(
+        player?.x + velocity.x * 5 - offset.x, // Offset left
+        player?.y + velocity.y * 5 - offset.y,
+        5,
+        "white",
+        velocity,
+        angle
+      )
+    );
+  }
   projectiles.push(
     new Projectile(
-      // adding velocity to create projectile distance from player
-      player?.x + velocity.x * 5,
-      player?.y + velocity.y * 5,
+      player?.x + velocity.x * 5 + offset.x, // Offset right
+      player?.y + velocity.y * 5 + offset.y,
       5,
       "white",
       velocity,
