@@ -14,6 +14,7 @@ class Enemy extends Sprite {
     this.detectionRadius = 300;
     this.visible = false;
     this.hit = false;
+    this.destroyed = false;
     this.margin = 40;
     this.color = color;
     this.velocity = velocity;

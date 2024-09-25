@@ -319,9 +319,12 @@ function gameLoop(timeStamp) {
           enemy.hit = true;
           enemy.startAnimation();
         } else {
-          gameState.score += 250;
-          enemiesToRemove.push(enemyIndex);
-          Math.random() < 0.1 ? dropGem(enemy) : dropCoins(enemy);
+          if (!enemy.destroyed) {
+            gameState.score += 250;
+            enemy.destroyed = true;
+            enemiesToRemove.push(enemyIndex);
+            Math.random() < 0.1 ? dropGem(enemy) : dropCoins(enemy);
+          }
         }
         projectilesToRemove.push(projectileIndex);
         // Apply knockback to enemy
