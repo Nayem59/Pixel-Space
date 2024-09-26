@@ -24,9 +24,11 @@ const keysPressed = {};
 addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     gameState.isPaused = !gameState.isPaused;
-  } else {
-    keysPressed[e.key] = true;
   }
+  if (e.key === "f") {
+    handleBoost();
+  }
+  keysPressed[e.key] = true;
 });
 addEventListener("keyup", (e) => {
   if (e.key === " ") {
@@ -161,6 +163,37 @@ canvas.addEventListener("mouseup", (e) => {
   }
 });
 
+let boostActive = false;
+let boostCooldown = false;
+const boostDuration = 300; // in milliseconds
+const boostCooldownTime = 1000; // 1 second cooldown after boost
+function handleBoost() {
+  if (boostActive || boostCooldown) return; // Ignore if already boosting or cooling down
+
+  boostActive = true;
+  const angle = ((player.degree - 90) * Math.PI) / 180;
+
+  // Set initial boost velocity
+  const boostSpeed = 30;
+  player.maxVelocity = 10;
+  player.velocity = {
+    x: Math.cos(angle) * boostSpeed,
+    y: Math.sin(angle) * boostSpeed,
+  };
+
+  // Boost duration
+  setTimeout(() => {
+    boostActive = false; // End boost
+    boostCooldown = true; // Start cooldown
+    player.maxVelocity = 3; // Reset to normal speed
+  }, boostDuration);
+
+  // Cooldown after boost ends
+  setTimeout(() => {
+    boostCooldown = false; // End cooldown
+  }, boostDuration + boostCooldownTime);
+}
+
 function shootProjectile(mouseX, mouseY) {
   turret?.startAnimation();
 
@@ -251,7 +284,7 @@ export function handlePlayerVelocity() {
   if (keysPressed["a"]) player.velocity.x -= player.speed;
   if (keysPressed["d"]) player.velocity.x += player.speed;
 
-  // Calculate velocity Magnitute through pythagoras theorem
+  // Calculate velocity Magnitude through pythagoras theorem
   const velocityMagnitude = Math.sqrt(
     player.velocity.x ** 2 + player.velocity.y ** 2
   );
@@ -340,7 +373,8 @@ export function handleShipExFireAnimation(delta) {
       keysPressed["w"] ||
       keysPressed["a"] ||
       keysPressed["s"] ||
-      keysPressed["d"]
+      keysPressed["d"] ||
+      boostActive
     ) {
       // Active animation
       if (shipExFire.frame < 4 || shipExFire.frame > 6) {
@@ -369,7 +403,15 @@ export function handleTrail(delta) {
       keysPressed["s"] ||
       keysPressed["d"]
     ) {
-      trails.push(new Trail(player.x, player.y, "orange", player.degree));
+      trails.push(
+        new Trail(player.x, player.y, "orange", "red", player.degree)
+      );
+    }
+
+    if (boostActive) {
+      trails.push(
+        new Trail(player.x, player.y, "#7DF9FF", "blue", player.degree)
+      );
     }
   }
 }

@@ -11,6 +11,7 @@ class StoreState {
     this.hasContinuousLaser = true;
     this.hasTwinTurret = true;
     this.missileCount = 10;
+    this.boostCount = 10;
   }
 
   increaseHealth() {

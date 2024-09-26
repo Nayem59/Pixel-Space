@@ -2,11 +2,12 @@ import { camera } from "../main.js";
 import { c } from "../utils/canvas.js";
 
 class Trail {
-  constructor(x, y, color, degree) {
+  constructor(x, y, color, outerColor, degree) {
     this.x = x;
     this.y = y;
     this.radius = 3;
     this.color = color;
+    this.outerColor = outerColor;
     this.alpha = 1;
     this.degree = degree;
   }
@@ -18,9 +19,9 @@ class Trail {
     c.rotate((this.degree * Math.PI) / 180);
     c.translate(-(this.x - camera.x), -(this.y - camera.y));
 
-    c.strokeStyle = "red";
+    c.strokeStyle = this.outerColor;
     c.fillStyle = this.color;
-    c.shadowColor = "red";
+    c.shadowColor = this.outerColor;
     c.shadowBlur = 5;
 
     c.beginPath();

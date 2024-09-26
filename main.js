@@ -327,14 +327,14 @@ function gameLoop(timeStamp) {
           }
         }
         projectilesToRemove.push(projectileIndex);
-        // Apply knockback to enemy
-        const knockbackStrength = 2;
-        const knockbackAngle = Math.atan2(
+        // Apply knockBack to enemy
+        const knockBackStrength = 2;
+        const knockBackAngle = Math.atan2(
           enemy.y - projectile.y,
           enemy.x - projectile.x
         );
-        enemy.velocity.x += Math.cos(knockbackAngle) * knockbackStrength;
-        enemy.velocity.y += Math.sin(knockbackAngle) * knockbackStrength;
+        enemy.velocity.x += Math.cos(knockBackAngle) * knockBackStrength;
+        enemy.velocity.y += Math.sin(knockBackAngle) * knockBackStrength;
       }
     });
     projectilesToRemove
@@ -532,7 +532,11 @@ startGameBtn.addEventListener("click", (e) => {
   init();
   gameLoop(0);
   spawnEnemies();
-  // spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
   modal.style.display = "none";
   collectableContainer.style.display = "block";
   scoreContainer.style.display = "block";
