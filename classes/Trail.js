@@ -2,7 +2,7 @@ import { camera } from "../main.js";
 import { c } from "../utils/canvas.js";
 
 class Trail {
-  constructor(x, y, color, outerColor, degree) {
+  constructor(x, y, color, outerColor, degree, boostActive) {
     this.x = x;
     this.y = y;
     this.radius = 3;
@@ -10,6 +10,7 @@ class Trail {
     this.outerColor = outerColor;
     this.alpha = 1;
     this.degree = degree;
+    this.boostActive = boostActive;
   }
 
   draw() {
@@ -24,29 +25,57 @@ class Trail {
     c.shadowColor = this.outerColor;
     c.shadowBlur = 5;
 
-    c.beginPath();
-    c.arc(
-      this.x - camera.x - 8,
-      this.y - camera.y + 24,
-      this.radius,
-      0,
-      Math.PI * 2,
-      false
-    );
-    c.stroke();
-    c.fill();
-
-    c.beginPath();
-    c.arc(
-      this.x - camera.x + 8,
-      this.y - camera.y + 24,
-      this.radius,
-      0,
-      Math.PI * 2,
-      false
-    );
-    c.stroke();
-    c.fill();
+    if (this.boostActive) {
+      c.beginPath();
+      c.ellipse(
+        this.x - camera.x - 8,
+        this.y - camera.y + 24,
+        this.radius,
+        this.radius * 6,
+        0,
+        0,
+        Math.PI * 2,
+        false
+      );
+      c.stroke();
+      c.fill();
+      c.beginPath();
+      c.ellipse(
+        this.x - camera.x + 8,
+        this.y - camera.y + 24,
+        this.radius,
+        this.radius * 6,
+        0,
+        0,
+        Math.PI * 2,
+        false
+      );
+      c.stroke();
+      c.fill();
+    } else {
+      c.beginPath();
+      c.arc(
+        this.x - camera.x - 8,
+        this.y - camera.y + 24,
+        this.radius,
+        0,
+        Math.PI * 2,
+        false
+      );
+      c.stroke();
+      c.fill();
+      c.beginPath();
+      c.arc(
+        this.x - camera.x + 8,
+        this.y - camera.y + 24,
+        this.radius,
+        0,
+        Math.PI * 2,
+        false
+      );
+      c.stroke();
+      c.fill();
+    }
 
     c.restore();
   }

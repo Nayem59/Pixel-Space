@@ -397,20 +397,32 @@ export function handleTrail(delta) {
 
   while (trailFrameTimer >= trailFrameDuration) {
     trailFrameTimer -= trailFrameDuration;
-    if (
+    if (boostActive) {
+      trails.push(
+        new Trail(
+          player.x,
+          player.y,
+          "#7DF9FF",
+          "blue",
+          player.degree,
+          boostActive
+        )
+      );
+    } else if (
       keysPressed["w"] ||
       keysPressed["a"] ||
       keysPressed["s"] ||
       keysPressed["d"]
     ) {
       trails.push(
-        new Trail(player.x, player.y, "orange", "red", player.degree)
-      );
-    }
-
-    if (boostActive) {
-      trails.push(
-        new Trail(player.x, player.y, "#7DF9FF", "blue", player.degree)
+        new Trail(
+          player.x,
+          player.y,
+          "orange",
+          "red",
+          player.degree,
+          boostActive
+        )
       );
     }
   }
