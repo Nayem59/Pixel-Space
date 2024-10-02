@@ -25,8 +25,10 @@ addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     gameState.isPaused = !gameState.isPaused;
   }
-  if (e.key === "f") {
-    handleBoost();
+  if (e.key === "Space") {
+    if (storeState.boostCount > 0) {
+      handleBoost();
+    }
   }
   keysPressed[e.key] = true;
 });
@@ -171,11 +173,13 @@ function handleBoost() {
   if (boostActive || boostCooldown) return; // Ignore if already boosting or cooling down
 
   boostActive = true;
+  storeState.boostCount--;
   const angle = ((player.degree - 90) * Math.PI) / 180;
 
   // Set initial boost velocity
   const boostSpeed = 30;
-  player.maxVelocity = 10;
+  const originalMaxVelocity = player.maxVelocity;
+  player.maxVelocity = player.maxVelocity * 3;
   player.velocity = {
     x: Math.cos(angle) * boostSpeed,
     y: Math.sin(angle) * boostSpeed,
@@ -185,7 +189,7 @@ function handleBoost() {
   setTimeout(() => {
     boostActive = false; // End boost
     boostCooldown = true; // Start cooldown
-    player.maxVelocity = 3; // Reset to normal speed
+    player.maxVelocity = originalMaxVelocity; // Reset to normal speed
   }, boostDuration);
 
   // Cooldown after boost ends

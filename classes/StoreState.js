@@ -50,7 +50,7 @@ class StoreState {
       this.damageUpgradeCost <= gameState.coins
     ) {
       gameState.coins -= this.speedUpgradeCost;
-      player.maxVelocity++;
+      player.maxVelocity += 0.3;
       gameState.updateState();
       this.speedUpgradePoint++;
       this.speedUpgradeCost += 200;
@@ -62,11 +62,14 @@ class StoreState {
   upgradeToAutoTurret() {
     this.hasContinuousLaser = true;
   }
+  upgradeToTwinTurret() {
+    this.hasTwinTurret = true;
+  }
   buyMissiles(amount) {
     this.missileCount += amount;
   }
-  upgradeToTwinTurret() {
-    this.hasTwinTurret = true;
+  buyBoost(amount) {
+    this.boostCount += amount;
   }
 }
 
