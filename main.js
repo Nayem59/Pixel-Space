@@ -33,6 +33,7 @@ import {
   dropCoins,
   dropGem,
 } from "./utils/utils.js";
+import SkillUI from "./classes/SkillUI.js";
 
 export const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
@@ -66,7 +67,7 @@ let miniMap;
 let live;
 let coinUI;
 let gemUI;
-let text;
+export let skillUI;
 export let stationUI;
 export let coins = [];
 let coinsEffects = [];
@@ -156,6 +157,13 @@ function init() {
     asset: assets.images.stationUI,
     frameSize: new Vector2(900, 600),
     hFrames: 2,
+    vFrames: 1,
+    frame: 0,
+  });
+  skillUI = new SkillUI(canvasMidX - 200, canvas.height - 100, {
+    asset: assets.images.skillUI,
+    frameSize: new Vector2(400, 100),
+    hFrames: 1,
     vFrames: 1,
     frame: 0,
   });
@@ -526,6 +534,7 @@ function gameLoop(timeStamp) {
   live.update(delta);
   coinUI.draw();
   gemUI.draw();
+  skillUI.update(delta);
 }
 
 startGameBtn.addEventListener("click", (e) => {

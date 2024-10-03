@@ -11,6 +11,7 @@ import {
   player,
   projectiles,
   shipExFire,
+  skillUI,
   spaceStation1,
   stationUI,
   storeState,
@@ -25,7 +26,7 @@ addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     gameState.isPaused = !gameState.isPaused;
   }
-  if (e.key === "Space") {
+  if (e.key === " ") {
     if (storeState.boostCount > 0) {
       handleBoost();
     }
@@ -33,10 +34,25 @@ addEventListener("keydown", (e) => {
   keysPressed[e.key] = true;
 });
 addEventListener("keyup", (e) => {
-  if (e.key === " ") {
+  if (e.key === "q") {
+    if (storeState.potionCount > 0) {
+      if (gameState.playerHealth < gameState.maxHealth) {
+        gameState.playerHealth++;
+        storeState.potionCount--;
+      } else {
+        // handle health already max
+      }
+    }
+  }
+  if (e.key === "e") {
     if (storeState.missileCount > 0) {
       shootHomingMissile();
       storeState.missileCount--;
+    }
+  }
+  if (e.key === "f") {
+    if (false) {
+      // handle f key here
     }
   }
   delete keysPressed[e.key];
@@ -184,6 +200,9 @@ function handleBoost() {
     x: Math.cos(angle) * boostSpeed,
     y: Math.sin(angle) * boostSpeed,
   };
+
+  // Start the cooldown in the UI
+  skillUI.startBoostCooldown();
 
   // Boost duration
   setTimeout(() => {
