@@ -7,13 +7,13 @@ class SkillUI extends Sprite {
     super(spriteConfig);
     this.x = x;
     this.y = y;
-    this.boostCooldownProgress = 0; // Progress of the boost cooldown (0 to 1)
-    this.boostRemainingTime = 0; // Time remaining for the boost cooldown
-    this.totalBoostCooldown = 1000 + 300; // Total time for boost duration + cooldown (in ms)
+    this.boostCooldownProgress = 0;
+    this.boostRemainingTime = 0;
+    this.totalBoostCooldown = 1000 + 300;
   }
 
   startBoostCooldown() {
-    this.boostRemainingTime = this.totalBoostCooldown; // Start the cooldown
+    this.boostRemainingTime = this.totalBoostCooldown;
   }
 
   draw() {
@@ -51,14 +51,13 @@ class SkillUI extends Sprite {
   }
 
   update(delta) {
-    // Update the boost cooldown progress
     if (this.boostRemainingTime > 0) {
-      this.boostRemainingTime -= 10 * delta; // Reduce remaining cooldown time by deltaTime
+      this.boostRemainingTime -= 10 * delta;
       this.boostCooldownProgress =
         this.boostRemainingTime / this.totalBoostCooldown;
     } else {
-      this.boostRemainingTime = 0; // Ensure time doesn't go negative
-      this.boostCooldownProgress = 0; // No cooldown
+      this.boostRemainingTime = 0;
+      this.boostCooldownProgress = 0;
     }
     this.draw();
   }
