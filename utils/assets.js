@@ -8,6 +8,7 @@ class Assets {
       ship4: "/../assets/player/Ship_4.png",
       ship5: "/../assets/player/Ship_5.png",
       turret: "/../assets/player/turretsheet2.png",
+      shield: "/../assets/player/shield.png",
       shipExhaustFire: "/../assets/player/shipexhaustFire.png",
       missile: "/../assets/player/missile.png",
       explosion1: "/../assets/player/explosion1.png",

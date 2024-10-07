@@ -10,10 +10,29 @@ class SkillUI extends Sprite {
     this.boostCooldownProgress = 0;
     this.boostRemainingTime = 0;
     this.totalBoostCooldown = 1000 + 300;
+
+    this.shieldCooldownProgress = 0;
+    this.shieldRemainingTime = 0;
+    this.totalShieldCooldown = 10000 + 5000;
+
+    this.cloakOnCooldown = false;
+    this.cloakDuration = 60000;
+    this.cloakCooldownTime = 20000;
+    this.cloakCooldownProgress = 0;
+    this.cloakRemainingTime = 0;
+    this.totalCloakCooldown = this.cloakDuration + this.cloakCooldownTime;
   }
 
   startBoostCooldown() {
     this.boostRemainingTime = this.totalBoostCooldown;
+  }
+
+  startShieldCooldown() {
+    this.shieldRemainingTime = this.totalShieldCooldown;
+  }
+
+  startCloakCooldown() {
+    this.cloakRemainingTime = this.totalCloakCooldown;
   }
 
   draw() {
@@ -29,9 +48,11 @@ class SkillUI extends Sprite {
 
     c.font = "15px pixel";
     c.fillStyle = "white";
-    c.fillText(storeState.potionCount, this.x + 80, this.y + 85);
-    c.fillText(storeState.boostCount, this.x + 176, this.y + 85);
-    c.fillText(storeState.missileCount, this.x + 272, this.y + 85);
+    c.fillText(storeState.potionCount, this.x + 82, this.y + 85);
+    c.fillText(storeState.boostCount, this.x + 178, this.y + 85);
+    c.fillText(storeState.missileCount, this.x + 274, this.y + 85);
+    c.fillText(storeState.shieldCount, this.x + 370, this.y + 85);
+    c.fillText(storeState.cloakCount, this.x + 466, this.y + 85);
 
     if (this.boostCooldownProgress > 0) {
       c.save();
@@ -41,8 +62,35 @@ class SkillUI extends Sprite {
       const startAngle = -Math.PI / 2;
       const endAngle = -Math.PI / 2 + this.boostCooldownProgress * Math.PI * 2;
 
-      c.arc(this.x + 152, this.y + 40, 25, startAngle, endAngle, false);
-      c.lineTo(this.x + 152, this.y + 40);
+      c.arc(this.x + 154, this.y + 39, 25, startAngle, endAngle, false);
+      c.lineTo(this.x + 154, this.y + 39);
+      c.fill();
+      c.restore();
+    }
+    if (this.shieldCooldownProgress > 0) {
+      c.save();
+      c.globalAlpha = 0.8;
+      c.fillStyle = "black";
+      c.beginPath();
+      const startAngle = -Math.PI / 2;
+      const endAngle = -Math.PI / 2 + this.shieldCooldownProgress * Math.PI * 2;
+
+      c.arc(this.x + 346, this.y + 39, 27, startAngle, endAngle, false);
+      c.lineTo(this.x + 346, this.y + 39);
+      c.fill();
+      c.restore();
+    }
+
+    if (this.cloakCooldownProgress > 0) {
+      c.save();
+      c.globalAlpha = 0.8;
+      c.fillStyle = "black";
+      c.beginPath();
+      const startAngle = -Math.PI / 2;
+      const endAngle = -Math.PI / 2 + this.cloakCooldownProgress * Math.PI * 2;
+
+      c.arc(this.x + 442, this.y + 39, 27, startAngle, endAngle, false);
+      c.lineTo(this.x + 442, this.y + 39);
       c.fill();
       c.restore();
     }
@@ -58,6 +106,32 @@ class SkillUI extends Sprite {
     } else {
       this.boostRemainingTime = 0;
       this.boostCooldownProgress = 0;
+    }
+
+    if (this.shieldRemainingTime > 0) {
+      this.shieldRemainingTime -= 10 * delta;
+      this.shieldCooldownProgress =
+        this.shieldRemainingTime / this.totalShieldCooldown;
+    } else {
+      this.shieldRemainingTime = 0;
+      this.shieldCooldownProgress = 0;
+    }
+
+    if (this.cloakRemainingTime > 0) {
+      this.cloakRemainingTime -= 10 * delta;
+      this.cloakCooldownProgress =
+        this.cloakRemainingTime / this.totalCloakCooldown;
+      if (
+        this.cloakRemainingTime <
+        this.totalCloakCooldown - this.cloakDuration
+      ) {
+        player.cloakActive = false;
+        this.cloakOnCooldown = true;
+      }
+    } else {
+      this.cloakRemainingTime = 0;
+      this.cloakCooldownProgress = 0;
+      this.cloakOnCooldown = false;
     }
     this.draw();
   }

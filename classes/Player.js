@@ -1,6 +1,6 @@
 import { c } from "../utils/canvas.js";
 import { assets } from "../utils/assets.js";
-import { shipExFire, camera } from "../main.js";
+import { shipExFire, camera, shield } from "../main.js";
 
 class Player {
   constructor(x, y, radius, color, velocity, map) {
@@ -17,6 +17,8 @@ class Player {
     this.map = map;
     this.damage = 10;
     this.isShooting = false;
+    this.shieldActive = false;
+    this.cloakActive = false;
   }
 
   draw() {
@@ -33,6 +35,10 @@ class Player {
     // c.fillStyle = this.color;
     // c.fill();
 
+    c.save();
+    if (this.cloakActive) {
+      c.globalAlpha = 0.2;
+    }
     c.save();
     c.translate(this.x - camera.x, this.y - camera.y);
     c.rotate((this.degree * Math.PI) / 180);
@@ -51,6 +57,10 @@ class Player {
       c.restore();
     }
     shipExFire.drawImage(c, this.x - camera.x - 24, this.y - camera.y - 15);
+    c.restore();
+    if (this.shieldActive) {
+      shield.drawImage(c, this.x - camera.x - 40, this.y - camera.y - 40);
+    }
     c.restore();
   }
 

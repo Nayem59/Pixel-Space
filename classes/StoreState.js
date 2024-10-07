@@ -13,6 +13,8 @@ class StoreState {
     this.missileCount = 10;
     this.boostCount = 10;
     this.potionCount = 10;
+    this.shieldCount = 10;
+    this.cloakCount = 10;
   }
 
   increaseHealth() {
@@ -95,6 +97,26 @@ class StoreState {
       );
     } else {
       this.potionCount = total;
+    }
+  }
+  buyShields(amount) {
+    const total = this.shieldCount + amount;
+    if (total > 99) {
+      console.log(
+        "You can't buy this ammount as you only have an inventory space of 99!"
+      );
+    } else {
+      this.shieldCount = total;
+    }
+  }
+  buyCloack(amount) {
+    const total = this.cloakCount + amount;
+    if (total > 99) {
+      console.log(
+        "You can't buy this ammount as you only have an inventory space of 99!"
+      );
+    } else {
+      this.cloakCount = total;
     }
   }
 }

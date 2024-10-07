@@ -51,8 +51,13 @@ addEventListener("keyup", (e) => {
     }
   }
   if (e.key === "f") {
-    if (false) {
-      // handle f key here
+    if (storeState.shieldCount > 0) {
+      activateShield();
+    }
+  }
+  if (e.key === "r") {
+    if (storeState.cloakCount > 0) {
+      activateCloaking();
     }
   }
   delete keysPressed[e.key];
@@ -89,6 +94,12 @@ canvas.addEventListener("mousedown", (e) => {
   }
   if (!gameState?.isPaused && !gameState.openStation) {
     player.isShooting = true;
+    player.cloakActive = false;
+    skillUI.cloakOnCooldown = true;
+    skillUI.cloakRemainingTime =
+      skillUI.cloakRemainingTime > skillUI.cloakCooldownTime
+        ? skillUI.cloakCooldownTime
+        : skillUI.cloakRemainingTime;
     if (storeState.hasContinuousLaser) {
       shootProjectile(mouseX, mouseY);
       shootInterval = setInterval(() => {
@@ -215,6 +226,34 @@ function handleBoost() {
   setTimeout(() => {
     boostCooldown = false; // End cooldown
   }, boostDuration + boostCooldownTime);
+}
+
+let shieldCooldown = false;
+const shieldDuration = 5000;
+const shieldCooldownTime = 10000;
+function activateShield() {
+  if (player.shieldActive || shieldCooldown) return;
+  player.shieldActive = true;
+  storeState.shieldCount--;
+
+  skillUI.startShieldCooldown();
+
+  setTimeout(() => {
+    player.shieldActive = false;
+    shieldCooldown = true;
+  }, shieldDuration);
+
+  setTimeout(() => {
+    shieldCooldown = false;
+  }, shieldDuration + shieldCooldownTime);
+}
+
+function activateCloaking() {
+  if (player.cloakActive || skillUI.cloakOnCooldown) return;
+  player.cloakActive = true;
+  storeState.cloakCount--;
+
+  skillUI.startCloakCooldown();
 }
 
 function shootProjectile(mouseX, mouseY) {

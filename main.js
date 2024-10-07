@@ -57,6 +57,7 @@ export let storeState;
 export let player;
 export let turret;
 export let shipExFire;
+export let shield;
 let turretAngle = 0;
 
 export let tileMap;
@@ -131,6 +132,13 @@ function init() {
     vFrames: 2,
     frame: 0,
   });
+  shield = new Sprite({
+    asset: assets.images.shield,
+    frameSize: new Vector2(80, 80),
+    hFrames: 1,
+    vFrames: 1,
+    frame: 0,
+  });
   miniMap = new MiniMap(canvas.width, canvas.height);
   live = new HealthBar(5, 25, {
     asset: assets.images.live,
@@ -160,9 +168,9 @@ function init() {
     vFrames: 1,
     frame: 0,
   });
-  skillUI = new SkillUI(canvasMidX - 200, canvas.height - 100, {
+  skillUI = new SkillUI(canvasMidX - 250, canvas.height - 100, {
     asset: assets.images.skillUI,
-    frameSize: new Vector2(400, 100),
+    frameSize: new Vector2(500, 100),
     hFrames: 1,
     vFrames: 1,
     frame: 0,
@@ -281,9 +289,11 @@ function gameLoop(timeStamp) {
     const distPlEn = Math.hypot(player.x - enemy.x, player.y - enemy.y);
     // reduce hp if the enemy collides with player, end game if hp is 0
     if (distPlEn - enemy.radius - player.radius < -2) {
-      gameState.takeDamage(1);
-      live.startAnimation();
-      camera.damageDuration = 10;
+      if (!player.shieldActive) {
+        gameState.takeDamage(1);
+        live.startAnimation();
+        camera.damageDuration = 10;
+      }
 
       resolveCollision(player, enemy);
 

@@ -229,14 +229,27 @@ class Enemy extends Sprite {
       this.visible = false;
     }
 
-    if (this.playerDetection() || this.hit) {
+    if (this.hit) {
       this.state = "chasing";
 
       this.enemyHealthBar.x = this.x - this.enemyHealthBar.width / 2;
       this.enemyHealthBar.y = this.y + this.radius + 10;
       this.enemyHealthBar.update(this.health);
+      return;
     } else if (this.state !== "patrolling") {
       this.state = "idle";
+    }
+
+    if (!player.cloakActive) {
+      if (this.playerDetection()) {
+        this.state = "chasing";
+
+        this.enemyHealthBar.x = this.x - this.enemyHealthBar.width / 2;
+        this.enemyHealthBar.y = this.y + this.radius + 10;
+        this.enemyHealthBar.update(this.health);
+      } else if (this.state !== "patrolling") {
+        this.state = "idle";
+      }
     }
   }
 }
