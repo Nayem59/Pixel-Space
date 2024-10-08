@@ -25,8 +25,8 @@ class Projectile {
     c.rotate(this.angle);
     c.translate(-this.x, -this.y);
 
-    c.strokeStyle = "red";
-    c.shadowColor = "red";
+    c.strokeStyle = "blue";
+    c.shadowColor = "blue";
     c.shadowBlur = 10;
     c.beginPath();
     // - 2.5 to center projectile to cursor

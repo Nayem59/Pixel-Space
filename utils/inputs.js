@@ -7,6 +7,7 @@ import {
   enemies,
   friction,
   gameState,
+  lasers,
   missiles,
   player,
   projectiles,
@@ -72,124 +73,143 @@ canvas.addEventListener("mousemove", (e) => {
 
 let shootInterval = null;
 canvas.addEventListener("mousedown", (e) => {
-  let newMarkedEnemy = null;
-  for (let enemy of enemies) {
-    if (enemy.isMouseOverEnemy(e)) {
-      newMarkedEnemy = enemy;
+  if (e.button === 0) {
+    let newMarkedEnemy = null;
+    for (let enemy of enemies) {
+      if (enemy.isMouseOverEnemy(e)) {
+        newMarkedEnemy = enemy;
+      }
     }
-  }
 
-  if (newMarkedEnemy) {
-    if (gameState.lastMarkedEnemy) {
-      gameState.lastMarkedEnemy.isMarked = false;
+    if (newMarkedEnemy) {
+      if (gameState.lastMarkedEnemy) {
+        gameState.lastMarkedEnemy.isMarked = false;
+      }
+      newMarkedEnemy.isMarked = true;
+      gameState.lastMarkedEnemy = newMarkedEnemy;
     }
-    newMarkedEnemy.isMarked = true;
-    gameState.lastMarkedEnemy = newMarkedEnemy;
-  }
 
-  if (spaceStation1?.playerDetection()) {
-    if (spaceStation1.mouseDetection(e)) {
-      gameState.openStation = true;
+    if (spaceStation1?.playerDetection()) {
+      if (spaceStation1.mouseDetection(e)) {
+        gameState.openStation = true;
+      }
     }
-  }
-  if (!gameState?.isPaused && !gameState.openStation) {
-    player.isShooting = true;
-    player.cloakActive = false;
-    skillUI.cloakOnCooldown = true;
-    skillUI.cloakRemainingTime =
-      skillUI.cloakRemainingTime > skillUI.cloakCooldownTime
-        ? skillUI.cloakCooldownTime
-        : skillUI.cloakRemainingTime;
-    if (storeState.hasContinuousLaser) {
-      shootProjectile(mouseX, mouseY);
-      shootInterval = setInterval(() => {
-        if (player.isShooting) {
-          shootProjectile(mouseX, mouseY);
-        }
-      }, 100);
-    } else {
-      shootProjectile(mouseX, mouseY);
+    if (!gameState?.isPaused && !gameState.openStation) {
+      player.isShooting = true;
+      player.cloakActive = false;
+      skillUI.cloakOnCooldown = true;
+      skillUI.cloakRemainingTime =
+        skillUI.cloakRemainingTime > skillUI.cloakCooldownTime
+          ? skillUI.cloakCooldownTime
+          : skillUI.cloakRemainingTime;
+      if (storeState.hasContinuousFire) {
+        shootProjectile(mouseX, mouseY);
+        shootInterval = setInterval(() => {
+          if (player.isShooting) {
+            shootProjectile(mouseX, mouseY);
+          }
+        }, 100);
+      } else {
+        shootProjectile(mouseX, mouseY);
+      }
+    }
+  } else if (e.button === 2) {
+    if (storeState.hasLaser) {
+      if (gameState.lastMarkedEnemy) {
+        lasers[0].active = true;
+      }
     }
   }
 });
 
 canvas.addEventListener("mouseup", (e) => {
-  player.isShooting = false;
-  clearInterval(shootInterval);
+  if (e.button === 0) {
+    player.isShooting = false;
+    clearInterval(shootInterval);
 
-  if (gameState?.openStation) {
-    // Check if the click is inside the "X" button area
-    if (
-      mouseX >= stationUI.xButton.x &&
-      mouseX <= stationUI.xButton.x + stationUI.xButton.width &&
-      mouseY >= stationUI.xButton.y &&
-      mouseY <= stationUI.xButton.y + stationUI.xButton.height
-    ) {
-      setTimeout(() => {
-        gameState.openStation = false;
-      }, 0);
-    }
-
-    if (
-      mouseX >= stationUI.upgradeTab.x &&
-      mouseX <= stationUI.upgradeTab.x + stationUI.upgradeTab.width &&
-      mouseY >= stationUI.upgradeTab.y &&
-      mouseY <= stationUI.upgradeTab.y + stationUI.upgradeTab.height
-    ) {
-      stationUI.currentTab = "upgrade";
-      stationUI.frame = 0;
-    }
-
-    if (
-      mouseX >= stationUI.shopTab.x &&
-      mouseX <= stationUI.shopTab.x + stationUI.shopTab.width &&
-      mouseY >= stationUI.shopTab.y &&
-      mouseY <= stationUI.shopTab.y + stationUI.shopTab.height
-    ) {
-      stationUI.currentTab = "shop";
-      stationUI.frame = 1;
-    }
-
-    if (stationUI.currentTab === "upgrade") {
+    if (gameState?.openStation) {
+      // Check if the click is inside the "X" button area
       if (
-        mouseX >= stationUI.healthPlusButton.x &&
-        mouseX <=
-          stationUI.healthPlusButton.x + stationUI.healthPlusButton.width &&
-        mouseY >= stationUI.healthPlusButton.y &&
-        mouseY <=
-          stationUI.healthPlusButton.y + stationUI.healthPlusButton.height
+        mouseX >= stationUI.xButton.x &&
+        mouseX <= stationUI.xButton.x + stationUI.xButton.width &&
+        mouseY >= stationUI.xButton.y &&
+        mouseY <= stationUI.xButton.y + stationUI.xButton.height
       ) {
-        storeState.increaseHealth()
-          ? stationUI.healthUpgrade.frame++
-          : console.log("cant upgrade");
+        setTimeout(() => {
+          gameState.openStation = false;
+        }, 0);
       }
 
       if (
-        mouseX >= stationUI.damagePlusButton.x &&
-        mouseX <=
-          stationUI.damagePlusButton.x + stationUI.damagePlusButton.width &&
-        mouseY >= stationUI.damagePlusButton.y &&
-        mouseY <=
-          stationUI.damagePlusButton.y + stationUI.damagePlusButton.height
+        mouseX >= stationUI.upgradeTab.x &&
+        mouseX <= stationUI.upgradeTab.x + stationUI.upgradeTab.width &&
+        mouseY >= stationUI.upgradeTab.y &&
+        mouseY <= stationUI.upgradeTab.y + stationUI.upgradeTab.height
       ) {
-        storeState.increaseDamage()
-          ? stationUI.damageUpgrade.frame++
-          : console.log("cant upgrade");
+        stationUI.currentTab = "upgrade";
+        stationUI.frame = 0;
       }
 
       if (
-        mouseX >= stationUI.speedPlusButton.x &&
-        mouseX <=
-          stationUI.speedPlusButton.x + stationUI.speedPlusButton.width &&
-        mouseY >= stationUI.speedPlusButton.y &&
-        mouseY <= stationUI.speedPlusButton.y + stationUI.speedPlusButton.height
+        mouseX >= stationUI.shopTab.x &&
+        mouseX <= stationUI.shopTab.x + stationUI.shopTab.width &&
+        mouseY >= stationUI.shopTab.y &&
+        mouseY <= stationUI.shopTab.y + stationUI.shopTab.height
       ) {
-        storeState.increaseSpeed()
-          ? stationUI.speedUpgrade.frame++
-          : console.log("cant upgrade");
+        stationUI.currentTab = "shop";
+        stationUI.frame = 1;
       }
+
+      if (stationUI.currentTab === "upgrade") {
+        if (
+          mouseX >= stationUI.healthPlusButton.x &&
+          mouseX <=
+            stationUI.healthPlusButton.x + stationUI.healthPlusButton.width &&
+          mouseY >= stationUI.healthPlusButton.y &&
+          mouseY <=
+            stationUI.healthPlusButton.y + stationUI.healthPlusButton.height
+        ) {
+          storeState.increaseHealth()
+            ? stationUI.healthUpgrade.frame++
+            : console.log("cant upgrade");
+        }
+
+        if (
+          mouseX >= stationUI.damagePlusButton.x &&
+          mouseX <=
+            stationUI.damagePlusButton.x + stationUI.damagePlusButton.width &&
+          mouseY >= stationUI.damagePlusButton.y &&
+          mouseY <=
+            stationUI.damagePlusButton.y + stationUI.damagePlusButton.height
+        ) {
+          storeState.increaseDamage()
+            ? stationUI.damageUpgrade.frame++
+            : console.log("cant upgrade");
+        }
+
+        if (
+          mouseX >= stationUI.speedPlusButton.x &&
+          mouseX <=
+            stationUI.speedPlusButton.x + stationUI.speedPlusButton.width &&
+          mouseY >= stationUI.speedPlusButton.y &&
+          mouseY <=
+            stationUI.speedPlusButton.y + stationUI.speedPlusButton.height
+        ) {
+          storeState.increaseSpeed()
+            ? stationUI.speedUpgrade.frame++
+            : console.log("cant upgrade");
+        }
+      }
+    }
+  } else if (e.button === 2) {
+    if (storeState.hasLaser) {
+      lasers[0].active = false;
     }
   }
+});
+
+canvas.addEventListener("contextmenu", (e) => {
+  e.preventDefault();
 });
 
 let boostActive = false;

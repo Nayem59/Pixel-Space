@@ -34,6 +34,7 @@ import {
   dropGem,
 } from "./utils/utils.js";
 import SkillUI from "./classes/SkillUI.js";
+import Laser from "./classes/Laser.js";
 
 export const scoreEl = document.querySelector("#score");
 const startGameBtn = document.querySelector("#startGame");
@@ -78,6 +79,7 @@ let yellowPlanet;
 export let spaceStation1;
 
 export let projectiles = [];
+export let lasers = [];
 export let missiles = [];
 export let enemies = [];
 let particles = [];
@@ -147,14 +149,14 @@ function init() {
     vFrames: 3,
     frame: 0,
   });
-  coinUI = new CoinUI(canvas.width - 170, 3, {
+  coinUI = new CoinUI(canvas.width - 115, 3, {
     asset: assets.images.coinUI,
     frameSize: new Vector2(48, 48),
     hFrames: 1,
     vFrames: 1,
     frame: 0,
   });
-  gemUI = new GemUI(canvas.width - 170, 60, {
+  gemUI = new GemUI(canvas.width - 115, 57, {
     asset: assets.images.gemUI,
     frameSize: new Vector2(48, 48),
     hFrames: 1,
@@ -176,6 +178,8 @@ function init() {
     frame: 0,
   });
   projectiles = [];
+  lasers = [];
+  lasers.push(new Laser(0, 0, 0, 0));
   missiles = [];
   enemies = [];
   particles = [];
@@ -425,13 +429,42 @@ function gameLoop(timeStamp) {
             enemy.hit = true;
             enemy.startAnimation();
           } else {
+            if (!enemy.destroyed) {
+              gameState.score += 250;
+              enemy.destroyed = true;
+              enemiesToRemove.push(enemyIndex);
+              Math.random() < 0.1 ? dropGem(enemy) : dropCoins(enemy);
+            }
+          }
+        }
+      }
+    });
+
+    if (lasers[0].active && enemy.visible && enemy.isMarked) {
+      lasers[0].x1 = player.x;
+      lasers[0].y1 = player.y;
+      lasers[0].x2 = enemy.x;
+      lasers[0].y2 = enemy.y;
+      lasers[0].draw();
+
+      if (enemy.canTakeLaserDamage(currentTime)) {
+        texts.push(new Text(enemy.x, enemy.y, (player.damage / 2) * -1));
+        enemy.takeLaserDamage(player.damage / 2, currentTime);
+
+        if (enemy.health > 0) {
+          gameState.score += 40;
+          enemy.hit = true;
+          enemy.startAnimation();
+        } else {
+          if (!enemy.destroyed) {
             gameState.score += 250;
+            enemy.destroyed = true;
             enemiesToRemove.push(enemyIndex);
             Math.random() < 0.1 ? dropGem(enemy) : dropCoins(enemy);
           }
         }
       }
-    });
+    }
   });
   enemiesToRemove
     .sort((a, b) => b - a)

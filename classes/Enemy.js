@@ -30,6 +30,8 @@ class Enemy extends Sprite {
     this.isMarked = false;
     this.lastExplosionDamageTime = 0;
     this.explosionDamageCooldown = 1200;
+    this.lastLaserDamageTime = 0;
+    this.laserDamageCooldown = 300;
     this.frameDuration = (1 / 10) * 100;
     this.firstDetected = false;
     this.exclam = new Sprite({
@@ -69,6 +71,15 @@ class Enemy extends Sprite {
   takeDamage(amount, currentTime) {
     this.health -= amount;
     this.lastExplosionDamageTime = currentTime;
+  }
+
+  canTakeLaserDamage(currentTime) {
+    return currentTime - this.lastLaserDamageTime > this.laserDamageCooldown;
+  }
+
+  takeLaserDamage(amount, currentTime) {
+    this.health -= amount;
+    this.lastLaserDamageTime = currentTime;
   }
 
   draw() {

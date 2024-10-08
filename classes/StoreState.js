@@ -8,8 +8,9 @@ class StoreState {
     this.healthUpgradeCost = 200;
     this.damageUpgradeCost = 200;
     this.speedUpgradeCost = 200;
-    this.hasContinuousLaser = true;
+    this.hasContinuousFire = true;
     this.hasTwinTurret = true;
+    this.hasLaser = true;
     this.missileCount = 10;
     this.boostCount = 10;
     this.potionCount = 10;
@@ -64,7 +65,7 @@ class StoreState {
     }
   }
   upgradeToAutoTurret() {
-    this.hasContinuousLaser = true;
+    this.hasContinuousFire = true;
   }
   upgradeToTwinTurret() {
     this.hasTwinTurret = true;
