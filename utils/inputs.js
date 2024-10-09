@@ -200,6 +200,105 @@ canvas.addEventListener("mouseup", (e) => {
             : console.log("cant upgrade");
         }
       }
+
+      if (stationUI.currentTab === "shop") {
+        if (
+          mouseX >= stationUI.healthPotionItem.x &&
+          mouseX <=
+            stationUI.healthPotionItem.x + stationUI.healthPotionItem.width &&
+          mouseY >= stationUI.healthPotionItem.y &&
+          mouseY <=
+            stationUI.healthPotionItem.y + stationUI.healthPotionItem.height
+        ) {
+          storeState.buyPotions(1);
+        }
+        if (
+          mouseX >= stationUI.homingMissileItem.x &&
+          mouseX <=
+            stationUI.homingMissileItem.x + stationUI.homingMissileItem.width &&
+          mouseY >= stationUI.homingMissileItem.y &&
+          mouseY <=
+            stationUI.homingMissileItem.y + stationUI.homingMissileItem.height
+        ) {
+          storeState.buyMissiles(1);
+        }
+        if (
+          mouseX >= stationUI.speedBoostItem.x &&
+          mouseX <=
+            stationUI.speedBoostItem.x + stationUI.speedBoostItem.width &&
+          mouseY >= stationUI.speedBoostItem.y &&
+          mouseY <= stationUI.speedBoostItem.y + stationUI.speedBoostItem.height
+        ) {
+          storeState.buyBoost(1);
+        }
+        if (
+          mouseX >= stationUI.bubbleShieldItem.x &&
+          mouseX <=
+            stationUI.bubbleShieldItem.x + stationUI.bubbleShieldItem.width &&
+          mouseY >= stationUI.bubbleShieldItem.y &&
+          mouseY <=
+            stationUI.bubbleShieldItem.y + stationUI.bubbleShieldItem.height
+        ) {
+          storeState.buyShields(1);
+        }
+        if (
+          mouseX >= stationUI.cloakingDeviceItem.x &&
+          mouseX <=
+            stationUI.cloakingDeviceItem.x +
+              stationUI.cloakingDeviceItem.width &&
+          mouseY >= stationUI.cloakingDeviceItem.y &&
+          mouseY <=
+            stationUI.cloakingDeviceItem.y + stationUI.cloakingDeviceItem.height
+        ) {
+          storeState.buyCloak(1);
+        }
+        if (
+          mouseX >= stationUI.autoTurretUpgrade.x &&
+          mouseX <=
+            stationUI.autoTurretUpgrade.x + stationUI.autoTurretUpgrade.width &&
+          mouseY >= stationUI.autoTurretUpgrade.y &&
+          mouseY <=
+            stationUI.autoTurretUpgrade.y + stationUI.autoTurretUpgrade.height
+        ) {
+          storeState.upgradeToAutoTurret();
+        }
+        if (
+          mouseX >= stationUI.twinTurretUpgrade.x &&
+          mouseX <=
+            stationUI.twinTurretUpgrade.x + stationUI.twinTurretUpgrade.width &&
+          mouseY >= stationUI.twinTurretUpgrade.y &&
+          mouseY <=
+            stationUI.twinTurretUpgrade.y + stationUI.twinTurretUpgrade.height
+        ) {
+          storeState.upgradeToTwinTurret();
+        }
+        if (
+          mouseX >= stationUI.laserGunUpgrade.x &&
+          mouseX <=
+            stationUI.laserGunUpgrade.x + stationUI.laserGunUpgrade.width &&
+          mouseY >= stationUI.laserGunUpgrade.y &&
+          mouseY <=
+            stationUI.laserGunUpgrade.y + stationUI.laserGunUpgrade.height
+        ) {
+          storeState.upgradeToLaserGun();
+        }
+        if (
+          mouseX >= stationUI.coinBuyButton.x &&
+          mouseX <= stationUI.coinBuyButton.x + stationUI.coinBuyButton.width &&
+          mouseY >= stationUI.coinBuyButton.y &&
+          mouseY <= stationUI.coinBuyButton.y + stationUI.coinBuyButton.height
+        ) {
+          storeState.buyCoins();
+        }
+        if (
+          mouseX >= stationUI.gemBuyButton.x &&
+          mouseX <= stationUI.gemBuyButton.x + stationUI.gemBuyButton.width &&
+          mouseY >= stationUI.gemBuyButton.y &&
+          mouseY <= stationUI.gemBuyButton.y + stationUI.gemBuyButton.height
+        ) {
+          storeState.buyGems();
+        }
+      }
     }
   } else if (e.button === 2) {
     if (storeState.hasLaser) {

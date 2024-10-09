@@ -6,7 +6,7 @@ class GameState {
     this.maxHealth = 5;
     this.score = 0;
     this.coins = 0;
-    this.gems = 0;
+    this.gems = 100;
     this.kCoins = false;
     this.mCoins = false;
     this.kGems = false;

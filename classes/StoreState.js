@@ -8,14 +8,22 @@ class StoreState {
     this.healthUpgradeCost = 200;
     this.damageUpgradeCost = 200;
     this.speedUpgradeCost = 200;
-    this.hasContinuousFire = true;
-    this.hasTwinTurret = true;
-    this.hasLaser = true;
-    this.missileCount = 10;
-    this.boostCount = 10;
-    this.potionCount = 10;
-    this.shieldCount = 10;
-    this.cloakCount = 10;
+    this.hasContinuousFire = false;
+    this.hasTwinTurret = false;
+    this.hasLaser = false;
+    this.missileCount = 99;
+    this.boostCount = 99;
+    this.potionCount = 99;
+    this.shieldCount = 99;
+    this.cloakCount = 99;
+    this.potionCost = 30;
+    this.missleCost = 50;
+    this.boostCost = 10;
+    this.shieldCost = 50;
+    this.cloakCost = 70;
+    this.autoTurretCost = 5;
+    this.twinTurretCost = 10;
+    this.laserGunCost = 15;
   }
 
   increaseHealth() {
@@ -65,59 +73,104 @@ class StoreState {
     }
   }
   upgradeToAutoTurret() {
-    this.hasContinuousFire = true;
+    if (!this.hasContinuousFire) {
+      if (this.autoTurretCost <= gameState.gems) {
+        gameState.gems -= this.autoTurretCost;
+        this.hasContinuousFire = true;
+      }
+    }
   }
   upgradeToTwinTurret() {
-    this.hasTwinTurret = true;
+    if (!this.hasTwinTurret && this.hasContinuousFire) {
+      if (this.twinTurretCost <= gameState.gems) {
+        gameState.gems -= this.twinTurretCost;
+        this.hasTwinTurret = true;
+      }
+    }
+  }
+  upgradeToLaserGun() {
+    if (!this.hasLaser && this.hasTwinTurret) {
+      if (this.laserGunCost <= gameState.gems) {
+        gameState.gems -= this.laserGunCost;
+        this.hasLaser = true;
+      }
+    }
   }
   buyMissiles(amount) {
-    const total = this.missileCount + amount;
-    if (total > 99) {
-      console.log(
-        "You can't buy this ammount as you only have an inventory space of 99!"
-      );
-    } else {
-      this.missileCount = total;
+    if (this.missleCost <= gameState.coins) {
+      const total = this.missileCount + amount;
+      if (total > 99) {
+        console.log(
+          "You can't buy this ammount as you only have an inventory space of 99!"
+        );
+      } else {
+        gameState.coins -= this.missleCost;
+        this.missileCount = total;
+      }
     }
   }
   buyBoost(amount) {
-    const total = this.boostCount + amount;
-    if (total > 99) {
-      console.log(
-        "You can't buy this ammount as you only have an inventory space of 99!"
-      );
-    } else {
-      this.boostCount = total;
+    if (this.boostCost <= gameState.coins) {
+      const total = this.boostCount + amount;
+      if (total > 99) {
+        console.log(
+          "You can't buy this ammount as you only have an inventory space of 99!"
+        );
+      } else {
+        gameState.coins -= this.boostCost;
+        this.boostCount = total;
+      }
     }
   }
   buyPotions(amount) {
-    const total = this.potionCount + amount;
-    if (total > 99) {
-      console.log(
-        "You can't buy this ammount as you only have an inventory space of 99!"
-      );
-    } else {
-      this.potionCount = total;
+    if (this.potionCost <= gameState.coins) {
+      const total = this.potionCount + amount;
+      if (total > 99) {
+        console.log(
+          "You can't buy this ammount as you only have an inventory space of 99!"
+        );
+      } else {
+        gameState.coins -= this.potionCost;
+        this.potionCount = total;
+      }
     }
   }
   buyShields(amount) {
-    const total = this.shieldCount + amount;
-    if (total > 99) {
-      console.log(
-        "You can't buy this ammount as you only have an inventory space of 99!"
-      );
-    } else {
-      this.shieldCount = total;
+    if (this.shieldCost <= gameState.coins) {
+      const total = this.shieldCount + amount;
+      if (total > 99) {
+        console.log(
+          "You can't buy this ammount as you only have an inventory space of 99!"
+        );
+      } else {
+        gameState.coins -= this.shieldCost;
+        this.shieldCount = total;
+      }
     }
   }
-  buyCloack(amount) {
-    const total = this.cloakCount + amount;
-    if (total > 99) {
-      console.log(
-        "You can't buy this ammount as you only have an inventory space of 99!"
-      );
-    } else {
-      this.cloakCount = total;
+  buyCloak(amount) {
+    if (this.cloakCost <= gameState.coins) {
+      const total = this.cloakCount + amount;
+      if (total > 99) {
+        console.log(
+          "You can't buy this ammount as you only have an inventory space of 99!"
+        );
+      } else {
+        gameState.coins -= this.cloakCost;
+        this.cloakCount = total;
+      }
+    }
+  }
+  buyCoins() {
+    if (1 <= gameState.gems) {
+      gameState.gems--;
+      gameState.coins += 90;
+    }
+  }
+  buyGems() {
+    if (100 <= gameState.coins) {
+      gameState.coins -= 100;
+      gameState.gems++;
     }
   }
 }

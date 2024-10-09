@@ -44,6 +44,7 @@ class Assets {
       healthUpgrade: "/../assets/spaceStations/healthUpgrade.png",
       damageUpgrade: "/../assets/spaceStations/damageUpgrade.png",
       speedUpgrade: "/../assets/spaceStations/speedUpgrade.png",
+      greenTick: "/../assets/spaceStations/greenTick.png",
     };
     // container for all images that have been downloaded
     // e.g. {ship1: {image: (ImageEl), isLoaded: true}}
