@@ -503,27 +503,35 @@ function gameLoop(timeStamp) {
   });
 
   coins.forEach((coin, coinIndex) => {
-    coin.isAnimating = true;
-    coin.update(delta);
-    const distCoinPlayer = Math.hypot(player.x - coin.x, player.y - coin.y);
-    if (distCoinPlayer - player.radius - coin.radius < -2) {
-      const coinEffect = coin.createCollectionEffect();
-      coinEffect.isAnimating = true;
-      coinsEffects.push(coinEffect);
+    if (coin.destroyed) {
       coins.splice(coinIndex, 1);
-      gameState.addCoin();
+    } else {
+      coin.isAnimating = true;
+      coin.update(delta);
+      const distCoinPlayer = Math.hypot(player.x - coin.x, player.y - coin.y);
+      if (distCoinPlayer - player.radius - coin.radius < -2) {
+        const coinEffect = coin.createCollectionEffect();
+        coinEffect.isAnimating = true;
+        coinsEffects.push(coinEffect);
+        coins.splice(coinIndex, 1);
+        gameState.addCoin();
+      }
     }
   });
   gems.forEach((gem, gemIndex) => {
-    gem.isAnimating = true;
-    gem.update(delta);
-    const distGemPlayer = Math.hypot(player.x - gem.x, player.y - gem.y);
-    if (distGemPlayer - player.radius - gem.radius < -2) {
-      const gemEffect = gem.createCollectionEffect();
-      gemEffect.isAnimating = true;
-      gemsEffects.push(gemEffect);
+    if (gem.destroyed) {
       gems.splice(gemIndex, 1);
-      gameState.addGem();
+    } else {
+      gem.isAnimating = true;
+      gem.update(delta);
+      const distGemPlayer = Math.hypot(player.x - gem.x, player.y - gem.y);
+      if (distGemPlayer - player.radius - gem.radius < -2) {
+        const gemEffect = gem.createCollectionEffect();
+        gemEffect.isAnimating = true;
+        gemsEffects.push(gemEffect);
+        gems.splice(gemIndex, 1);
+        gameState.addGem();
+      }
     }
   });
 

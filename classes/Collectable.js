@@ -13,6 +13,8 @@ class Collectable extends Sprite {
     this.type = type;
     this.margin = 40;
     this.frameDuration = (1 / 10) * 100;
+    this.lifeSpan = 600000;
+    this.destroyed = false;
   }
 
   createCollectionEffect() {
@@ -70,6 +72,10 @@ class Collectable extends Sprite {
   }
 
   update(delta) {
+    this.lifeSpan -= 10 * delta;
+    if (this.lifeSpan < 0) {
+      this.destroyed = true;
+    }
     this.animate(delta);
     this.draw();
   }
