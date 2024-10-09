@@ -111,6 +111,9 @@ class SkillUI extends Sprite {
         5
       );
       c.fillStyle = "red";
+      if (lasers[0].currentLaser < lasers[0].laserMax * 0.8) {
+        c.fillStyle = "white";
+      }
       c.fill();
       c.restore();
     }

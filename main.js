@@ -454,6 +454,7 @@ function gameLoop(timeStamp) {
       lasers[0].y1 = player.y;
       lasers[0].x2 = enemy.x;
       lasers[0].y2 = enemy.y;
+      lasers[0].charge(delta);
       lasers[0].draw();
 
       if (enemy.canTakeLaserDamage(currentTime)) {
@@ -609,6 +610,21 @@ function gameLoop(timeStamp) {
 startGameBtn.addEventListener("click", (e) => {
   init();
   gameLoop(0);
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
+  spawnEnemies();
   spawnEnemies();
   spawnEnemies();
   spawnEnemies();

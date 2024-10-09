@@ -26,20 +26,24 @@ class Laser {
     c.restore();
   }
 
-  update(delta) {
-    if (this.currentLaser === 0) {
-      this.overCharged = false;
-    }
-
+  charge(delta) {
     if (this.active && !this.overCharged) {
       this.currentLaser += 10 * delta;
       if (this.currentLaser >= this.laserMax) {
         this.active = false;
         this.overCharged = true;
       }
-    } else {
+    }
+  }
+
+  update(delta) {
+    if (!this.active || this.overCharged) {
       this.currentLaser =
         this.currentLaser < 0 ? 0 : this.currentLaser - 10 * delta;
+    }
+
+    if (this.currentLaser === 0) {
+      this.overCharged = false;
     }
   }
 }
