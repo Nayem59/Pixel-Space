@@ -511,7 +511,7 @@ function gameLoop(timeStamp) {
       coinEffect.isAnimating = true;
       coinsEffects.push(coinEffect);
       coins.splice(coinIndex, 1);
-      gameState.coins++;
+      gameState.addCoin();
     }
   });
   gems.forEach((gem, gemIndex) => {
@@ -523,7 +523,7 @@ function gameLoop(timeStamp) {
       gemEffect.isAnimating = true;
       gemsEffects.push(gemEffect);
       gems.splice(gemIndex, 1);
-      gameState.gems++;
+      gameState.addGem();
     }
   });
 
