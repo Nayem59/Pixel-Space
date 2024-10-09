@@ -284,6 +284,10 @@ function gameLoop(timeStamp) {
     }
   });
 
+  console.log(lasers[0].active, lasers[0].overCharged);
+
+  lasers[0].update(delta);
+
   const currentTime = Date.now();
   const enemiesToRemove = [];
   // enemy update and handle all collisions with enemy
@@ -440,7 +444,12 @@ function gameLoop(timeStamp) {
       }
     });
 
-    if (lasers[0].active && enemy.visible && enemy.isMarked) {
+    if (
+      lasers[0].active &&
+      enemy.visible &&
+      enemy.isMarked &&
+      !lasers[0].overCharged
+    ) {
       lasers[0].x1 = player.x;
       lasers[0].y1 = player.y;
       lasers[0].x2 = enemy.x;
@@ -456,9 +465,18 @@ function gameLoop(timeStamp) {
           enemy.hit = true;
           enemy.startAnimation();
         } else {
+          for (let i = 0; i < 10; i++) {
+            particles.push(
+              new Particle(enemy.x, enemy.y, Math.random() * 3, enemy.color, {
+                x: (Math.random() - 0.5) * (Math.random() * 5),
+                y: (Math.random() - 0.5) * (Math.random() * 5),
+              })
+            );
+          }
           if (!enemy.destroyed) {
             gameState.score += 250;
             enemy.destroyed = true;
+            lasers[0].active = false;
             enemiesToRemove.push(enemyIndex);
             Math.random() < 0.1 ? dropGem(enemy) : dropCoins(enemy);
           }

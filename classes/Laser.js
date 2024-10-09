@@ -7,6 +7,9 @@ class Laser {
     this.x2 = x2;
     this.y2 = y2;
     this.active = false;
+    this.laserMax = 2000;
+    this.currentLaser = 0;
+    this.overCharged = false;
   }
 
   draw() {
@@ -21,6 +24,23 @@ class Laser {
     c.shadowBlur = 10;
     c.stroke();
     c.restore();
+  }
+
+  update(delta) {
+    if (this.currentLaser === 0) {
+      this.overCharged = false;
+    }
+
+    if (this.active && !this.overCharged) {
+      this.currentLaser += 10 * delta;
+      if (this.currentLaser >= this.laserMax) {
+        this.active = false;
+        this.overCharged = true;
+      }
+    } else {
+      this.currentLaser =
+        this.currentLaser < 0 ? 0 : this.currentLaser - 10 * delta;
+    }
   }
 }
 

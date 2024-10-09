@@ -1,4 +1,4 @@
-import { camera, player, storeState } from "../main.js";
+import { camera, lasers, player, storeState } from "../main.js";
 import { c } from "../utils/canvas.js";
 import Sprite from "./Sprite.js";
 
@@ -91,6 +91,26 @@ class SkillUI extends Sprite {
 
       c.arc(this.x + 442, this.y + 39, 27, startAngle, endAngle, false);
       c.lineTo(this.x + 442, this.y + 39);
+      c.fill();
+      c.restore();
+    }
+
+    if (storeState.hasLaser) {
+      const laserPercentage = lasers[0].currentLaser / lasers[0].laserMax;
+      c.save();
+      c.strokeStyle = "#7DF9FF";
+      c.beginPath();
+      c.roundRect(this.x - 10, this.y + 5, 10, this.frameSize.y - 10, 5);
+      c.stroke();
+      c.beginPath();
+      c.roundRect(
+        this.x - 8,
+        this.y + this.frameSize.y - 7,
+        6,
+        (this.frameSize.y - 14) * -1 * laserPercentage,
+        5
+      );
+      c.fillStyle = "red";
       c.fill();
       c.restore();
     }
