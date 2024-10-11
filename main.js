@@ -1,14 +1,16 @@
-import { c, canvas } from "./utils/canvas.js";
+import { c, canvas, cM, menuCanvas } from "./utils/canvas.js";
 import Player from "./classes/Player.js";
 import Particle from "./classes/Particle.js";
 import Turret from "./classes/Turret.js";
 import {
+  // bindGameKeyEvents,
   handlePlayerRotation,
   handlePlayerVelocity,
   handleShipExFireAnimation,
   handleTrail,
   mouseX,
   mouseY,
+  toggleMenu,
 } from "./utils/inputs.js";
 import Sprite from "./classes/Sprite.js";
 import { assets } from "./utils/assets.js";
@@ -35,10 +37,10 @@ import {
 } from "./utils/utils.js";
 import SkillUI from "./classes/SkillUI.js";
 import Laser from "./classes/Laser.js";
+import MenuUI from "./classes/MenuUI.js";
+import MenuState from "./classes/MenuState.js";
 
 export const scoreEl = document.querySelector("#score");
-const startGameBtn = document.querySelector("#startGame");
-const modal = document.querySelector(".modal-container");
 export const endScore = document.querySelector("#endScore");
 export const collectableContainer = document.querySelector(
   ".collectable-container"
@@ -47,7 +49,18 @@ export const scoreContainer = document.querySelector(".score-container");
 export const coinEl = document.querySelector("#coin");
 export const gemEl = document.querySelector("#gem");
 export const pauseEl = document.querySelector("#pause");
-
+export const menuState = new MenuState();
+export const menuUI = new MenuUI({
+  asset: assets.images.menuUI,
+  frameSize: new Vector2(400, 500),
+  hFrames: 4,
+  vFrames: 1,
+  frame: 0,
+  position: new Vector2(
+    menuCanvas.width / 2 - 200,
+    menuCanvas.height / 2 - 250
+  ),
+});
 export const friction = 0.98;
 
 // Instantiation
@@ -284,8 +297,6 @@ function gameLoop(timeStamp) {
     }
   });
 
-  console.log(lasers[0].active, lasers[0].overCharged);
-
   lasers[0].update(delta);
 
   const currentTime = Date.now();
@@ -309,9 +320,10 @@ function gameLoop(timeStamp) {
 
       if (gameState.playerHealth === 0) {
         setTimeout(() => {
-          cancelAnimationFrame(animationId);
-          clearTimeout(enemyTimeOutId);
-          modal.style.display = "flex";
+          clearGameCanvas();
+          toggleMenu(true);
+          menuUI.frame = 3;
+          menuUI.draw();
         }, 300);
       }
     }
@@ -607,31 +619,115 @@ function gameLoop(timeStamp) {
   skillUI.update(delta);
 }
 
-startGameBtn.addEventListener("click", (e) => {
-  init();
-  gameLoop(0);
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  spawnEnemies();
-  modal.style.display = "none";
-  collectableContainer.style.display = "block";
-  scoreContainer.style.display = "block";
+function clearGameCanvas() {
+  cancelAnimationFrame(animationId);
+  clearTimeout(enemyTimeOutId);
+  canvas.style.display = "none";
+  collectableContainer.style.display = "none";
+  scoreContainer.style.display = "none";
+}
+
+// start of the menu
+addEventListener("load", () => {
+  if (assets.images.menuUI.isLoaded) {
+    menuUI.draw(); // Draw the menu UI immediately
+    menuState.menuOpen = true;
+  }
+});
+
+menuCanvas.addEventListener("mouseup", (e) => {
+  if (e.button === 0) {
+    if (menuState.menuOpen && menuUI.frame === 0) {
+      // start of a new game
+      if (
+        mouseX >= menuUI.newGameButton.x &&
+        mouseX <= menuUI.newGameButton.x + menuUI.newGameButton.width &&
+        mouseY >= menuUI.newGameButton.y &&
+        mouseY <= menuUI.newGameButton.y + menuUI.newGameButton.height
+      ) {
+        init();
+        gameLoop(0);
+        spawnEnemies();
+        spawnEnemies();
+        spawnEnemies();
+        spawnEnemies();
+        spawnEnemies();
+        spawnEnemies();
+        spawnEnemies();
+        spawnEnemies();
+        collectableContainer.style.display = "block";
+        scoreContainer.style.display = "block";
+        toggleMenu(false);
+      }
+    }
+    if (menuState.menuOpen && menuUI.frame === 1) {
+      if (
+        mouseX >= menuUI.resumeGameButton.x &&
+        mouseX <= menuUI.resumeGameButton.x + menuUI.resumeGameButton.width &&
+        mouseY >= menuUI.resumeGameButton.y &&
+        mouseY <= menuUI.resumeGameButton.y + menuUI.resumeGameButton.height
+      ) {
+        init();
+        gameLoop(0);
+        spawnEnemies();
+        canvas.style.display = "block";
+        collectableContainer.style.display = "block";
+        scoreContainer.style.display = "block";
+        toggleMenu(false);
+      }
+    }
+    if (menuState.menuOpen && menuUI.frame === 2) {
+      if (
+        mouseX >= menuUI.resumeButton.x &&
+        mouseX <= menuUI.resumeButton.x + menuUI.resumeButton.width &&
+        mouseY >= menuUI.resumeButton.y &&
+        mouseY <= menuUI.resumeButton.y + menuUI.resumeButton.height
+      ) {
+        gameState.isPaused = false;
+        toggleMenu(false);
+      }
+      if (
+        mouseX >= menuUI.newGameButton.x &&
+        mouseX <= menuUI.newGameButton.x + menuUI.newGameButton.width &&
+        mouseY >= menuUI.newGameButton.y &&
+        mouseY <= menuUI.newGameButton.y + menuUI.newGameButton.height
+      ) {
+        clearGameCanvas();
+        canvas.style.display = "block";
+        collectableContainer.style.display = "block";
+        scoreContainer.style.display = "block";
+        init();
+        gameLoop(0);
+        spawnEnemies();
+        toggleMenu(false);
+      }
+      if (
+        mouseX >= menuUI.saveGameButton.x &&
+        mouseX <= menuUI.saveGameButton.x + menuUI.saveGameButton.width &&
+        mouseY >= menuUI.saveGameButton.y &&
+        mouseY <= menuUI.saveGameButton.y + menuUI.saveGameButton.height
+      ) {
+        console.log("game saved, handle saving state to browser");
+        clearGameCanvas();
+        menuUI.frame = 1;
+        menuUI.draw();
+      }
+    }
+    if (menuState.menuOpen && menuUI.frame === 3) {
+      if (
+        mouseX >= menuUI.newGameButton.x &&
+        mouseX <= menuUI.newGameButton.x + menuUI.newGameButton.width &&
+        mouseY >= menuUI.newGameButton.y &&
+        mouseY <= menuUI.newGameButton.y + menuUI.newGameButton.height
+      ) {
+        init();
+        gameLoop(0);
+        spawnEnemies();
+        canvas.style.display = "block";
+        collectableContainer.style.display = "block";
+        scoreContainer.style.display = "block";
+        toggleMenu(false);
+      }
+    }
+  }
 });

@@ -8,6 +8,8 @@ import {
   friction,
   gameState,
   lasers,
+  menuState,
+  menuUI,
   missiles,
   player,
   projectiles,
@@ -20,12 +22,20 @@ import {
   turret,
 } from "../main.js";
 import { assets } from "./assets.js";
-import { canvas } from "./canvas.js";
+import { canvas, menuCanvas } from "./canvas.js";
 
 const keysPressed = {};
 addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     gameState.isPaused = !gameState.isPaused;
+    if (gameState.isPaused) {
+      toggleMenu(true);
+      menuUI.frame = 2;
+
+      menuUI.draw();
+    } else {
+      toggleMenu(false);
+    }
   }
   if (e.key === " ") {
     if (storeState.boostCount > 0) {
@@ -63,14 +73,6 @@ addEventListener("keyup", (e) => {
   }
   delete keysPressed[e.key];
 });
-
-export let mouseX = 0;
-export let mouseY = 0;
-canvas.addEventListener("mousemove", (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-});
-
 let shootInterval = null;
 canvas.addEventListener("mousedown", (e) => {
   if (e.button === 0) {
@@ -310,6 +312,22 @@ canvas.addEventListener("mouseup", (e) => {
 canvas.addEventListener("contextmenu", (e) => {
   e.preventDefault();
 });
+
+menuCanvas.addEventListener("contextmenu", (e) => {
+  e.preventDefault();
+});
+
+export let mouseX = 0;
+export let mouseY = 0;
+addEventListener("mousemove", (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+export function toggleMenu(show) {
+  menuCanvas.style.display = show ? "block" : "none";
+  menuState.menuOpen = show;
+}
 
 let boostActive = false;
 let boostCooldown = false;

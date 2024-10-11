@@ -17,6 +17,7 @@ class Assets {
       live: "/../assets/ui/health.png",
       skillUI: "/../assets/ui/skillUI.png",
       exclam: "/../assets/ui/exclamationMark.png",
+      menuUI: "/../assets/ui/menuUI.png",
       gem: "/../assets/collectables/gem2.png",
       coin: "/../assets/collectables/coin.png",
       coinUI: "/../assets/collectables/coinUI.png",

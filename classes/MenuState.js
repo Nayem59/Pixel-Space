@@ -1,5 +1,7 @@
 class MenuState {
-  constructor() {}
+  constructor() {
+    this.menuOpen = false;
+  }
 }
 
 export default MenuState;
