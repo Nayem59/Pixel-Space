@@ -1,9 +1,8 @@
-import { c, canvas, cM, menuCanvas } from "./utils/canvas.js";
+import { c, canvas, menuCanvas } from "./utils/canvas.js";
 import Player from "./classes/Player.js";
 import Particle from "./classes/Particle.js";
 import Turret from "./classes/Turret.js";
 import {
-  // bindGameKeyEvents,
   handlePlayerRotation,
   handlePlayerVelocity,
   handleShipExFireAnimation,

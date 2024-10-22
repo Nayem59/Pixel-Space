@@ -393,8 +393,36 @@ function activateCloaking() {
   skillUI.startCloakCooldown();
 }
 
+let audioContext = new AudioContext();
+let shootingBuffer;
+
+function loadSound(url) {
+  fetch(url)
+    .then((response) => response.arrayBuffer())
+    .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
+    .then((audioBuffer) => {
+      shootingBuffer = audioBuffer; // Save decoded buffer
+    })
+    .catch((e) => console.error("Error loading shoot sound:", e));
+}
+
+function playSound(buffer) {
+  const source = audioContext.createBufferSource();
+  source.buffer = buffer;
+  source.connect(audioContext.destination);
+  source.start(0); // Start playing immediately
+}
+
+// Load the sound at the beginning
+loadSound("assets/sound-effects/shooting-sound.mp3");
+
 function shootProjectile(mouseX, mouseY) {
   turret?.startAnimation();
+
+  // Play the sound using the Web Audio API
+  if (shootingBuffer) {
+    playSound(shootingBuffer);
+  }
 
   // calculate the triangle angle (in radiant) between the center (Player) to the clicked point
   const angle = Math.atan2(
