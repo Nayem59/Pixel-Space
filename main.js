@@ -63,6 +63,8 @@ export const menuUI = new MenuUI({
 export const friction = 0.98;
 
 // Instantiation
+export let gameStateFromLS;
+export let storeStateFromLS;
 export const canvasMidX = canvas.width / 2;
 export const canvasMidY = canvas.height / 2;
 export let gameState;
@@ -227,6 +229,8 @@ function gameLoop(timeStamp) {
   // delta = 1;
   oldTimeStamp = timeStamp;
   delta = Math.min(delta, 10);
+
+  console.log(gameState.playerHealth);
 
   handlePlayerVelocity();
   handlePlayerRotation();
@@ -631,6 +635,8 @@ addEventListener("load", () => {
   if (assets.images.menuUI.isLoaded) {
     menuUI.draw(); // Draw the menu UI immediately
     menuState.menuOpen = true;
+    gameStateFromLS = JSON.parse(localStorage.getItem("gameState"));
+    storeStateFromLS = JSON.parse(localStorage.getItem("storeState"));
   }
 });
 
@@ -701,7 +707,11 @@ menuCanvas.addEventListener("mouseup", (e) => {
         mouseY <= menuUI.resumeGameButton.y + menuUI.resumeGameButton.height
       ) {
         // handle fetching data form local storage from here
+        gameStateFromLS = JSON.parse(localStorage.getItem("gameState"));
+        storeStateFromLS = JSON.parse(localStorage.getItem("storeState"));
         init();
+        gameState.setStateFromLS(gameStateFromLS);
+        storeState.setStateFromLS(storeStateFromLS);
         gameLoop(0);
         spawnEnemies();
         canvas.style.display = "block";

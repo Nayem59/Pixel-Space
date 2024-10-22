@@ -1,4 +1,4 @@
-import { gameState, player } from "../main.js";
+import { gameState, player, stationUI } from "../main.js";
 
 class StoreState {
   constructor() {
@@ -44,6 +44,26 @@ class StoreState {
       cloakCount: this.cloakCount,
     };
     localStorage.setItem("storeState", JSON.stringify(storeStateObj));
+  }
+
+  setStateFromLS(state) {
+    this.healthUpgradePoint = state.healthUpgradePoint;
+    stationUI.healthUpgrade.frame = state.healthUpgradePoint;
+    this.damageUpgradePoint = state.damageUpgradePoint;
+    stationUI.damageUpgrade.frame = state.damageUpgradePoint;
+    this.speedUpgradePoint = state.speedUpgradePoint;
+    stationUI.speedUpgrade.frame = state.speedUpgradePoint;
+    this.healthUpgradeCost = state.healthUpgradeCost;
+    this.damageUpgradeCost = state.damageUpgradeCost;
+    this.speedUpgradeCost = state.speedUpgradeCost;
+    this.hasContinuousFire = state.hasContinuousFire;
+    this.hasTwinTurret = state.hasTwinTurret;
+    this.hasLaser = state.hasLaser;
+    this.missileCount = state.missileCount;
+    this.boostCount = state.boostCount;
+    this.potionCount = state.potionCount;
+    this.shieldCount = state.shieldCount;
+    this.cloakCount = state.cloakCount;
   }
 
   increaseHealth() {

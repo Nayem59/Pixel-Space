@@ -69,6 +69,36 @@ class GameState {
     localStorage.setItem("gameState", JSON.stringify(gameStateObj));
   }
 
+  setStateFromLS(state) {
+    this.playerHealth = state.playerHealth;
+    this.maxHealth = state.maxHealth;
+    player.x = state.playerLocation.x;
+    player.y = state.playerLocation.y;
+    this.timePlayed = state.timePlayed;
+    this.enemiesKilled = state.enemiesKilled;
+    this.bossesKilled = state.bossesKilled;
+    this.damageDealt = state.damageDealt;
+    this.accuracy = state.accuracy;
+    this.criticalHits = state.criticalHits;
+    this.healthLost = state.healthLost;
+    this.goldEarned = state.goldEarned;
+    this.gemsCollected = state.gemsCollected;
+    this.potionUsed = state.potionUsed;
+    this.missilesLaunched = state.missilesLaunched;
+    this.boostUsed = state.boostUsed;
+    this.shieldActivated = state.shieldActivated;
+    this.cloakingUsed = state.cloakingUsed;
+    this.laserDuration = state.laserDuration;
+    this.upgradesUnlocked = state.upgradesUnlocked;
+    this.score = state.score;
+    this.coins = state.coins;
+    this.gems = state.gems;
+    this.kCoins = state.kCoins;
+    this.mCoins = state.mCoins;
+    this.kGems = state.kGems;
+    this.mGems = state.mGems;
+  }
+
   takeDamage(damage) {
     this.playerHealth -= damage;
 
