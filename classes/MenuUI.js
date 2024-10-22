@@ -28,16 +28,70 @@ class MenuUI extends Sprite {
       width: 330,
       height: 60,
     };
+    this.yesButton = {
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 102,
+      y: menuCanvas.height / 2 - this.frameSize.y / 2 + 291,
+      width: 85,
+      height: 59,
+    };
+    this.noButton = {
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 214,
+      y: menuCanvas.height / 2 - this.frameSize.y / 2 + 291,
+      width: 85,
+      height: 59,
+    };
+    this.statsControlsButton = {
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 35,
+      y: menuCanvas.height / 2 - this.frameSize.y / 2 + 223,
+      width: 330,
+      height: 60,
+    };
+    this.creditsButton = {
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 35,
+      y: menuCanvas.height / 2 - this.frameSize.y / 2 + 289,
+      width: 330,
+      height: 60,
+    };
+    this.supportMeButton = {
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 35,
+      y: menuCanvas.height / 2 - this.frameSize.y / 2 + 355,
+      width: 330,
+      height: 60,
+    };
+    this.webSiteButton = {
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 152,
+      y: menuCanvas.height / 2 - this.frameSize.y / 2 + 421,
+      width: 67,
+      height: 60,
+    };
+    this.linkedInButton = {
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 226,
+      y: menuCanvas.height / 2 - this.frameSize.y / 2 + 421,
+      width: 55,
+      height: 60,
+    };
+    this.gitHubButton = {
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 288,
+      y: menuCanvas.height / 2 - this.frameSize.y / 2 + 421,
+      width: 59,
+      height: 60,
+    };
+    this.backButton = {
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 30,
+      y: menuCanvas.height / 2 - this.frameSize.y / 2 + 18,
+      width: 46,
+      height: 37,
+    };
   }
 
   draw() {
     super.drawImage(cM, this.position.x, this.position.y);
     // cM.fillStyle = "red";
     // cM.fillRect(
-    //   this.resumeGameButton.x,
-    //   this.resumeGameButton.y,
-    //   this.resumeGameButton.width,
-    //   this.resumeGameButton.height
+    //   this.backButton.x,
+    //   this.backButton.y,
+    //   this.backButton.width,
+    //   this.backButton.height
     // );
   }
 }

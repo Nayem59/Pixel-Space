@@ -26,6 +26,9 @@ import { canvas, menuCanvas } from "./canvas.js";
 
 const keysPressed = {};
 addEventListener("keydown", (e) => {
+  if (menuState.menuOpen) {
+    return;
+  }
   if (e.key === "Escape") {
     gameState.isPaused = !gameState.isPaused;
     if (gameState.isPaused) {
@@ -45,6 +48,9 @@ addEventListener("keydown", (e) => {
   keysPressed[e.key] = true;
 });
 addEventListener("keyup", (e) => {
+  if (menuState.menuOpen) {
+    return;
+  }
   if (e.key === "q") {
     if (storeState.potionCount > 0) {
       if (gameState.playerHealth < gameState.maxHealth) {

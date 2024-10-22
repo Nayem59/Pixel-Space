@@ -52,9 +52,9 @@ export const menuState = new MenuState();
 export const menuUI = new MenuUI({
   asset: assets.images.menuUI,
   frameSize: new Vector2(400, 500),
-  hFrames: 4,
+  hFrames: 7,
   vFrames: 1,
-  frame: 0,
+  frame: localStorage.getItem("gameState") !== null ? 1 : 0,
   position: new Vector2(
     menuCanvas.width / 2 - 200,
     menuCanvas.height / 2 - 250
@@ -636,6 +636,38 @@ addEventListener("load", () => {
 
 menuCanvas.addEventListener("mouseup", (e) => {
   if (e.button === 0) {
+    if (
+      menuState.menuOpen &&
+      (menuUI.frame === 0 ||
+        menuUI.frame === 1 ||
+        menuUI.frame === 2 ||
+        menuUI.frame === 3)
+    ) {
+      if (
+        mouseX >= menuUI.statsControlsButton.x &&
+        mouseX <=
+          menuUI.statsControlsButton.x + menuUI.statsControlsButton.width &&
+        mouseY >= menuUI.statsControlsButton.y &&
+        mouseY <=
+          menuUI.statsControlsButton.y + menuUI.statsControlsButton.height
+      ) {
+        menuState.lastFrame = menuUI.frame;
+        menuUI.frame = 6;
+        menuUI.draw();
+        return;
+      }
+      if (
+        mouseX >= menuUI.creditsButton.x &&
+        mouseX <= menuUI.creditsButton.x + menuUI.creditsButton.width &&
+        mouseY >= menuUI.creditsButton.y &&
+        mouseY <= menuUI.creditsButton.y + menuUI.creditsButton.height
+      ) {
+        menuState.lastFrame = menuUI.frame;
+        menuUI.frame = 5;
+        menuUI.draw();
+        return;
+      }
+    }
     if (menuState.menuOpen && menuUI.frame === 0) {
       // start of a new game
       if (
@@ -644,6 +676,7 @@ menuCanvas.addEventListener("mouseup", (e) => {
         mouseY >= menuUI.newGameButton.y &&
         mouseY <= menuUI.newGameButton.y + menuUI.newGameButton.height
       ) {
+        localStorage.clear();
         init();
         gameLoop(0);
         spawnEnemies();
@@ -657,6 +690,7 @@ menuCanvas.addEventListener("mouseup", (e) => {
         collectableContainer.style.display = "block";
         scoreContainer.style.display = "block";
         toggleMenu(false);
+        return;
       }
     }
     if (menuState.menuOpen && menuUI.frame === 1) {
@@ -666,6 +700,7 @@ menuCanvas.addEventListener("mouseup", (e) => {
         mouseY >= menuUI.resumeGameButton.y &&
         mouseY <= menuUI.resumeGameButton.y + menuUI.resumeGameButton.height
       ) {
+        // handle fetching data form local storage from here
         init();
         gameLoop(0);
         spawnEnemies();
@@ -673,6 +708,7 @@ menuCanvas.addEventListener("mouseup", (e) => {
         collectableContainer.style.display = "block";
         scoreContainer.style.display = "block";
         toggleMenu(false);
+        return;
       }
     }
     if (menuState.menuOpen && menuUI.frame === 2) {
@@ -684,6 +720,7 @@ menuCanvas.addEventListener("mouseup", (e) => {
       ) {
         gameState.isPaused = false;
         toggleMenu(false);
+        return;
       }
       if (
         mouseX >= menuUI.newGameButton.x &&
@@ -691,14 +728,9 @@ menuCanvas.addEventListener("mouseup", (e) => {
         mouseY >= menuUI.newGameButton.y &&
         mouseY <= menuUI.newGameButton.y + menuUI.newGameButton.height
       ) {
-        clearGameCanvas();
-        canvas.style.display = "block";
-        collectableContainer.style.display = "block";
-        scoreContainer.style.display = "block";
-        init();
-        gameLoop(0);
-        spawnEnemies();
-        toggleMenu(false);
+        menuUI.frame = 4;
+        menuUI.draw();
+        return;
       }
       if (
         mouseX >= menuUI.saveGameButton.x &&
@@ -707,9 +739,12 @@ menuCanvas.addEventListener("mouseup", (e) => {
         mouseY <= menuUI.saveGameButton.y + menuUI.saveGameButton.height
       ) {
         console.log("game saved, handle saving state to browser");
+        gameState.saveGameStateToLS();
+        storeState.saveStoreStateToLS();
         clearGameCanvas();
         menuUI.frame = 1;
         menuUI.draw();
+        return;
       }
     }
     if (menuState.menuOpen && menuUI.frame === 3) {
@@ -719,6 +754,7 @@ menuCanvas.addEventListener("mouseup", (e) => {
         mouseY >= menuUI.newGameButton.y &&
         mouseY <= menuUI.newGameButton.y + menuUI.newGameButton.height
       ) {
+        localStorage.clear();
         init();
         gameLoop(0);
         spawnEnemies();
@@ -726,6 +762,60 @@ menuCanvas.addEventListener("mouseup", (e) => {
         collectableContainer.style.display = "block";
         scoreContainer.style.display = "block";
         toggleMenu(false);
+        return;
+      }
+    }
+    if (menuState.menuOpen && menuUI.frame === 4) {
+      if (
+        mouseX >= menuUI.yesButton.x &&
+        mouseX <= menuUI.yesButton.x + menuUI.yesButton.width &&
+        mouseY >= menuUI.yesButton.y &&
+        mouseY <= menuUI.yesButton.y + menuUI.yesButton.height
+      ) {
+        localStorage.clear();
+        clearGameCanvas();
+        canvas.style.display = "block";
+        collectableContainer.style.display = "block";
+        scoreContainer.style.display = "block";
+        init();
+        gameLoop(0);
+        spawnEnemies();
+        toggleMenu(false);
+        return;
+      }
+      if (
+        mouseX >= menuUI.noButton.x &&
+        mouseX <= menuUI.noButton.x + menuUI.noButton.width &&
+        mouseY >= menuUI.noButton.y &&
+        mouseY <= menuUI.noButton.y + menuUI.noButton.height
+      ) {
+        menuUI.frame = 2;
+        menuUI.draw();
+        return;
+      }
+    }
+    if (menuState.menuOpen && menuUI.frame === 5) {
+      if (
+        mouseX >= menuUI.backButton.x &&
+        mouseX <= menuUI.backButton.x + menuUI.backButton.width &&
+        mouseY >= menuUI.backButton.y &&
+        mouseY <= menuUI.backButton.y + menuUI.backButton.height
+      ) {
+        menuUI.frame = menuState.lastFrame;
+        menuUI.draw();
+        return;
+      }
+    }
+    if (menuState.menuOpen && menuUI.frame === 6) {
+      if (
+        mouseX >= menuUI.backButton.x &&
+        mouseX <= menuUI.backButton.x + menuUI.backButton.width &&
+        mouseY >= menuUI.backButton.y &&
+        mouseY <= menuUI.backButton.y + menuUI.backButton.height
+      ) {
+        menuUI.frame = menuState.lastFrame;
+        menuUI.draw();
+        return;
       }
     }
   }

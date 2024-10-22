@@ -1,9 +1,27 @@
-import { coinEl, endScore, gemEl, scoreEl } from "../main.js";
+import { coinEl, gemEl, player, scoreEl } from "../main.js";
+import Vector2 from "./Vector2.js";
 
 class GameState {
   constructor() {
     this.playerHealth = 5;
     this.maxHealth = 5;
+    this.playerLocation = new Vector2();
+    this.timePlayed = 0;
+    this.enemiesKilled = 0;
+    this.bossesKilled = 0;
+    this.damageDealt = 0;
+    this.accuracy = 0;
+    this.criticalHits = 0;
+    this.healthLost = 0;
+    this.goldEarned = 0;
+    this.gemsCollected = 0;
+    this.potionUsed = 0;
+    this.missilesLaunched = 0;
+    this.boostUsed = 0;
+    this.shieldActivated = 0;
+    this.cloakingUsed = 0;
+    this.laserDuration = 0;
+    this.upgradesUnlocked = 0;
     this.score = 0;
     this.coins = 0;
     this.gems = 100;
@@ -14,6 +32,41 @@ class GameState {
     this.isPaused = false;
     this.openStation = false;
     this.lastMarkedEnemy = null;
+  }
+
+  saveGameStateToLS() {
+    this.playerLocation.x = player.x;
+    this.playerLocation.y = player.y;
+
+    const gameStateObj = {
+      playerHealth: this.playerHealth,
+      maxHealth: this.maxHealth,
+      playerLocation: this.playerLocation,
+      timePlayed: this.timePlayed,
+      enemiesKilled: this.enemiesKilled,
+      bossesKilled: this.bossesKilled,
+      damageDealt: this.damageDealt,
+      accuracy: this.accuracy,
+      criticalHits: this.criticalHits,
+      healthLost: this.healthLost,
+      goldEarned: this.goldEarned,
+      gemsCollected: this.gemsCollected,
+      potionUsed: this.potionUsed,
+      missilesLaunched: this.missilesLaunched,
+      boostUsed: this.boostUsed,
+      shieldActivated: this.shieldActivated,
+      cloakingUsed: this.cloakingUsed,
+      laserDuration: this.laserDuration,
+      upgradesUnlocked: this.upgradesUnlocked,
+      score: this.score,
+      coins: this.coins,
+      gems: this.gems,
+      kCoins: this.kCoins,
+      mCoins: this.mCoins,
+      kGems: this.kGems,
+      mGems: this.mGems,
+    };
+    localStorage.setItem("gameState", JSON.stringify(gameStateObj));
   }
 
   takeDamage(damage) {

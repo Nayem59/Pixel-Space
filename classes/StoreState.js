@@ -26,6 +26,26 @@ class StoreState {
     this.laserGunCost = 15;
   }
 
+  saveStoreStateToLS() {
+    const storeStateObj = {
+      healthUpgradePoint: this.healthUpgradePoint,
+      damageUpgradePoint: this.damageUpgradePoint,
+      speedUpgradePoint: this.speedUpgradePoint,
+      healthUpgradeCost: this.healthUpgradeCost,
+      damageUpgradeCost: this.damageUpgradeCost,
+      speedUpgradeCost: this.speedUpgradeCost,
+      hasContinuousFire: this.hasContinuousFire,
+      hasTwinTurret: this.hasTwinTurret,
+      hasLaser: this.hasLaser,
+      missileCount: this.missileCount,
+      boostCount: this.boostCount,
+      potionCount: this.potionCount,
+      shieldCount: this.shieldCount,
+      cloakCount: this.cloakCount,
+    };
+    localStorage.setItem("storeState", JSON.stringify(storeStateObj));
+  }
+
   increaseHealth() {
     if (
       this.healthUpgradePoint < 10 &&

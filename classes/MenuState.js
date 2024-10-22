@@ -1,6 +1,7 @@
 class MenuState {
   constructor() {
     this.menuOpen = false;
+    this.lastFrame = 0;
   }
 }
 
