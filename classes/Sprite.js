@@ -56,7 +56,7 @@ class Sprite {
     }
   }
 
-  continuousAnimation(delta) {
+  continuousAnimation(delta, endFrame = null) {
     // Increment the frame timer by delta time
     this.frameTimer += delta;
 
@@ -64,7 +64,7 @@ class Sprite {
     while (this.frameTimer >= this.frameDuration) {
       this.frameTimer -= this.frameDuration; // Reset the timer by the frame duration
 
-      this.frame = (this.frame + 1) % this.maxAnimationFrames;
+      this.frame = (this.frame + 1) % (endFrame ?? this.maxAnimationFrames);
     }
   }
 

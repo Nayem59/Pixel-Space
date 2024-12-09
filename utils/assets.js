@@ -14,6 +14,7 @@ class Assets {
       explosion1: "/../assets/player/explosion1.png",
       explosion2: "/../assets/player/explosion2.png",
       purpleBlob: "/../assets/enemies/purple_blob_sheet.png",
+      squidMonster: "/../assets/enemies/squid_sheet.png",
       live: "/../assets/ui/health.png",
       skillUI: "/../assets/ui/skillUI.png",
       exclam: "/../assets/ui/exclamationMark.png",

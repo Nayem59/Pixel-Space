@@ -113,7 +113,7 @@ class Enemy extends Sprite {
 
   startAnimation() {
     this.isAnimating = true;
-    this.frame = 0;
+    this.frame = 18;
   }
 
   playerDetection() {
@@ -211,7 +211,11 @@ class Enemy extends Sprite {
     }
 
     this.handleEnemyVelocity();
-    this.animate(delta);
+    if (this.isAnimating) {
+      this.animate(delta);
+    } else {
+      this.continuousAnimation(delta, 9);
+    }
 
     this.x = Math.max(
       this.radius,
