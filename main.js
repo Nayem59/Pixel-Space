@@ -230,8 +230,6 @@ function gameLoop(timeStamp) {
   oldTimeStamp = timeStamp;
   delta = Math.min(delta, 10);
 
-  console.log(gameState.playerHealth);
-
   handlePlayerVelocity();
   handlePlayerRotation();
   handleShipExFireAnimation(delta);
