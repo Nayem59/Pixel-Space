@@ -420,7 +420,7 @@ function playSound(buffer) {
 }
 
 // Load the sound at the beginning
-loadSound("assets/sound-effects/shooting-sound.mp3");
+loadSound("assets/sound effects/shooting-sound.mp3");
 
 function shootProjectile(mouseX, mouseY) {
   turret?.startAnimation();
