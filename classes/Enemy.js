@@ -213,7 +213,7 @@ class Enemy extends Sprite {
     this.handleEnemyVelocity();
     if (this.isAnimating) {
       this.animate(delta);
-    } else if (this.hit) {
+    } else if (this.hit || this.state === "chasing") {
       this.continuousAnimation(delta, 17, 9);
     } else {
       this.continuousAnimation(delta, 8);
