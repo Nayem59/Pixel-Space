@@ -1,9 +1,10 @@
 import { assets } from "../utils/assets.js";
 import { c } from "../utils/canvas.js";
 import Sprite from "./Sprite.js";
-import { camera, player, map, friction } from "../main.js";
+import { camera, player, map, friction, projectiles } from "../main.js";
 import Vector2 from "./Vector2.js";
 import EnemyHealthBar from "./EnemyHealthBar.js";
+import Projectile from "./Projectile.js";
 
 class Enemy extends Sprite {
   constructor(x, y, radius, color, velocity, spriteConfig) {
@@ -20,6 +21,7 @@ class Enemy extends Sprite {
     this.velocity = velocity;
     this.state = "idle";
     this.idleTime = 0;
+    this.shootingTime = 0;
     this.patrolPoints = this.generatePatrolPoints();
     this.currentPatrolPoint = 0;
     this.health = 50;
@@ -186,6 +188,28 @@ class Enemy extends Sprite {
     this.velocity.y += Math.sin(angle) * this.speed;
   }
 
+  shootProjectileFromEnemy() {
+    // calculate the triangle angle (in radiant) between the enemy to the player
+    const angle = Math.atan2(player.y - this.y, player.x - this.x);
+    // calculate velocity through sin and cos
+    const velocity = {
+      x: Math.cos(angle) * 3,
+      y: Math.sin(angle) * 3,
+    };
+
+    projectiles.push(
+      new Projectile(
+        this.x + velocity.x * 5,
+        this.y + velocity.y * 5,
+        5,
+        "green",
+        velocity,
+        angle,
+        "enemy"
+      )
+    );
+  }
+
   update(delta) {
     switch (this.state) {
       case "idle":
@@ -207,6 +231,11 @@ class Enemy extends Sprite {
 
       case "chasing":
         this.moveToTarget(player);
+        this.shootingTime++;
+        if (this.shootingTime > 200) {
+          this.shootProjectileFromEnemy();
+          this.shootingTime = 0;
+        }
         break;
     }
 

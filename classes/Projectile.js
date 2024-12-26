@@ -1,7 +1,7 @@
 import { c } from "../utils/canvas.js";
 
 class Projectile {
-  constructor(x, y, radius, color, velocity, angle) {
+  constructor(x, y, radius, color, velocity, angle, type) {
     this.x = x;
     this.y = y;
     this.originalX = x;
@@ -10,6 +10,7 @@ class Projectile {
     this.color = color;
     this.velocity = velocity;
     this.angle = angle;
+    this.type = type;
     this.mass = 1;
   }
 

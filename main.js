@@ -261,13 +261,44 @@ function gameLoop(timeStamp) {
   projectiles.forEach((projectile, projIndex) => {
     projectile.update(delta);
 
-    const distProj = Math.hypot(
-      projectile.originalX - projectile.x,
-      projectile.originalY - projectile.y
+    const distPlPro = Math.hypot(
+      projectile.x - player.x,
+      projectile.y - player.y
     );
+    if (distPlPro - player.radius - projectile.radius < -2) {
+      if (!player.shieldActive) {
+        gameState.takeDamage(1);
+        live.startAnimation();
+        camera.damageDuration = 10;
+      }
 
-    if (distProj > 300) {
+      resolveCollision(player, projectile);
+
       projectiles.splice(projIndex, 1);
+
+      if (gameState.playerHealth === 0) {
+        setTimeout(() => {
+          clearGameCanvas();
+          toggleMenu(true);
+          menuUI.frame = 3;
+          menuUI.draw();
+        }, 300);
+      }
+    } else {
+      const distProj = Math.hypot(
+        projectile.originalX - projectile.x,
+        projectile.originalY - projectile.y
+      );
+
+      if (projectile.type === "enemy") {
+        if (distProj > 700) {
+          projectiles.splice(projIndex, 1);
+        }
+      } else {
+        if (distProj > 300) {
+          projectiles.splice(projIndex, 1);
+        }
+      }
     }
   });
 
@@ -331,49 +362,51 @@ function gameLoop(timeStamp) {
 
     const projectilesToRemove = [];
     projectiles.forEach((projectile, projectileIndex) => {
-      const distEnPro = Math.hypot(
-        projectile.x - enemy.x,
-        projectile.y - enemy.y
-      );
-      if (distEnPro - enemy.radius - projectile.radius < -2) {
-        texts.push(new Text(enemy.x, enemy.y, player.damage * -1));
-        enemy.health -= player.damage;
-        for (let i = 0; i < 10; i++) {
-          particles.push(
-            new Particle(
-              projectile.x,
-              projectile.y,
-              Math.random() * 3,
-              enemy.color,
-              {
-                x: (Math.random() - 0.5) * (Math.random() * 5),
-                y: (Math.random() - 0.5) * (Math.random() * 5),
-              }
-            )
-          );
-        }
-
-        if (enemy.health > 0) {
-          gameState.score += 100;
-          enemy.hit = true;
-          enemy.startAnimation();
-        } else {
-          if (!enemy.destroyed) {
-            gameState.score += 250;
-            enemy.destroyed = true;
-            enemiesToRemove.push(enemyIndex);
-            Math.random() < 0.1 ? dropGem(enemy) : dropCoins(enemy);
-          }
-        }
-        projectilesToRemove.push(projectileIndex);
-        // Apply knockBack to enemy
-        const knockBackStrength = 2;
-        const knockBackAngle = Math.atan2(
-          enemy.y - projectile.y,
-          enemy.x - projectile.x
+      if (projectile.type !== "enemy") {
+        const distEnPro = Math.hypot(
+          projectile.x - enemy.x,
+          projectile.y - enemy.y
         );
-        enemy.velocity.x += Math.cos(knockBackAngle) * knockBackStrength;
-        enemy.velocity.y += Math.sin(knockBackAngle) * knockBackStrength;
+        if (distEnPro - enemy.radius - projectile.radius < -2) {
+          texts.push(new Text(enemy.x, enemy.y, player.damage * -1));
+          enemy.health -= player.damage;
+          for (let i = 0; i < 10; i++) {
+            particles.push(
+              new Particle(
+                projectile.x,
+                projectile.y,
+                Math.random() * 3,
+                enemy.color,
+                {
+                  x: (Math.random() - 0.5) * (Math.random() * 5),
+                  y: (Math.random() - 0.5) * (Math.random() * 5),
+                }
+              )
+            );
+          }
+
+          if (enemy.health > 0) {
+            gameState.score += 100;
+            enemy.hit = true;
+            enemy.startAnimation();
+          } else {
+            if (!enemy.destroyed) {
+              gameState.score += 250;
+              enemy.destroyed = true;
+              enemiesToRemove.push(enemyIndex);
+              Math.random() < 0.1 ? dropGem(enemy) : dropCoins(enemy);
+            }
+          }
+          projectilesToRemove.push(projectileIndex);
+          // Apply knockBack to enemy
+          const knockBackStrength = 2;
+          const knockBackAngle = Math.atan2(
+            enemy.y - projectile.y,
+            enemy.x - projectile.x
+          );
+          enemy.velocity.x += Math.cos(knockBackAngle) * knockBackStrength;
+          enemy.velocity.y += Math.sin(knockBackAngle) * knockBackStrength;
+        }
       }
     });
     projectilesToRemove
