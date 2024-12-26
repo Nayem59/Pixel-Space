@@ -151,7 +151,7 @@ class Enemy extends Sprite {
   }
 
   handleEnemyVelocity() {
-    // Apply Friction to slow down gradually on keyup
+    // Apply Friction to slow down gradually
     this.velocity.x *= friction;
     this.velocity.y *= friction;
 
@@ -213,8 +213,10 @@ class Enemy extends Sprite {
     this.handleEnemyVelocity();
     if (this.isAnimating) {
       this.animate(delta);
+    } else if (this.hit) {
+      this.continuousAnimation(delta, 17, 9);
     } else {
-      this.continuousAnimation(delta, 9);
+      this.continuousAnimation(delta, 8);
     }
 
     this.x = Math.max(

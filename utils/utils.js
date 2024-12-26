@@ -70,20 +70,6 @@ export function spawnEnemies() {
   const color = "#ab47bc";
 
   enemies.push(
-    // new Enemy(
-    //   x,
-    //   y,
-    //   radius,
-    //   color,
-    //   { x: 0, y: 0 },
-    //   {
-    //     asset: assets.images.purpleBlob,
-    //     frameSize: new Vector2(64, 64),
-    //     hFrames: 8,
-    //     vFrames: 1,
-    //     frame: 0,
-    //   }
-    // )
     new Enemy(
       x,
       y,
@@ -91,13 +77,27 @@ export function spawnEnemies() {
       color,
       { x: 0, y: 0 },
       {
-        asset: assets.images.squidMonster,
+        asset: assets.images.purpleBlob,
         frameSize: new Vector2(64, 64),
         hFrames: 9,
         vFrames: 3,
         frame: 0,
       }
     )
+    // new Enemy(
+    //   x,
+    //   y,
+    //   radius,
+    //   color,
+    //   { x: 0, y: 0 },
+    //   {
+    //     asset: assets.images.squidMonster,
+    //     frameSize: new Vector2(64, 64),
+    //     hFrames: 9,
+    //     vFrames: 3,
+    //     frame: 0,
+    //   }
+    // )
   );
 
   if (enemies.length > 50) {

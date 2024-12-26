@@ -56,7 +56,23 @@ class Sprite {
     }
   }
 
-  continuousAnimation(delta, endFrame = null) {
+  continuousAnimation(delta, endFrame = null, startFrame = null) {
+    // Default to 0 if startFrame is null
+    const start = startFrame ?? 0;
+
+    // Default to maxAnimationFrames if endFrame is null
+    const end = endFrame ?? this.maxAnimationFrames - 1;
+
+    // Validate the frame range
+    if (start > end || start < 0 || end >= this.maxAnimationFrames) {
+      throw new Error("Invalid startFrame or endFrame");
+    }
+
+    // If the current frame is not initialized or out of range, set it to start
+    if (this.frame < start || this.frame > end) {
+      this.frame = start;
+    }
+
     // Increment the frame timer by delta time
     this.frameTimer += delta;
 
@@ -64,7 +80,8 @@ class Sprite {
     while (this.frameTimer >= this.frameDuration) {
       this.frameTimer -= this.frameDuration; // Reset the timer by the frame duration
 
-      this.frame = (this.frame + 1) % (endFrame ?? this.maxAnimationFrames);
+      // Loop within the range [start, end]
+      this.frame = this.frame + 1 > end ? start : this.frame + 1;
     }
   }
 
