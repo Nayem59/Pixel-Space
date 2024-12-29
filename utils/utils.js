@@ -1,7 +1,7 @@
 import Collectable from "../classes/Collectable.js";
 import Enemy from "../classes/Enemy.js";
 import Vector2 from "../classes/Vector2.js";
-import { coins, enemies, gems, map } from "../main.js";
+import { coins, enemies, gameState, gems, map, player } from "../main.js";
 import { assets } from "./assets.js";
 
 // complex algorithm to resolve collision, dont understand fully, research elastic collision
@@ -172,4 +172,19 @@ export function dropGem(enemy) {
       frame: 0,
     })
   );
+}
+
+export function resolvePlayerDamage() {
+  const playerDamage = player.damage;
+  if (Math.random() < 0.05) {
+    gameState.criticalHits++;
+    return {
+      playerDamage: playerDamage * 2,
+      criticalHit: true,
+    };
+  }
+  return {
+    playerDamage,
+    criticalHit: false,
+  };
 }

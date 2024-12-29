@@ -33,6 +33,7 @@ import {
   enemyTimeOutId,
   dropCoins,
   dropGem,
+  resolvePlayerDamage,
 } from "./utils/utils.js";
 import SkillUI from "./classes/SkillUI.js";
 import Laser from "./classes/Laser.js";
@@ -368,8 +369,11 @@ function gameLoop(timeStamp) {
           projectile.y - enemy.y
         );
         if (distEnPro - enemy.radius - projectile.radius < -2) {
-          texts.push(new Text(enemy.x, enemy.y, player.damage * -1));
-          enemy.health -= player.damage;
+          const { playerDamage, criticalHit } = resolvePlayerDamage();
+          texts.push(
+            new Text(enemy.x, enemy.y, playerDamage * -1, criticalHit)
+          );
+          enemy.health -= playerDamage;
           for (let i = 0; i < 10; i++) {
             particles.push(
               new Particle(
@@ -447,11 +451,13 @@ function gameLoop(timeStamp) {
 
       if (distEnExplosion - enemy.radius - explosion.radius < -2) {
         if (enemy.canTakeDamage(currentTime)) {
+          const { playerDamage, criticalHit } = resolvePlayerDamage();
           texts.push(
             new Text(
               enemy.x,
               enemy.y,
-              player.damage * explosion.damageMultiplier * -1
+              playerDamage * explosion.damageMultiplier * -1,
+              criticalHit
             )
           );
           enemy.takeDamage(
@@ -504,8 +510,11 @@ function gameLoop(timeStamp) {
       lasers[0].draw();
 
       if (enemy.canTakeLaserDamage(currentTime)) {
-        texts.push(new Text(enemy.x, enemy.y, (player.damage / 2) * -1));
-        enemy.takeLaserDamage(player.damage / 2, currentTime);
+        const { playerDamage, criticalHit } = resolvePlayerDamage();
+        texts.push(
+          new Text(enemy.x, enemy.y, (playerDamage / 2) * -1, criticalHit)
+        );
+        enemy.takeLaserDamage(playerDamage / 2, currentTime);
 
         if (enemy.health > 0) {
           gameState.score += 40;

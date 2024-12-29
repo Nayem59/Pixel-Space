@@ -1,18 +1,22 @@
 import { c } from "../utils/canvas.js";
 
 class Text {
-  constructor(x, y, text) {
+  constructor(x, y, text, doubleFont) {
     this.x = x;
     this.y = y;
     this.text = text;
     this.alpha = 1;
     this.random = Math.random() < 0.5 ? -0.5 : 0.5;
+    this.fontSize = 24;
+    this.doubleFont = doubleFont;
   }
 
   draw() {
     c.save();
     c.globalAlpha = this.alpha;
-    c.font = "24px pixel";
+    c.font = `${
+      this.doubleFont ? "bold " + this.fontSize * 2 : this.fontSize
+    }px pixel`;
     c.fillStyle = "red";
     c.fillText(this.text, this.x, this.y);
     c.restore();
