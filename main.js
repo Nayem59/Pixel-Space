@@ -717,13 +717,6 @@ menuCanvas.addEventListener("mouseup", (e) => {
         init();
         gameLoop(0);
         spawnEnemies();
-        spawnEnemies();
-        spawnEnemies();
-        spawnEnemies();
-        spawnEnemies();
-        spawnEnemies();
-        spawnEnemies();
-        spawnEnemies();
         collectableContainer.style.display = "block";
         scoreContainer.style.display = "block";
         toggleMenu(false);

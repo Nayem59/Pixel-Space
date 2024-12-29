@@ -57,41 +57,85 @@ export function resolveCollision(circle1, circle2) {
     Math.sin(collisionAngle + Math.PI / 2) * vy2;
 }
 
+const test = true;
 export let enemyTimeOutId;
 export function spawnEnemies() {
-  const randomTime = Math.floor(Math.random() * (60000 - 10000 + 1)) + 10000;
-  const radius = 23;
+  if (test) {
+    const randomTime = Math.floor(Math.random() * (6000 - 1000 + 1)) + 1000;
+    const radius = 23;
 
-  // debugging
-  let x = 500;
-  let y = 500;
-  // let x = Math.random() * map.tileWidth * map.tilesCountX;
-  // let y = Math.random() * map.tileHeight * map.tilesCountY;
-  const color = "#ab47bc";
+    // debugging
+    let x = 500;
+    let y = 500;
+    // let x = Math.random() * map.tileWidth * map.tilesCountX;
+    // let y = Math.random() * map.tileHeight * map.tilesCountY;
+    const color = "#ab47bc";
 
-  enemies.push(
-    // new Enemy(x, y, radius, color, { x: 0, y: 0 }, "blob", {
-    //   asset: assets.images.purpleBlob,
-    //   frameSize: new Vector2(64, 64),
-    //   hFrames: 9,
-    //   vFrames: 3,
-    //   frame: 0,
-    // })
-    new Enemy(x, y, radius, color, { x: 0, y: 0 }, "squid", {
-      asset: assets.images.squidMonster,
-      frameSize: new Vector2(64, 64),
-      hFrames: 9,
-      vFrames: 3,
-      frame: 0,
-    })
-  );
+    if (Math.random() < 0.7) {
+      enemies.push(
+        new Enemy(x, y, radius, color, { x: 0, y: 0 }, "blob", {
+          asset: assets.images.purpleBlob,
+          frameSize: new Vector2(64, 64),
+          hFrames: 9,
+          vFrames: 3,
+          frame: 0,
+        })
+      );
+    } else {
+      enemies.push(
+        new Enemy(x, y, radius, color, { x: 0, y: 0 }, "squid", {
+          asset: assets.images.squidMonster,
+          frameSize: new Vector2(64, 64),
+          hFrames: 9,
+          vFrames: 3,
+          frame: 0,
+        })
+      );
+    }
 
-  if (enemies.length > 50) {
-    const enemyIdx = enemies.findIndex((enemy) => !enemy.visible);
-    enemies.splice(enemyIdx, 1);
+    if (enemies.length > 50) {
+      const enemyIdx = enemies.findIndex((enemy) => !enemy.visible);
+      enemies.splice(enemyIdx, 1);
+    }
+
+    enemyTimeOutId = setTimeout(spawnEnemies, randomTime);
+  } else {
+    const randomTime = Math.floor(Math.random() * (60000 - 10000 + 1)) + 10000;
+    const radius = 23;
+
+    let x = Math.random() * map.tileWidth * map.tilesCountX;
+    let y = Math.random() * map.tileHeight * map.tilesCountY;
+    const color = "#ab47bc";
+
+    if (Math.random() < 0.7) {
+      enemies.push(
+        new Enemy(x, y, radius, color, { x: 0, y: 0 }, "blob", {
+          asset: assets.images.purpleBlob,
+          frameSize: new Vector2(64, 64),
+          hFrames: 9,
+          vFrames: 3,
+          frame: 0,
+        })
+      );
+    } else {
+      enemies.push(
+        new Enemy(x, y, radius, color, { x: 0, y: 0 }, "squid", {
+          asset: assets.images.squidMonster,
+          frameSize: new Vector2(64, 64),
+          hFrames: 9,
+          vFrames: 3,
+          frame: 0,
+        })
+      );
+    }
+
+    if (enemies.length > 50) {
+      const enemyIdx = enemies.findIndex((enemy) => !enemy.visible);
+      enemies.splice(enemyIdx, 1);
+    }
+
+    enemyTimeOutId = setTimeout(spawnEnemies, randomTime);
   }
-
-  // enemyTimeOutId = setTimeout(spawnEnemies, randomTime);
 }
 
 export function dropCoins(enemy) {

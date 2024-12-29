@@ -86,6 +86,12 @@ class Enemy extends Sprite {
   }
 
   draw() {
+    // for collision and debug purposes
+    // c.beginPath();
+    // c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    // c.fillStyle = this.color;
+    // c.fill();
+
     if (assets.images.purpleBlob.isLoaded) {
       super.drawImage(c, this.x - 32, this.y - 32);
     }
