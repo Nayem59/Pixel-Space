@@ -220,7 +220,7 @@ class Enemy extends Sprite {
   update(delta) {
     switch (this.state) {
       case "idle":
-        this.idleTime++;
+        this.idleTime += delta;
         if (this.idleTime > 200) {
           this.state = "patrolling";
           this.idleTime = 0;
@@ -239,7 +239,7 @@ class Enemy extends Sprite {
       case "chasing":
         this.moveToTarget(player);
         if (this.type === "squid") {
-          this.shootingTime++;
+          this.shootingTime += delta;
           if (this.shootingTime > 200) {
             this.shootProjectileFromEnemy();
             this.shootingTime = 0;
