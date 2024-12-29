@@ -7,10 +7,11 @@ import EnemyHealthBar from "./EnemyHealthBar.js";
 import Projectile from "./Projectile.js";
 
 class Enemy extends Sprite {
-  constructor(x, y, radius, color, velocity, spriteConfig) {
+  constructor(x, y, radius, color, velocity, type, spriteConfig) {
     super(spriteConfig);
     this.x = x;
     this.y = y;
+    this.type = type;
     this.radius = radius;
     this.detectionRadius = 300;
     this.visible = false;
@@ -199,10 +200,10 @@ class Enemy extends Sprite {
 
     projectiles.push(
       new Projectile(
-        this.x + velocity.x * 5,
-        this.y + velocity.y * 5,
-        5,
-        "green",
+        this.x + velocity.x - 25,
+        this.y + velocity.y - 25,
+        7.5,
+        "yellow",
         velocity,
         angle,
         "enemy"
@@ -231,10 +232,12 @@ class Enemy extends Sprite {
 
       case "chasing":
         this.moveToTarget(player);
-        this.shootingTime++;
-        if (this.shootingTime > 200) {
-          this.shootProjectileFromEnemy();
-          this.shootingTime = 0;
+        if (this.type === "squid") {
+          this.shootingTime++;
+          if (this.shootingTime > 200) {
+            this.shootProjectileFromEnemy();
+            this.shootingTime = 0;
+          }
         }
         break;
     }

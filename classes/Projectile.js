@@ -26,12 +26,18 @@ class Projectile {
     c.rotate(this.angle);
     c.translate(-this.x, -this.y);
 
-    c.strokeStyle = "blue";
-    c.shadowColor = "blue";
     c.shadowBlur = 10;
     c.beginPath();
-    // - 2.5 to center projectile to cursor
-    c.roundRect(this.x, this.y - 2.5, 15, 5, 5);
+    // - 2.5 to center projectile to cursord
+    if (this.type === "enemy") {
+      c.roundRect(this.x, this.y - 7.5, 20, 15, 10);
+      c.strokeStyle = "red";
+      c.shadowColor = "red";
+    } else {
+      c.roundRect(this.x, this.y - 2.5, 15, 5, 5);
+      c.strokeStyle = "blue";
+      c.shadowColor = "blue";
+    }
     c.stroke();
     c.fillStyle = this.color;
     c.fill();
