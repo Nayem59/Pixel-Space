@@ -3,6 +3,7 @@ import Enemy from "../classes/Enemy.js";
 import Vector2 from "../classes/Vector2.js";
 import { coins, enemies, gameState, gems, map, player } from "../main.js";
 import { assets } from "./assets.js";
+import { canvas } from "./canvas.js";
 
 // complex algorithm to resolve collision, dont understand fully, research elastic collision
 export function resolveCollision(circle1, circle2) {
@@ -187,4 +188,12 @@ export function resolvePlayerDamage() {
     playerDamage,
     criticalHit: false,
   };
+}
+
+export function drawFPSIndicator(c, fps) {
+  c.save();
+  c.fillStyle = "white";
+  c.font = "16px pixel";
+  c.fillText(`FPS: ${fps}`, canvas.width - 80, canvas.height - 210); // Draw FPS in the top-left corner
+  c.restore();
 }

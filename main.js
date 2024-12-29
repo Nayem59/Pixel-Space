@@ -34,6 +34,7 @@ import {
   dropCoins,
   dropGem,
   resolvePlayerDamage,
+  drawFPSIndicator,
 } from "./utils/utils.js";
 import SkillUI from "./classes/SkillUI.js";
 import Laser from "./classes/Laser.js";
@@ -213,6 +214,10 @@ let animationId;
 let delta = 0;
 let oldTimeStamp = 0;
 
+let fps = 0;
+let lastFpsUpdate = 0;
+let frameCount = 0;
+
 function gameLoop(timeStamp) {
   animationId = requestAnimationFrame(gameLoop);
 
@@ -230,6 +235,14 @@ function gameLoop(timeStamp) {
   // delta = 1;
   oldTimeStamp = timeStamp;
   delta = Math.min(delta, 10);
+
+  // Update FPS (every second)
+  frameCount++;
+  if (timeStamp - lastFpsUpdate >= 100) {
+    fps = Math.round(frameCount / ((timeStamp - lastFpsUpdate) / 1000));
+    lastFpsUpdate = timeStamp;
+    frameCount = 0;
+  }
 
   handlePlayerVelocity();
   handlePlayerRotation();
@@ -660,6 +673,7 @@ function gameLoop(timeStamp) {
   coinUI.draw();
   gemUI.draw();
   skillUI.update(delta);
+  drawFPSIndicator(c, fps);
 }
 
 function clearGameCanvas() {
