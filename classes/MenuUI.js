@@ -1,4 +1,5 @@
-import { cM, menuCanvas } from "../utils/canvas.js";
+import { gameState, gameStateFromLS } from "../main.js";
+import { c, cM, menuCanvas } from "../utils/canvas.js";
 import Sprite from "./Sprite.js";
 
 class MenuUI extends Sprite {
@@ -93,6 +94,92 @@ class MenuUI extends Sprite {
     //   this.backButton.width,
     //   this.backButton.height
     // );
+    if (this.frame === 6) {
+      cM.save();
+      cM.font = "15px pixel";
+      cM.fillStyle = "white";
+      cM.fillText(
+        gameState?.timePlayed ?? gameStateFromLS?.timePlayed ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 76
+      );
+      cM.fillText(
+        gameState?.enemiesKilled ?? gameStateFromLS?.enemiesKilled ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 90
+      );
+      cM.fillText(
+        gameState?.bossesKilled ?? gameStateFromLS?.bossesKilled ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 104
+      );
+      cM.fillText(
+        gameState?.damageDealt ?? gameStateFromLS?.damageDealt ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 117
+      );
+      cM.fillText(
+        gameState?.accuracy ?? gameStateFromLS?.accuracy ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 131
+      );
+      cM.fillText(
+        gameState?.criticalHits ?? gameStateFromLS?.criticalHits ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 145
+      );
+      cM.fillText(
+        gameState?.healthLost ?? gameStateFromLS?.healthLost ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 159
+      );
+      cM.fillText(
+        gameState?.goldEarned ?? gameStateFromLS?.goldEarned ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 173
+      );
+      cM.fillText(
+        gameState?.gemsCollected ?? gameStateFromLS?.gemsCollected ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 187
+      );
+      cM.fillText(
+        gameState?.potionUsed ?? gameStateFromLS?.potionUsed ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 201
+      );
+      cM.fillText(
+        gameState?.missilesLaunched ?? gameStateFromLS?.missilesLaunched ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 215
+      );
+      cM.fillText(
+        gameState?.boostUsed ?? gameStateFromLS?.boostUsed ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 229
+      );
+      cM.fillText(
+        gameState?.shieldActivated ?? gameStateFromLS?.shieldActivated ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 243
+      );
+      cM.fillText(
+        gameState?.cloakingUsed ?? gameStateFromLS?.cloakingUsed ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 257
+      );
+      cM.fillText(
+        gameState?.laserDuration ?? gameStateFromLS?.laserDuration ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 271
+      );
+      cM.fillText(
+        gameState?.upgradesUnlocked ?? gameStateFromLS?.upgradesUnlocked ?? 0,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 315,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 285
+      );
+      cM.restore();
+    }
   }
 }
 
