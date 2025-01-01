@@ -197,3 +197,13 @@ export function drawFPSIndicator(c, fps) {
   c.fillText(`FPS: ${fps}`, canvas.width - 80, canvas.height - 210); // Draw FPS in the top-left corner
   c.restore();
 }
+
+export function processAccuracy() {
+  const total = gameState.projectilesHit + gameState.projectilesMissed;
+
+  if (!total) {
+    return;
+  }
+
+  gameState.accuracy = ((gameState.projectilesHit / total) * 100).toFixed();
+}

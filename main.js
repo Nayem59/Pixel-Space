@@ -35,6 +35,7 @@ import {
   dropGem,
   resolvePlayerDamage,
   drawFPSIndicator,
+  processAccuracy,
 } from "./utils/utils.js";
 import SkillUI from "./classes/SkillUI.js";
 import Laser from "./classes/Laser.js";
@@ -311,6 +312,8 @@ function gameLoop(timeStamp) {
       } else {
         if (distProj > 300) {
           projectiles.splice(projIndex, 1);
+          gameState.projectilesMissed++;
+          processAccuracy();
         }
       }
     }
@@ -401,6 +404,8 @@ function gameLoop(timeStamp) {
               )
             );
           }
+          gameState.projectilesHit++;
+          processAccuracy();
 
           if (enemy.health > 0) {
             gameState.score += 100;

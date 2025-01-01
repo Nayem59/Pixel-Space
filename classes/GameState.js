@@ -10,6 +10,8 @@ class GameState {
     this.enemiesKilled = 0;
     this.bossesKilled = 0;
     this.damageDealt = 0;
+    this.projectilesHit = 0;
+    this.projectilesMissed = 0;
     this.accuracy = 0;
     this.criticalHits = 0;
     this.healthLost = 0;
@@ -46,6 +48,8 @@ class GameState {
       enemiesKilled: this.enemiesKilled,
       bossesKilled: this.bossesKilled,
       damageDealt: this.damageDealt,
+      projectilesHit: this.projectilesHit,
+      projectilesMissed: this.projectilesMissed,
       accuracy: this.accuracy,
       criticalHits: this.criticalHits,
       healthLost: this.healthLost,
@@ -78,6 +82,8 @@ class GameState {
     this.enemiesKilled = state.enemiesKilled;
     this.bossesKilled = state.bossesKilled;
     this.damageDealt = state.damageDealt;
+    this.projectilesHit = state.projectilesHit;
+    this.projectilesMissed = state.projectilesMissed;
     this.accuracy = state.accuracy;
     this.criticalHits = state.criticalHits;
     this.healthLost = state.healthLost;
