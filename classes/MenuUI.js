@@ -180,7 +180,9 @@ class MenuUI extends Sprite {
         menuCanvas.height / 2 - this.frameSize.y / 2 + 271
       );
       cM.fillText(
-        gameState?.upgradesUnlocked ?? gameStateFromLS?.upgradesUnlocked ?? 0,
+        (gameState?.upgradesUnlocked ??
+          gameStateFromLS?.upgradesUnlocked ??
+          0) + "/33",
         menuCanvas.width / 2 - this.frameSize.x / 2 + 295,
         menuCanvas.height / 2 - this.frameSize.y / 2 + 285
       );

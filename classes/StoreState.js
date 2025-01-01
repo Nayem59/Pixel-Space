@@ -74,6 +74,7 @@ class StoreState {
       gameState.coins -= this.healthUpgradeCost;
       gameState.playerHealth++;
       gameState.maxHealth++;
+      gameState.upgradesUnlocked++;
       gameState.updateState();
       this.healthUpgradePoint++;
       this.healthUpgradeCost += 200;
@@ -89,6 +90,7 @@ class StoreState {
     ) {
       gameState.coins -= this.damageUpgradeCost;
       player.damage++;
+      gameState.upgradesUnlocked++;
       gameState.updateState();
       this.damageUpgradePoint++;
       this.damageUpgradeCost += 200;
@@ -104,6 +106,7 @@ class StoreState {
     ) {
       gameState.coins -= this.speedUpgradeCost;
       player.maxVelocity += 0.3;
+      gameState.upgradesUnlocked++;
       gameState.updateState();
       this.speedUpgradePoint++;
       this.speedUpgradeCost += 200;
@@ -117,6 +120,7 @@ class StoreState {
       if (this.autoTurretCost <= gameState.gems) {
         gameState.gems -= this.autoTurretCost;
         this.hasContinuousFire = true;
+        gameState.upgradesUnlocked++;
       }
     }
   }
@@ -125,6 +129,7 @@ class StoreState {
       if (this.twinTurretCost <= gameState.gems) {
         gameState.gems -= this.twinTurretCost;
         this.hasTwinTurret = true;
+        gameState.upgradesUnlocked++;
       }
     }
   }
@@ -133,6 +138,7 @@ class StoreState {
       if (this.laserGunCost <= gameState.gems) {
         gameState.gems -= this.laserGunCost;
         this.hasLaser = true;
+        gameState.upgradesUnlocked++;
       }
     }
   }
@@ -205,12 +211,14 @@ class StoreState {
     if (1 <= gameState.gems) {
       gameState.gems--;
       gameState.coins += 90;
+      gameState.updateState();
     }
   }
   buyGems() {
     if (100 <= gameState.coins) {
       gameState.coins -= 100;
       gameState.gems++;
+      gameState.updateState();
     }
   }
 }
