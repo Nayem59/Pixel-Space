@@ -116,6 +116,7 @@ class GameState {
 
   addCoin() {
     this.coins++;
+    this.goldEarned++;
     if (this.coins > 999) {
       this.kCoins = true;
     }
