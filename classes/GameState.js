@@ -107,6 +107,7 @@ class GameState {
 
   takeDamage(damage) {
     this.playerHealth -= damage;
+    this.healthLost += damage;
 
     if (this.playerHealth < 0) {
       this.playerHealth = 0;
