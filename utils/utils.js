@@ -72,7 +72,7 @@ export function spawnEnemies() {
     // let y = Math.random() * map.tileHeight * map.tilesCountY;
     const color = "#ab47bc";
 
-    if (Math.random() < 0.7) {
+    if (Math.random() < 0.8) {
       enemies.push(
         new Enemy(x, y, radius, color, { x: 0, y: 0 }, "blob", {
           asset: assets.images.purpleBlob,
