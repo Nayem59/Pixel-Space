@@ -126,6 +126,7 @@ class GameState {
   }
   addGem() {
     this.gems++;
+    this.gemsCollected++;
     if (this.gems > 999) {
       this.kGems = true;
     }
