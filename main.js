@@ -874,6 +874,25 @@ menuCanvas.addEventListener("mouseup", (e) => {
         menuUI.draw();
         return;
       }
+      if (
+        mouseX >= menuUI.resetButton.x &&
+        mouseX <= menuUI.resetButton.x + menuUI.resetButton.width &&
+        mouseY >= menuUI.resetButton.y &&
+        mouseY <= menuUI.resetButton.y + menuUI.resetButton.height
+      ) {
+        if (gameState) {
+          gameState.projectilesHit = 0;
+          gameState.projectilesMissed = 0;
+          gameState.accuracy = 0;
+        }
+        if (gameStateFromLS) {
+          gameStateFromLS.projectilesHit = 0;
+          gameStateFromLS.projectilesMissed = 0;
+          gameStateFromLS.accuracy = 0;
+        }
+        menuUI.draw();
+        return;
+      }
     }
   }
 });
