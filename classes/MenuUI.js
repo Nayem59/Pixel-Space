@@ -91,6 +91,13 @@ class MenuUI extends Sprite {
     };
   }
 
+  formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+
+    return `${hours}h ${minutes}m`;
+  }
+
   draw() {
     super.drawImage(cM, this.position.x, this.position.y);
     // cM.fillStyle = "red";
@@ -105,7 +112,9 @@ class MenuUI extends Sprite {
       cM.font = "15px pixel";
       cM.fillStyle = "white";
       cM.fillText(
-        (gameState?.timePlayed ?? gameStateFromLS?.timePlayed ?? 0) + "h",
+        this.formatTime(
+          gameState?.timePlayed ?? gameStateFromLS?.timePlayed ?? 0
+        ),
         menuCanvas.width / 2 - this.frameSize.x / 2 + 295,
         menuCanvas.height / 2 - this.frameSize.y / 2 + 76
       );

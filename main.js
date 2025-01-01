@@ -223,11 +223,7 @@ function gameLoop(timeStamp) {
   animationId = requestAnimationFrame(gameLoop);
 
   if (gameState.isPaused) {
-    return;
-  }
-
-  if (gameState.openStation) {
-    stationUI.draw();
+    oldTimeStamp = timeStamp;
     return;
   }
 
@@ -236,6 +232,13 @@ function gameLoop(timeStamp) {
   // delta = 1;
   oldTimeStamp = timeStamp;
   delta = Math.min(delta, 10);
+
+  gameState.timePlayed += delta / 100;
+
+  if (gameState.openStation) {
+    stationUI.draw();
+    return;
+  }
 
   // Update FPS (every second)
   frameCount++;
