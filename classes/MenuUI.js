@@ -1,5 +1,5 @@
 import { gameState, gameStateFromLS } from "../main.js";
-import { c, cM, menuCanvas } from "../utils/canvas.js";
+import { cM, menuCanvas } from "../utils/canvas.js";
 import Sprite from "./Sprite.js";
 
 class MenuUI extends Sprite {
@@ -175,7 +175,9 @@ class MenuUI extends Sprite {
         menuCanvas.height / 2 - this.frameSize.y / 2 + 257
       );
       cM.fillText(
-        gameState?.laserDuration ?? gameStateFromLS?.laserDuration ?? 0,
+        (gameState?.laserDuration.toFixed() ??
+          gameStateFromLS?.laserDuration.toFixed() ??
+          0) + "s",
         menuCanvas.width / 2 - this.frameSize.x / 2 + 295,
         menuCanvas.height / 2 - this.frameSize.y / 2 + 271
       );

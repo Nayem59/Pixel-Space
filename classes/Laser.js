@@ -1,3 +1,4 @@
+import { gameState } from "../main.js";
 import { c } from "../utils/canvas.js";
 
 class Laser {
@@ -29,6 +30,7 @@ class Laser {
   charge(delta) {
     if (this.active && !this.overCharged) {
       this.currentLaser += 10 * delta;
+      gameState.laserDuration += delta / 100;
       if (this.currentLaser >= this.laserMax) {
         this.active = false;
         this.overCharged = true;
