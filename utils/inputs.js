@@ -55,6 +55,7 @@ addEventListener("keyup", (e) => {
     if (storeState.potionCount > 0) {
       if (gameState.playerHealth < gameState.maxHealth) {
         gameState.playerHealth++;
+        gameState.potionUsed++;
         storeState.potionCount--;
       } else {
         // handle health already max
@@ -65,6 +66,7 @@ addEventListener("keyup", (e) => {
     if (storeState.missileCount > 0) {
       shootHomingMissile();
       storeState.missileCount--;
+      gameState.missilesLaunched++;
     }
   }
   if (e.key === "f") {
@@ -344,6 +346,7 @@ function handleBoost() {
 
   boostActive = true;
   storeState.boostCount--;
+  gameState.boostUsed++;
   const angle = ((player.degree - 90) * Math.PI) / 180;
 
   // Set initial boost velocity
@@ -378,6 +381,7 @@ function activateShield() {
   if (player.shieldActive || shieldCooldown) return;
   player.shieldActive = true;
   storeState.shieldCount--;
+  gameState.shieldActivated++;
 
   skillUI.startShieldCooldown();
 
@@ -395,6 +399,7 @@ function activateCloaking() {
   if (player.cloakActive || skillUI.cloakOnCooldown) return;
   player.cloakActive = true;
   storeState.cloakCount--;
+  gameState.cloakingUsed++;
 
   skillUI.startCloakCooldown();
 }
