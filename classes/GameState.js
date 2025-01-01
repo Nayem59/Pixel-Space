@@ -157,7 +157,6 @@ class GameState {
 
   updateState() {
     scoreEl.innerHTML = this.score;
-    // endScore.innerHTML = this.score;
     coinEl.innerHTML = this.showCoins();
     gemEl.innerHTML = this.showGems();
   }
