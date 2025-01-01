@@ -565,6 +565,7 @@ function gameLoop(timeStamp) {
         gameState.lastMarkedEnemy = null;
       }
       enemies.splice(index, 1);
+      gameState.enemiesKilled++;
     });
 
   // particles update
