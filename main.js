@@ -390,6 +390,7 @@ function gameLoop(timeStamp) {
             new Text(enemy.x, enemy.y, playerDamage * -1, criticalHit)
           );
           enemy.health -= playerDamage;
+          gameState.damageDealt += playerDamage;
           for (let i = 0; i < 10; i++) {
             particles.push(
               new Particle(
@@ -479,9 +480,10 @@ function gameLoop(timeStamp) {
             )
           );
           enemy.takeDamage(
-            player.damage * explosion.damageMultiplier,
+            playerDamage * explosion.damageMultiplier,
             currentTime
           );
+          gameState.damageDealt += playerDamage;
           for (let i = 0; i < 10; i++) {
             particles.push(
               new Particle(
@@ -533,6 +535,7 @@ function gameLoop(timeStamp) {
           new Text(enemy.x, enemy.y, (playerDamage / 2) * -1, criticalHit)
         );
         enemy.takeLaserDamage(playerDamage / 2, currentTime);
+        gameState.damageDealt += playerDamage / 2;
 
         if (enemy.health > 0) {
           gameState.score += 40;
