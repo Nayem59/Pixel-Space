@@ -1,3 +1,4 @@
+import { sounds } from "../utils/sounds.js";
 import Vector2 from "./Vector2.js";
 
 class Sprite {
@@ -39,12 +40,15 @@ class Sprite {
     }
   }
 
-  animate(delta, withDestroy) {
+  animate(delta, withDestroy, withSound = null) {
     if (this.isAnimating) {
       this.frameTimer += delta;
       while (this.frameTimer >= this.frameDuration) {
         this.frameTimer -= this.frameDuration;
         this.frame++;
+        if (withSound) {
+          this.frame === 1 ? sounds.playSound(withSound) : null;
+        }
         if (this.frame >= this.maxAnimationFrames) {
           this.isAnimating = false;
           this.frame = 0;

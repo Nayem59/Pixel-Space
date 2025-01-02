@@ -30,7 +30,11 @@ class Explosion extends Sprite {
 
   update(delta) {
     this.draw();
-    this.animate(delta, true);
+    this.animate(
+      delta,
+      true,
+      Math.random() < 0.5 ? "explosion1" : "explosion2"
+    );
     // this.alpha -= 0.01 * delta;
   }
 }

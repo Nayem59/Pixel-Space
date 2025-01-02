@@ -3,6 +3,10 @@ class Sounds {
     // Define all sounds to preload
     this.toLoad = {
       projectileSound: "/../assets/soundEffects/shooting-sound.mp3",
+      projectileSound2: "/../assets/soundEffects/shooting-sound2.wav",
+      projectileSound3: "/../assets/soundEffects/shooting-sound3.wav",
+      explosion1: "/../assets/soundEffects/explosion1.wav",
+      explosion2: "/../assets/soundEffects/explosion2.wav",
     };
 
     // Container for all loaded sounds
