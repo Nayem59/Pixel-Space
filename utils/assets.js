@@ -51,14 +51,27 @@ class Assets {
     // container for all images that have been downloaded
     // e.g. {ship1: {image: (ImageEl), isLoaded: true}}
     this.images = {};
+    this.loadingPromises = [];
 
     // download each image
     Object.keys(this.toLoad).forEach((key) => {
       const img = new Image();
       img.src = this.toLoad[key];
       this.images[key] = { image: img, isLoaded: false };
-      img.onload = (e) => (this.images[key].isLoaded = true);
+
+      const promise = new Promise((resolve) => {
+        img.onload = () => {
+          this.images[key].isLoaded = true;
+          resolve();
+        };
+      });
+
+      this.loadingPromises.push(promise);
     });
+  }
+
+  loadAll() {
+    return Promise.all(this.loadingPromises);
   }
 
   getSpaceBgImages() {

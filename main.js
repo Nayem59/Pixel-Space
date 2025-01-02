@@ -1,4 +1,6 @@
 import { c, canvas, menuCanvas } from "./utils/canvas.js";
+import { assets } from "./utils/assets.js";
+import { sounds } from "./utils/sounds.js";
 import Player from "./classes/Player.js";
 import Particle from "./classes/Particle.js";
 import Turret from "./classes/Turret.js";
@@ -12,7 +14,6 @@ import {
   toggleMenu,
 } from "./utils/inputs.js";
 import Sprite from "./classes/Sprite.js";
-import { assets } from "./utils/assets.js";
 import Vector2 from "./classes/Vector2.js";
 import Camera from "./classes/Camera.js";
 import MiniMap from "./classes/MiniMap.js";
@@ -697,12 +698,20 @@ function clearGameCanvas() {
 }
 
 // start of the menu
-addEventListener("load", () => {
-  if (assets.images.menuUI.isLoaded) {
+addEventListener("load", async () => {
+  const loadingElement = document.getElementById("loading");
+
+  try {
+    // Wait for all assets and sounds to load
+    await Promise.all([assets.loadAll(), sounds.loadAll()]);
+
+    loadingElement.style.display = "none";
     menuUI.draw(); // Draw the menu UI immediately
     menuState.menuOpen = true;
     gameStateFromLS = JSON.parse(localStorage.getItem("gameState"));
     storeStateFromLS = JSON.parse(localStorage.getItem("storeState"));
+  } catch (error) {
+    console.error("Error loading assets or sounds:", error);
   }
 });
 
