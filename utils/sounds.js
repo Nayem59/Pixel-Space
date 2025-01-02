@@ -34,8 +34,12 @@ class Sounds {
   // Play a sound by its key
   playSound(key) {
     if (this.sounds[key] && this.sounds[key].isLoaded) {
-      this.sounds[key].audio.currentTime = 0; // Reset to the start
-      this.sounds[key].audio.play();
+      //   this.sounds[key].audio.currentTime = 0; // Reset to the start
+      //   this.sounds[key].audio.play();
+
+      // Clone the audio element for simultaneous playback
+      const audioClone = this.sounds[key].audio.cloneNode();
+      audioClone.play();
     } else {
       console.warn(`Sound "${key}" is not loaded or doesn't exist.`);
     }
