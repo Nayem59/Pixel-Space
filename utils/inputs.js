@@ -436,7 +436,8 @@ function shootProjectile(mouseX, mouseY) {
   //   playSound(shootingBuffer);
   // }
 
-  sounds.playSound("projectileSound");
+  // projectileSound or projectileSound5 ??
+  sounds.playSound("projectileSound5");
 
   // calculate the triangle angle (in radiant) between the center (Player) to the clicked point
   const angle = Math.atan2(
