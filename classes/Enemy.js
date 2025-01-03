@@ -5,6 +5,7 @@ import { camera, player, map, friction, projectiles } from "../main.js";
 import Vector2 from "./Vector2.js";
 import EnemyHealthBar from "./EnemyHealthBar.js";
 import Projectile from "./Projectile.js";
+import { sounds } from "../utils/sounds.js";
 
 class Enemy extends Sprite {
   constructor(x, y, radius, color, velocity, type, spriteConfig) {
@@ -196,6 +197,8 @@ class Enemy extends Sprite {
   }
 
   shootProjectileFromEnemy() {
+    sounds.playSound("projectileSound8", 0.5);
+
     // calculate the triangle angle (in radiant) between the enemy to the player
     const angle = Math.atan2(player.y - this.y, player.x - this.x);
     // calculate velocity through sin and cos
