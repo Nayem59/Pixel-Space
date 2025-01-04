@@ -19,7 +19,7 @@ class Sounds {
       explosion7: "/../assets/soundEffects/explosion7.wav",
       explosion8: "/../assets/soundEffects/explosion8.wav",
       explosion9: "/../assets/soundEffects/explosion9.wav",
-      laser: "/../assets/soundEffects/laser.mp3",
+      laser2: "/../assets/soundEffects/laser2.wav",
       engine1: "/../assets/soundEffects/engine1.mp3",
       engine2: "/../assets/soundEffects/engine2.mp3",
       engine3: "/../assets/soundEffects/engine3.mp3",

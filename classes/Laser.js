@@ -1,5 +1,6 @@
 import { gameState } from "../main.js";
 import { c } from "../utils/canvas.js";
+import { sounds } from "../utils/sounds.js";
 
 class Laser {
   constructor(x1, y1, x2, y2) {
@@ -29,6 +30,7 @@ class Laser {
 
   charge(delta) {
     if (this.active && !this.overCharged) {
+      sounds.loopSound("laser2");
       this.currentLaser += 10 * delta;
       gameState.laserDuration += delta / 100;
       if (this.currentLaser >= this.laserMax) {
@@ -40,6 +42,7 @@ class Laser {
 
   update(delta) {
     if (!this.active || this.overCharged) {
+      sounds.stopSound("laser2");
       this.currentLaser =
         this.currentLaser < 0 ? 0 : this.currentLaser - 10 * delta;
     }
