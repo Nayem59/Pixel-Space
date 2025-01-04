@@ -26,6 +26,7 @@ import { canvas, menuCanvas } from "./canvas.js";
 import { sounds } from "./sounds.js";
 
 const keysPressed = {};
+const engineKeys = new Set(["w", "a", "s", "d"]);
 addEventListener("keydown", (e) => {
   if (menuState.menuOpen) {
     return;
@@ -46,7 +47,12 @@ addEventListener("keydown", (e) => {
       handleBoost();
     }
   }
-  keysPressed[e.key] = true;
+  keysPressed[e.key.toLowerCase()] = true;
+
+  // Start engine sound if any engine key is pressed
+  if (engineKeys.has(e.key.toLowerCase())) {
+    sounds.loopSound("engine1");
+  }
 });
 addEventListener("keyup", (e) => {
   if (menuState.menuOpen) {
@@ -80,7 +86,12 @@ addEventListener("keyup", (e) => {
       activateCloaking();
     }
   }
-  delete keysPressed[e.key];
+  delete keysPressed[e.key.toLowerCase()];
+
+  // Stop engine sound if no engine keys are pressed
+  if (!Object.keys(keysPressed).some((key) => engineKeys.has(key))) {
+    sounds.stopSound("engine1");
+  }
 });
 let shootInterval = null;
 canvas.addEventListener("mousedown", (e) => {

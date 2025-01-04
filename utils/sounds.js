@@ -20,6 +20,12 @@ class Sounds {
       explosion8: "/../assets/soundEffects/explosion8.wav",
       explosion9: "/../assets/soundEffects/explosion9.wav",
       laser: "/../assets/soundEffects/laser.mp3",
+      engine1: "/../assets/soundEffects/engine1.mp3",
+      engine2: "/../assets/soundEffects/engine2.mp3",
+      engine3: "/../assets/soundEffects/engine3.mp3",
+      engine4: "/../assets/soundEffects/engine4.mp3",
+      engine5: "/../assets/soundEffects/engine5.mp3",
+      engine6: "/../assets/soundEffects/engine6.mp3",
     };
 
     // Container for all loaded sounds
@@ -32,6 +38,7 @@ class Sounds {
     Object.keys(this.toLoad).forEach((key) => {
       const audio = new Audio();
       audio.src = this.toLoad[key];
+      audio.volume = this.defaultVolume;
       this.sounds[key] = { audio: audio, isLoaded: false };
 
       const promise = new Promise((resolve) => {
@@ -87,8 +94,10 @@ class Sounds {
   // Loop a sound by its key
   loopSound(key) {
     if (this.sounds[key] && this.sounds[key].isLoaded) {
-      this.sounds[key].audio.loop = true;
-      this.sounds[key].audio.play();
+      if (this.sounds[key].audio.paused) {
+        this.sounds[key].audio.loop = true;
+        this.sounds[key].audio.play();
+      }
     }
   }
 }
