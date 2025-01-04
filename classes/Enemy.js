@@ -52,6 +52,8 @@ class Enemy extends Sprite {
       this.health,
       this.maxHealth
     );
+    this.chasingSound = sounds.getSoundInstance("enemy1");
+    this.chasingSound.volume = 0.3;
   }
 
   generatePatrolPoints() {
@@ -254,10 +256,21 @@ class Enemy extends Sprite {
     this.handleEnemyVelocity();
     if (this.isAnimating) {
       this.animate(delta);
+
+      this.chasingSound.pause();
+      this.chasingSound.currentTime = 0;
     } else if (this.hit || this.state === "chasing") {
       this.continuousAnimation(delta, 17, 9);
+
+      if (this.chasingSound.paused) {
+        this.chasingSound.loop = true;
+        this.chasingSound.play();
+      }
     } else {
       this.continuousAnimation(delta, 8);
+
+      this.chasingSound.pause();
+      this.chasingSound.currentTime = 0;
     }
 
     this.x = Math.max(

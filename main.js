@@ -571,6 +571,7 @@ function gameLoop(timeStamp) {
       if (gameState.lastMarkedEnemy === enemies[index]) {
         gameState.lastMarkedEnemy = null;
       }
+      enemies[index].chasingSound.pause();
       enemies.splice(index, 1);
       gameState.enemiesKilled++;
     });

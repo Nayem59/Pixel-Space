@@ -20,6 +20,7 @@ class Sounds {
       explosion8: "/../assets/soundEffects/explosion8.wav",
       explosion9: "/../assets/soundEffects/explosion9.wav",
       laser2: "/../assets/soundEffects/laser2.wav",
+      enemy1: "/../assets/soundEffects/enemy1.mp3",
       engine1: "/../assets/soundEffects/engine1.mp3",
       engine2: "/../assets/soundEffects/engine2.mp3",
       engine3: "/../assets/soundEffects/engine3.mp3",
@@ -54,6 +55,15 @@ class Sounds {
 
   loadAll() {
     return Promise.all(this.loadingPromises);
+  }
+
+  getSoundInstance(key) {
+    if (this.sounds[key] && this.sounds[key].isLoaded) {
+      const audioClone = this.sounds[key].audio.cloneNode();
+      return audioClone;
+    } else {
+      console.warn(`Sound "${key}" is not loaded or doesn't exist.`);
+    }
   }
 
   // Play a sound by its key
