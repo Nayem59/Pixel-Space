@@ -34,6 +34,7 @@ class Sounds {
     this.sounds = {};
     this.loadingPromises = [];
     this.defaultVolume = 1.0;
+    this.pausedAudios = [];
 
     // Preload each sound
     Object.keys(this.toLoad).forEach((key) => {
@@ -109,6 +110,21 @@ class Sounds {
         this.sounds[key].audio.play();
       }
     }
+  }
+
+  stopAllSounds() {
+    Object.values(this.sounds).forEach((sound) => {
+      if (!sound.audio.paused) {
+        sound.audio.pause();
+        this.pausedAudios.push(sound.audio);
+      }
+    });
+    console.log(this.pausedAudios);
+  }
+
+  resumePausedSounds() {
+    this.pausedAudios.map((audio) => audio.play());
+    this.pausedAudios = [];
   }
 }
 

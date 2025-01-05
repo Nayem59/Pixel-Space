@@ -25,7 +25,7 @@ import { assets } from "./assets.js";
 import { canvas, menuCanvas } from "./canvas.js";
 import { sounds } from "./sounds.js";
 
-const keysPressed = {};
+let keysPressed = {};
 const engineKeys = new Set(["w", "a", "s", "d"]);
 addEventListener("keydown", (e) => {
   if (menuState.menuOpen) {
@@ -33,13 +33,17 @@ addEventListener("keydown", (e) => {
   }
   if (e.key === "Escape") {
     gameState.isPaused = !gameState.isPaused;
+    sounds.stopAllSounds();
     if (gameState.isPaused) {
+      keysPressed = {};
       toggleMenu(true);
       menuUI.frame = 2;
 
       menuUI.draw();
+      return;
     } else {
       toggleMenu(false);
+      return;
     }
   }
   if (e.key === " ") {
@@ -87,12 +91,16 @@ addEventListener("keyup", (e) => {
     }
   }
   delete keysPressed[e.key.toLowerCase()];
+  stopEngineSound();
+});
 
+export function stopEngineSound() {
   // Stop engine sound if no engine keys are pressed
   if (!Object.keys(keysPressed).some((key) => engineKeys.has(key))) {
     sounds.stopSound("engine1");
   }
-});
+}
+
 let shootInterval = null;
 canvas.addEventListener("mousedown", (e) => {
   if (e.button === 0) {

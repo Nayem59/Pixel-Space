@@ -11,6 +11,7 @@ import {
   handleTrail,
   mouseX,
   mouseY,
+  stopEngineSound,
   toggleMenu,
 } from "./utils/inputs.js";
 import Sprite from "./classes/Sprite.js";
@@ -798,6 +799,8 @@ menuCanvas.addEventListener("mouseup", (e) => {
         mouseY <= menuUI.resumeButton.y + menuUI.resumeButton.height
       ) {
         gameState.isPaused = false;
+        sounds.resumePausedSounds();
+        stopEngineSound();
         toggleMenu(false);
         return;
       }
