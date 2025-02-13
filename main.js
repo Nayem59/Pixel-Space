@@ -210,6 +210,7 @@ function init() {
   gems = [];
   texts = [];
   gameState.updateState();
+  sounds.loopSound("ambient1");
 }
 
 // main game loop
