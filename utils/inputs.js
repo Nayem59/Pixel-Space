@@ -122,6 +122,7 @@ canvas.addEventListener("mousedown", (e) => {
     if (spaceStation1?.playerDetection()) {
       if (spaceStation1.mouseDetection(e)) {
         gameState.openStation = true;
+        sounds.stopAllSounds();
       }
     }
     if (!gameState?.isPaused && !gameState.openStation) {
@@ -168,6 +169,7 @@ canvas.addEventListener("mouseup", (e) => {
         setTimeout(() => {
           gameState.openStation = false;
         }, 0);
+        sounds.resumePausedSounds();
       }
 
       if (

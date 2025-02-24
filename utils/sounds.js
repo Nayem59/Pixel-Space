@@ -21,7 +21,7 @@ class Sounds {
       explosion9: "/../assets/soundEffects/explosion9.wav",
       laser2: "/../assets/soundEffects/laser2.wav",
       enemy1: "/../assets/soundEffects/enemy1.mp3",
-      engine1: "/../assets/soundEffects/engine1.mp3",
+      engine1: "/../assets/soundEffects/engine1e.mp3",
       engine2: "/../assets/soundEffects/engine2.mp3",
       engine3: "/../assets/soundEffects/engine3.mp3",
       engine4: "/../assets/soundEffects/engine4.mp3",
@@ -96,18 +96,43 @@ class Sounds {
   }
 
   // Stop a sound by its key
-  stopSound(key) {
+  // stopSound(key) {
+  //   if (this.sounds[key] && this.sounds[key].isLoaded) {
+  //     this.sounds[key].audio.pause();
+  //     this.sounds[key].audio.currentTime = 0;
+  //   }
+  // }
+  stopSound(key, fadeDuration = 300) {
+    // Default fade-out over 0.5s
     if (this.sounds[key] && this.sounds[key].isLoaded) {
-      this.sounds[key].audio.pause();
-      this.sounds[key].audio.currentTime = 0;
+      const audio = this.sounds[key].audio;
+      ("");
+
+      if (audio.paused) return; // Already stopped
+
+      const fadeSteps = 10; // Number of steps in fade-out
+      const stepTime = fadeDuration / fadeSteps; // Time per step
+      let volumeStep = audio.volume / fadeSteps; // Amount to reduce per step
+
+      let fadeInterval = setInterval(() => {
+        if (audio.volume > volumeStep) {
+          audio.volume -= volumeStep;
+        } else {
+          audio.volume = 0;
+          audio.pause();
+          audio.currentTime = 0; // Reset position
+          clearInterval(fadeInterval);
+        }
+      }, stepTime);
     }
   }
 
   // Loop a sound by its key
-  loopSound(key) {
+  loopSound(key, volume = this.defaultVolume) {
     if (this.sounds[key] && this.sounds[key].isLoaded) {
       if (this.sounds[key].audio.paused) {
         this.sounds[key].audio.loop = true;
+        this.sounds[key].audio.volume = volume;
         this.sounds[key].audio.play();
       }
     }
