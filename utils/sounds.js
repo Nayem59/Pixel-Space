@@ -29,6 +29,7 @@ class Sounds {
       engine6: "/../assets/soundEffects/engine6.mp3",
       ambient1: "/../assets/soundEffects/ambient1.mp3",
       boost: "/../assets/soundEffects/boost.mp3",
+      cloakSound: "/../assets/soundEffects/cloakSound.mp3",
     };
 
     // Container for all loaded sounds

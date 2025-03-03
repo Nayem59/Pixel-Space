@@ -422,6 +422,7 @@ function activateShield() {
 function activateCloaking() {
   if (player.cloakActive || skillUI.cloakOnCooldown) return;
   player.cloakActive = true;
+  sounds.playSound("cloakSound");
   storeState.cloakCount--;
   gameState.cloakingUsed++;
 
