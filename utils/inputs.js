@@ -367,6 +367,8 @@ function handleBoost() {
   if (boostActive || boostCooldown) return; // Ignore if already boosting or cooling down
 
   boostActive = true;
+  sounds.playSound("boost");
+
   storeState.boostCount--;
   gameState.boostUsed++;
   const angle = ((player.degree - 90) * Math.PI) / 180;

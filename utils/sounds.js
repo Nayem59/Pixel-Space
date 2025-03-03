@@ -28,6 +28,7 @@ class Sounds {
       engine5: "/../assets/soundEffects/engine5.mp3",
       engine6: "/../assets/soundEffects/engine6.mp3",
       ambient1: "/../assets/soundEffects/ambient1.mp3",
+      boost: "/../assets/soundEffects/boost.mp3",
     };
 
     // Container for all loaded sounds
