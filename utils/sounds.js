@@ -33,6 +33,7 @@ class Sounds {
       coinSound: "/../assets/soundEffects/coinSound.mp3",
       gemSound: "/../assets/soundEffects/gemSound.mp3",
       healthUp: "/../assets/soundEffects/healthUp.mp3",
+      shield2: "/../assets/soundEffects/shield2.mp3",
     };
 
     // Container for all loaded sounds

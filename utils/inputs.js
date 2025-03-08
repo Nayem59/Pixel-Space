@@ -405,6 +405,7 @@ const shieldCooldownTime = 10000;
 function activateShield() {
   if (player.shieldActive || shieldCooldown) return;
   player.shieldActive = true;
+  sounds.playSound("shield2");
   storeState.shieldCount--;
   gameState.shieldActivated++;
 
