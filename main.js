@@ -289,6 +289,9 @@ function gameLoop(timeStamp) {
     if (distPlPro - player.radius - projectile.radius < -2) {
       if (!player.shieldActive) {
         gameState.takeDamage(1);
+        sounds.playSound(
+          `damage${Math.floor(Math.random() * (5 - 1 + 1)) + 1}`
+        );
         live.startAnimation();
         camera.damageDuration = 10;
       }
@@ -365,6 +368,9 @@ function gameLoop(timeStamp) {
     if (distPlEn - enemy.radius - player.radius < -2) {
       if (!player.shieldActive) {
         gameState.takeDamage(1);
+        sounds.playSound(
+          `damage${Math.floor(Math.random() * (5 - 1 + 1)) + 1}`
+        );
         live.startAnimation();
         camera.damageDuration = 10;
       }

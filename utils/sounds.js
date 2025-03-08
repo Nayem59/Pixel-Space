@@ -34,6 +34,11 @@ class Sounds {
       gemSound: "/../assets/soundEffects/gemSound.mp3",
       healthUp: "/../assets/soundEffects/healthUp.mp3",
       shield2: "/../assets/soundEffects/shield2.mp3",
+      damage1: "/../assets/soundEffects/damage1.mp3",
+      damage2: "/../assets/soundEffects/damage2.mp3",
+      damage3: "/../assets/soundEffects/damage3.mp3",
+      damage4: "/../assets/soundEffects/damage4.mp3",
+      damage5: "/../assets/soundEffects/damage5.mp3",
     };
 
     // Container for all loaded sounds
