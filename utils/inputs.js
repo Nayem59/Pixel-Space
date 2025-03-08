@@ -66,6 +66,7 @@ addEventListener("keyup", (e) => {
     if (storeState.potionCount > 0) {
       if (gameState.playerHealth < gameState.maxHealth) {
         gameState.playerHealth++;
+        sounds.playSound("healthUp");
         gameState.potionUsed++;
         storeState.potionCount--;
       } else {

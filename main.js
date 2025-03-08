@@ -616,6 +616,7 @@ function gameLoop(timeStamp) {
         const coinEffect = coin.createCollectionEffect();
         coinEffect.isAnimating = true;
         coinsEffects.push(coinEffect);
+        sounds.playSound("coinSound");
         coins.splice(coinIndex, 1);
         gameState.addCoin();
       }
@@ -632,6 +633,7 @@ function gameLoop(timeStamp) {
         const gemEffect = gem.createCollectionEffect();
         gemEffect.isAnimating = true;
         gemsEffects.push(gemEffect);
+        sounds.playSound("gemSound");
         gems.splice(gemIndex, 1);
         gameState.addGem();
       }

@@ -30,6 +30,9 @@ class Sounds {
       ambient1: "/../assets/soundEffects/ambient1.mp3",
       boost: "/../assets/soundEffects/boost.mp3",
       cloakSound: "/../assets/soundEffects/cloakSound.mp3",
+      coinSound: "/../assets/soundEffects/coinSound.mp3",
+      gemSound: "/../assets/soundEffects/gemSound.mp3",
+      healthUp: "/../assets/soundEffects/healthUp.mp3",
     };
 
     // Container for all loaded sounds
