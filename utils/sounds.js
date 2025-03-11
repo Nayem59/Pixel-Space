@@ -156,7 +156,6 @@ class Sounds {
         this.pausedAudios.push(sound.audio);
       }
     });
-    console.log(this.pausedAudios);
   }
 
   resumePausedSounds() {

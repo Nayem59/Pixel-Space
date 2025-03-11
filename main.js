@@ -57,7 +57,7 @@ export const menuState = new MenuState();
 export const menuUI = new MenuUI({
   asset: assets.images.menuUI,
   frameSize: new Vector2(400, 500),
-  hFrames: 7,
+  hFrames: 8,
   vFrames: 1,
   frame: localStorage.getItem("gameState") !== null ? 1 : 0,
   position: new Vector2(
@@ -829,12 +829,15 @@ menuCanvas.addEventListener("mouseup", (e) => {
         mouseY >= menuUI.saveGameButton.y &&
         mouseY <= menuUI.saveGameButton.y + menuUI.saveGameButton.height
       ) {
-        console.log("game saved, handle saving state to browser");
         gameState.saveGameStateToLS();
         storeState.saveStoreStateToLS();
         clearGameCanvas();
-        menuUI.frame = 1;
+        menuUI.frame = 7;
         menuUI.draw();
+        setTimeout(() => {
+          menuUI.frame = 1;
+          menuUI.draw();
+        }, 2000);
         return;
       }
     }
