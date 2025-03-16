@@ -34,6 +34,7 @@ addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     gameState.isPaused = !gameState.isPaused;
     sounds.stopAllSounds();
+    enemies.map((e) => e.chasingSound.pause());
     if (gameState.isPaused) {
       keysPressed = {};
       toggleMenu(true);
@@ -124,6 +125,7 @@ canvas.addEventListener("mousedown", (e) => {
       if (spaceStation1.mouseDetection(e)) {
         gameState.openStation = true;
         sounds.stopAllSounds();
+        enemies.map((e) => e.chasingSound.pause());
       }
     }
     if (!gameState?.isPaused && !gameState.openStation) {
@@ -368,7 +370,7 @@ function handleBoost() {
   if (boostActive || boostCooldown) return; // Ignore if already boosting or cooling down
 
   boostActive = true;
-  sounds.playSound("boost");
+  sounds.playSound("boost", 0.2);
 
   storeState.boostCount--;
   gameState.boostUsed++;
