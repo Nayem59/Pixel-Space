@@ -53,7 +53,12 @@ class Enemy extends Sprite {
       this.maxHealth
     );
     this.chasingSound = sounds.getSoundInstance("enemy1");
-    this.chasingSound.volume = 0.3;
+    this.baseVolume = 0.3;
+    this.chasingSound.volume = this.baseVolume;
+  }
+
+  setVolume(volume) {
+    this.chasingSound.volume = this.baseVolume * volume;
   }
 
   generatePatrolPoints() {

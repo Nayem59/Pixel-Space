@@ -1,3 +1,5 @@
+import { enemies } from "../main.js";
+
 class Sounds {
   constructor() {
     // Define all sounds to preload
@@ -46,7 +48,7 @@ class Sounds {
     this.sounds = {};
     this.loadingPromises = [];
     this.defaultVolume = 1.0;
-    this.pausedAudios = [];
+    this.pausedAudios = {};
 
     // Preload each sound
     Object.keys(this.toLoad).forEach((key) => {
@@ -80,7 +82,12 @@ class Sounds {
   }
 
   // Play a sound by its key
-  playSound(key, volume = this.defaultVolume) {
+  playSound(key, volume = null) {
+    if (!volume) {
+      volume = this.defaultVolume;
+    } else {
+      volume *= this.defaultVolume;
+    }
     if (this.sounds[key] && this.sounds[key].isLoaded) {
       //   this.sounds[key].audio.currentTime = 0; // Reset to the start
       //   this.sounds[key].audio.play();
@@ -101,18 +108,12 @@ class Sounds {
       Object.values(this.sounds).forEach((sound) => {
         sound.audio.volume = volume;
       });
+      enemies.map((enemy) => enemy.setVolume(volume));
     } else {
       console.error("Volume must be between 0.0 and 1.0.");
     }
   }
 
-  // Stop a sound by its key
-  // stopSound(key) {
-  //   if (this.sounds[key] && this.sounds[key].isLoaded) {
-  //     this.sounds[key].audio.pause();
-  //     this.sounds[key].audio.currentTime = 0;
-  //   }
-  // }
   stopSound(key, fadeDuration = 300) {
     // Default fade-out over 0.5s
     if (this.sounds[key] && this.sounds[key].isLoaded) {
@@ -139,7 +140,12 @@ class Sounds {
   }
 
   // Loop a sound by its key
-  loopSound(key, volume = this.defaultVolume) {
+  loopSound(key, volume = null) {
+    if (!volume) {
+      volume = this.defaultVolume;
+    } else {
+      volume *= this.defaultVolume;
+    }
     if (this.sounds[key] && this.sounds[key].isLoaded) {
       if (this.sounds[key].audio.paused) {
         this.sounds[key].audio.loop = true;
@@ -149,18 +155,28 @@ class Sounds {
     }
   }
 
-  stopAllSounds() {
-    Object.values(this.sounds).forEach((sound) => {
+  stopAllSounds(withoutSave = false) {
+    Object.values(this.sounds).forEach((sound, i) => {
       if (!sound.audio.paused) {
         sound.audio.pause();
-        this.pausedAudios.push(sound.audio);
+        if (!withoutSave) {
+          const length = sound.audio.src.split("/").length;
+          this.pausedAudios[sound.audio.src.split("/")[length - 1]] = {
+            audio: sound.audio,
+            volume: sound.audio.volume,
+          };
+        }
       }
     });
+    enemies.map((e) => e.chasingSound.pause());
   }
 
   resumePausedSounds() {
-    this.pausedAudios.map((audio) => audio.play());
-    this.pausedAudios = [];
+    Object.values(this.pausedAudios).map((audio) => {
+      audio.audio.volume = audio.volume;
+      audio.audio.play();
+    });
+    this.pausedAudios = {};
   }
 }
 

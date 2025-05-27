@@ -1,4 +1,4 @@
-import { gameState, gameStateFromLS } from "../main.js";
+import { gameState, gameStateFromLS, menuState } from "../main.js";
 import { cM, menuCanvas } from "../utils/canvas.js";
 import Sprite from "./Sprite.js";
 
@@ -60,22 +60,46 @@ class MenuUI extends Sprite {
       height: 60,
     };
     this.webSiteButton = {
-      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 152,
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 36,
       y: menuCanvas.height / 2 - this.frameSize.y / 2 + 421,
       width: 67,
       height: 60,
     };
     this.linkedInButton = {
-      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 226,
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 110,
       y: menuCanvas.height / 2 - this.frameSize.y / 2 + 421,
       width: 55,
       height: 60,
     };
     this.gitHubButton = {
-      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 288,
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 172,
       y: menuCanvas.height / 2 - this.frameSize.y / 2 + 421,
       width: 59,
       height: 60,
+    };
+    this.settingsButton = {
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 307,
+      y: menuCanvas.height / 2 - this.frameSize.y / 2 + 421,
+      width: 59,
+      height: 60,
+    };
+    this.volumeButton = {
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 162,
+      y: menuCanvas.height / 2 - this.frameSize.y / 2 + 78,
+      width: 60,
+      height: 53,
+    };
+    this.volumeUpButton = {
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 305,
+      y: menuCanvas.height / 2 - this.frameSize.y / 2 + 94,
+      width: 12,
+      height: 20,
+    };
+    this.volumeDownButton = {
+      x: menuCanvas.width / 2 - this.frameSize.x / 2 + 260,
+      y: menuCanvas.height / 2 - this.frameSize.y / 2 + 94,
+      width: 12,
+      height: 20,
     };
     this.backButton = {
       x: menuCanvas.width / 2 - this.frameSize.x / 2 + 30,
@@ -102,10 +126,10 @@ class MenuUI extends Sprite {
     super.drawImage(cM, this.position.x, this.position.y);
     // cM.fillStyle = "red";
     // cM.fillRect(
-    //   this.resetButton.x,
-    //   this.resetButton.y,
-    //   this.resetButton.width,
-    //   this.resetButton.height
+    //   this.volumeButton.x,
+    //   this.volumeButton.y,
+    //   this.volumeButton.width,
+    //   this.volumeButton.height
     // );
     if (this.frame === 6) {
       cM.save();
@@ -197,6 +221,22 @@ class MenuUI extends Sprite {
         menuCanvas.width / 2 - this.frameSize.x / 2 + 295,
         menuCanvas.height / 2 - this.frameSize.y / 2 + 285
       );
+      cM.restore();
+    }
+    if (this.frame === 8) {
+      cM.save();
+      cM.font = "15px pixel";
+      cM.fillStyle = "white";
+      cM.fillText(
+        menuState?.volume,
+        menuCanvas.width / 2 - this.frameSize.x / 2 + 279,
+        menuCanvas.height / 2 - this.frameSize.y / 2 + 108
+      );
+      cM.restore();
+    }
+    if (this.frame === 8 && menuState.volume === 0) {
+      cM.save();
+
       cM.restore();
     }
   }

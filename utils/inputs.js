@@ -34,7 +34,6 @@ addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     gameState.isPaused = !gameState.isPaused;
     sounds.stopAllSounds();
-    enemies.map((e) => e.chasingSound.pause());
     if (gameState.isPaused) {
       keysPressed = {};
       toggleMenu(true);
@@ -125,7 +124,6 @@ canvas.addEventListener("mousedown", (e) => {
       if (spaceStation1.mouseDetection(e)) {
         gameState.openStation = true;
         sounds.stopAllSounds();
-        enemies.map((e) => e.chasingSound.pause());
       }
     }
     if (!gameState?.isPaused && !gameState.openStation) {

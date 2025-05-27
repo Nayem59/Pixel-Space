@@ -57,7 +57,7 @@ export const menuState = new MenuState();
 export const menuUI = new MenuUI({
   asset: assets.images.menuUI,
   frameSize: new Vector2(400, 500),
-  hFrames: 8,
+  hFrames: 9,
   vFrames: 1,
   frame: localStorage.getItem("gameState") !== null ? 1 : 0,
   position: new Vector2(
@@ -303,6 +303,7 @@ function gameLoop(timeStamp) {
       if (gameState.playerHealth === 0) {
         setTimeout(() => {
           clearGameCanvas();
+          sounds.stopAllSounds(true);
           toggleMenu(true);
           menuUI.frame = 3;
           menuUI.draw();
@@ -382,6 +383,7 @@ function gameLoop(timeStamp) {
       if (gameState.playerHealth === 0) {
         setTimeout(() => {
           clearGameCanvas();
+          sounds.stopAllSounds(true);
           toggleMenu(true);
           menuUI.frame = 3;
           menuUI.draw();
@@ -759,6 +761,17 @@ menuCanvas.addEventListener("mouseup", (e) => {
         menuUI.draw();
         return;
       }
+      if (
+        mouseX >= menuUI.settingsButton.x &&
+        mouseX <= menuUI.settingsButton.x + menuUI.settingsButton.width &&
+        mouseY >= menuUI.settingsButton.y &&
+        mouseY <= menuUI.settingsButton.y + menuUI.settingsButton.height
+      ) {
+        menuState.lastFrame = menuUI.frame;
+        menuUI.frame = 8;
+        menuUI.draw();
+        return;
+      }
     }
     if (menuState.menuOpen && menuUI.frame === 0) {
       // start of a new game
@@ -929,6 +942,43 @@ menuCanvas.addEventListener("mouseup", (e) => {
         }
         menuUI.draw();
         return;
+      }
+    }
+    if (menuState.menuOpen && menuUI.frame === 8) {
+      if (
+        mouseX >= menuUI.backButton.x &&
+        mouseX <= menuUI.backButton.x + menuUI.backButton.width &&
+        mouseY >= menuUI.backButton.y &&
+        mouseY <= menuUI.backButton.y + menuUI.backButton.height
+      ) {
+        menuUI.frame = menuState.lastFrame;
+        menuUI.draw();
+        return;
+      }
+      if (
+        mouseX >= menuUI.volumeButton.x &&
+        mouseX <= menuUI.volumeButton.x + menuUI.volumeButton.width &&
+        mouseY >= menuUI.volumeButton.y &&
+        mouseY <= menuUI.volumeButton.y + menuUI.volumeButton.height
+      ) {
+      }
+      if (
+        mouseX >= menuUI.volumeUpButton.x &&
+        mouseX <= menuUI.volumeUpButton.x + menuUI.volumeUpButton.width &&
+        mouseY >= menuUI.volumeUpButton.y &&
+        mouseY <= menuUI.volumeUpButton.y + menuUI.volumeUpButton.height
+      ) {
+        menuState.increaseVolume();
+        menuUI.draw();
+      }
+      if (
+        mouseX >= menuUI.volumeDownButton.x &&
+        mouseX <= menuUI.volumeDownButton.x + menuUI.volumeDownButton.width &&
+        mouseY >= menuUI.volumeDownButton.y &&
+        mouseY <= menuUI.volumeDownButton.y + menuUI.volumeDownButton.height
+      ) {
+        menuState.decreaseVolume();
+        menuUI.draw();
       }
     }
   }
