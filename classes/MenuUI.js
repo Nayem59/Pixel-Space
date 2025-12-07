@@ -1,5 +1,5 @@
 import { gameState, gameStateFromLS, menuState } from "../main.js";
-import { cM, menuCanvas } from "../utils/canvas.js";
+import { c, cM, menuCanvas } from "../utils/canvas.js";
 import Sprite from "./Sprite.js";
 
 class MenuUI extends Sprite {
@@ -123,6 +123,11 @@ class MenuUI extends Sprite {
   }
 
   draw() {
+    cM.save();
+    cM.fillStyle = "black";
+    cM.globalAlpha = 0.3;
+    cM.fillRect(0, 0, menuCanvas.width, menuCanvas.height);
+    cM.restore();
     super.drawImage(cM, this.position.x, this.position.y);
     // cM.fillStyle = "red";
     // cM.fillRect(
