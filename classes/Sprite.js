@@ -20,14 +20,14 @@ class Sprite {
     this.frameMap = new Map();
     this.scale = scale ?? 1;
     this.position = position ?? new Vector2(0, 0);
-    this.generateframeMap();
+    this.generateFrameMap();
     this.isAnimating = false;
     this.frameTimer = 0;
     this.frameDuration = (1 / 60) * 100;
     this.maxAnimationFrames = this.frameMap.size;
   }
 
-  generateframeMap() {
+  generateFrameMap() {
     let frameCount = 0;
     for (let v = 0; v < this.vFrames; v++) {
       for (let h = 0; h < this.hFrames; h++) {
